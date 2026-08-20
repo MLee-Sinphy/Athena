@@ -23,7 +23,7 @@
 
 ---
 
-# FEATURE-001 — Notificação de disponibilidade antecipada por e-mail
+# FEATURE-001 — Notificações de disponibilidade antecipada
 
 ## Estado
 - [x] Adiada
@@ -32,13 +32,13 @@
 - Usuário: contexto fornecido pelo responsável em 2026-08-20.
 
 ## Problema ou oportunidade
-Uma devolução antecipada pode liberar um exemplar antes da data reservada pelo próximo leitor da fila, mas esse leitor pode não perceber a nova disponibilidade.
+Uma devolução antecipada ou a expiração de uma reserva sem retirada pode liberar um exemplar antes da data reservada pelo próximo leitor da fila, mas esse leitor pode não perceber a nova disponibilidade.
 
 ## Público beneficiado
 Leitores que aguardam um exemplar já reservado para um período futuro.
 
 ## Proposta
-Enviar um e-mail ao próximo leitor elegível quando uma devolução antecipada permitir a retirada antes da data inicialmente reservada.
+Notificar o próximo leitor elegível dentro do sistema e por e-mail quando uma devolução antecipada ou a perda de prioridade de outra reserva permitir a retirada antes da data inicialmente reservada.
 
 ## Benefício esperado
 Antecipar o acesso ao livro e melhorar o aproveitamento do acervo sem retirar do leitor a data final já organizada.
@@ -49,28 +49,35 @@ A capacidade complementa a fila de espera e a política de antecipação por dev
 ## Fluxo esperado
 1. Um exemplar é devolvido antes da data prevista.
 2. O sistema identifica o próximo leitor elegível na fila.
-3. O sistema envia uma notificação por e-mail informando a disponibilidade antecipada.
-4. O leitor pode retirar o exemplar antes da data reservada conforme as regras vigentes.
-5. A data final originalmente reservada é preservada, mesmo que isso gere a exceção aprovada ao período máximo normal.
+3. O sistema cria uma notificação interna e envia um e-mail informando a disponibilidade antecipada.
+4. O sistema registra o envio e, quando ocorrerem, a leitura, o aceite ou a recusa.
+5. O leitor pode aceitar ou recusar a antecipação até a data original de início de sua reserva.
+6. Se aceitar, pode retirar o exemplar antes da data reservada conforme as regras vigentes.
+7. Se recusar, preserva integralmente sua reserva original.
+8. A data final originalmente reservada é preservada, mesmo que isso gere a exceção aprovada ao período máximo normal.
 
 ## Escopo inicial
-- Notificação por e-mail para disponibilidade antecipada causada por devolução antes do prazo.
+- Notificação interna e por e-mail para disponibilidade antecipada causada por devolução antes do prazo ou reserva não retirada.
 - Identificação do próximo leitor elegível.
+- Registro de envio, leitura, aceite e recusa.
 
 ## Fora de escopo
 - Implementação na primeira versão.
 - Definição antecipada do provedor de e-mail.
-- Outros tipos de notificação.
+- Notificações não relacionadas à disponibilidade antecipada.
 
 ## Critérios iniciais de sucesso
-- O e-mail é enviado somente ao próximo leitor elegível.
+- As notificações são destinadas somente ao próximo leitor elegível.
 - A mensagem informa de forma compreensível que a retirada pode ser antecipada.
 - Nenhuma notificação altera silenciosamente as datas confirmadas.
+- O leitor pode responder até a data original de início de sua reserva.
+- Uma recusa não cancela nem modifica a reserva original.
 
 ## Dependências
 - Fila de espera implementada e validada.
 - Registro de devolução antecipada.
 - Endereço de e-mail válido do leitor.
+- Central interna de notificações ainda não implementada.
 - Serviço de envio de e-mails ainda não escolhido.
 
 ## Riscos
