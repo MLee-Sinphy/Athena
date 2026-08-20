@@ -10,7 +10,7 @@
 Athena.
 
 ### Descrição curta
-Sistema online de aluguel de livros, composto por frontend web, backend com autenticação e módulos do domínio, além de persistência em banco de dados relacional.
+Sistema online de empréstimo de livros físicos para escolas, universidades, bibliotecas públicas e instituições semelhantes, composto por frontend web, backend com autenticação e módulos do domínio, além de persistência em banco de dados relacional.
 
 ### Estado atual
 Planejamento.
@@ -32,16 +32,18 @@ Construir e compreender um sistema completo a partir de documentação validada,
 ## Problema
 
 ### Descrição
-[Problema.]
+Leitores precisam consultar um acervo físico, reservar períodos de uso e solicitar empréstimos, enquanto a instituição precisa configurar suas políticas, controlar a disponibilidade e identificar exatamente qual exemplar foi entregue a cada pessoa.
 
 ### Contexto
-[Onde e quando ocorre.]
+O problema ocorre em escolas, universidades, bibliotecas públicas e instituições semelhantes que mantêm acervos de exemplares físicos administrados por pessoas responsáveis pela biblioteca.
 
 ### Quem é afetado
-- [Pessoa ou grupo.]
+- Leitores cadastrados, como alunos, universitários, clientes ou usuários de bibliotecas públicas.
+- Administradores responsáveis pelos cadastros, pelo acervo, pelas políticas, pelas reservas e pelos empréstimos.
 
 ### Impacto
-- [Consequência.]
+- O leitor precisa saber quais títulos estão disponíveis, reservar um período e organizar previamente as datas de retirada e devolução.
+- A instituição precisa aplicar regras configuráveis de elegibilidade e manter rastreabilidade sobre cada exemplar físico.
 
 ### Frequência e dimensão
 [Frequência e escala.]
@@ -61,7 +63,7 @@ Construir e compreender um sistema completo a partir de documentação validada,
 ## Objetivos
 
 ### Objetivo principal
-Desenvolver, como projeto de estudo, um sistema online de aluguel de livros que funcione de ponta a ponta enquanto seu backend estiver em execução.
+Desenvolver, como projeto de estudo, um sistema configurável de empréstimo de livros físicos que possa atender diferentes tipos de biblioteca e funcione de ponta a ponta enquanto seu backend estiver em execução.
 
 ### Objetivos secundários
 - [Objetivo.]
@@ -76,16 +78,18 @@ Desenvolver, como projeto de estudo, um sistema online de aluguel de livros que 
 ## Público
 
 ### Público principal
-[Usuário principal.]
+Leitores cadastrados pela instituição, incluindo alunos, universitários, clientes e usuários de bibliotecas públicas.
 
 ### Públicos secundários
-- [Público.]
+- Administradores da plataforma responsáveis pelos usuários, pelo acervo e pelas políticas da biblioteca.
 
 ### Necessidades do público
-- [Necessidade.]
+- Leitores precisam consultar o catálogo, escolher períodos válidos, reservar e solicitar empréstimos sem precisar distinguir cópias equivalentes de um mesmo título.
+- Administradores precisam cadastrar títulos e exemplares físicos, identificar cada cópia e acompanhar empréstimos e ocorrências.
+- Administradores precisam configurar as regras que determinam prazos, limites, permissões, penalidades e demais condições de empréstimo.
 
 ### Contexto de uso
-[Ambiente, dispositivo e frequência.]
+Leitores e administradores utilizam uma aplicação web vinculada ao acervo físico da instituição.
 
 ### Conhecimento esperado
 [Conhecimento prévio.]
@@ -96,13 +100,15 @@ Desenvolver, como projeto de estudo, um sistema online de aluguel de livros que 
 ## Proposta
 
 ### Solução imaginada
-[Solução em linguagem de produto.]
+Uma plataforma web configurável na qual administradores cadastram usuários e o acervo físico, definem políticas da biblioteca e acompanham as operações; leitores consultam títulos, escolhem datas válidas, fazem reservas e solicitam empréstimos sujeitos às regras da instituição.
 
 ### Valor entregue
-[Benefício concreto.]
+Facilitar o acesso dos leitores ao acervo e permitir que diferentes instituições controlem disponibilidade, reservas, empréstimos e a situação individual de cada exemplar físico segundo suas próprias políticas.
 
 ### Diferenciais
-- [Diferencial.]
+- Catálogo simplificado para o leitor, agrupado por título.
+- Controle individual de exemplares para o administrador sem expor detalhes operacionais desnecessários ao leitor.
+- Painel administrativo para adaptar as políticas de empréstimo à dinâmica de cada biblioteca.
 
 ### Hipótese de valor
 [Hipótese.]
@@ -115,45 +121,85 @@ Desenvolver, como projeto de estudo, um sistema online de aluguel de livros que 
 - Gerenciamento de livros.
 - Gerenciamento de empréstimos de livros.
 - Gerenciamento de reservas.
+- Calendário de reserva e empréstimo baseado nos dias em que a biblioteca funciona.
+- Painel administrativo para configurar intervalos mínimo e máximo, limite de empréstimos, permissões e efeitos de penalidades.
+- Fila de espera ordenada para títulos sem exemplar disponível no período desejado.
+- Cadastro de leitores pelo administrador e alteração do próprio e-mail e senha pelo leitor.
+- Visibilidade, alteração e cancelamento de qualquer empréstimo pelo administrador.
 - Persistência em banco de dados relacional.
 - Apresentação de mensagem de erro quando o frontend não conseguir acessar o backend.
 
 ### Fora da primeira versão
-- [Capacidade adiada.]
+- Notificação por e-mail quando uma devolução antecipada permitir que o próximo leitor retire o exemplar antes da data reservada.
 
 ### Fora do projeto
-- [Item excluído.]
+- Cobrança por empréstimo ou processamento de pagamentos.
+- Distribuição de livros ou arquivos digitais.
 
 ### Funcionalidades futuras conhecidas
-- [Possibilidade futura.]
+- Notificação antecipada por e-mail vinculada à fila de espera e às devoluções antes do prazo.
 
 ### Limites entre o sistema e o ambiente externo
-- [Responsabilidade externa.]
+- O sistema controla registros e solicitações, mas a entrega e a devolução do exemplar físico ocorrem na instituição responsável pelo acervo.
+- A relação institucional do leitor e qualquer cobrança externa existem fora do Athena; estar cadastrado pelo administrador representa o direito básico de solicitar empréstimos, sujeito às demais regras configuradas.
 
 ## Comportamentos e regras
 
 ### Fluxo principal esperado
-1. [Ação.]
-2. [Resposta.]
-3. [Resultado.]
+1. Um administrador cadastra um título e seus exemplares físicos, atribuindo identificação única a cada exemplar.
+2. Um leitor cadastrado pelo administrador autentica-se e consulta o catálogo, no qual cópias do mesmo livro aparecem agrupadas pelo título.
+3. O leitor escolhe, em um calendário, datas de retirada e devolução permitidas pelas políticas configuradas e pelos dias de funcionamento da biblioteca.
+4. O leitor solicita a reserva do título para o período escolhido.
+5. O sistema avalia as regras aplicáveis ao leitor, ao título, ao período e aos exemplares disponíveis.
+6. Quando houver exemplar disponível e as regras permitirem, a reserva e o empréstimo são concedidos sem exigir confirmação administrativa.
+7. Um exemplar específico é associado ao empréstimo e o administrador pode acompanhar, alterar ou cancelar a operação.
 
 ### Fluxos alternativos conhecidos
-1. [Condição e comportamento.]
+1. Quando nenhuma cópia estiver disponível imediatamente, o leitor pode reservar um período futuro e entra em uma fila de espera organizada.
+2. Quando uma devolução antecipada liberar o exemplar, o próximo leitor pode retirá-lo antes da data reservada e manter a data final originalmente definida, mesmo que o período total ultrapasse excepcionalmente o máximo normal.
+3. Quando o leitor não satisfizer uma regra configurada de empréstimo, a solicitação deve ser recusada com uma explicação apropriada.
+4. Quando um empréstimo for devolvido depois da data, a penalidade configurada pode impedir novos empréstimos por um período e reduzir o limite de livros permitido.
 
 ### Exceções e falhas conhecidas
 - Quando o backend estiver parado ou inacessível, o frontend deve informar ao usuário que não conseguiu acessar o serviço e não deve indicar que a operação foi concluída.
 
 ### Regras de negócio conhecidas
-- [Regra.]
+- Somente leitores cadastrados por um administrador podem solicitar empréstimos.
+- O administrador cadastra o leitor com matrícula ou identificador institucional, e-mail e senha inicial.
+- O leitor pode alterar o próprio e-mail e a própria senha depois de cadastrado.
+- Não há cobrança financeira pelo empréstimo; o direito básico decorre do cadastro do leitor na instituição.
+- Todo exemplar físico deve possuir identificação única no sistema.
+- Vários exemplares do mesmo livro devem aparecer agrupados como um único título no catálogo do leitor.
+- Um empréstimo concedido deve estar associado a um exemplar físico específico.
+- O leitor deve solicitar uma reserva mesmo quando houver disponibilidade imediata.
+- O leitor escolhe o intervalo do empréstimo dentro do mínimo e do máximo configurados pelo administrador.
+- Somente dias de funcionamento configurados para a biblioteca contam para determinar os intervalos permitidos.
+- As datas de retirada e devolução devem ser definidas e respeitadas.
+- Quando não houver disponibilidade imediata, o leitor pode escolher um período futuro e participar de uma fila de espera ordenada.
+- O atraso pode gerar uma penalidade configurável, incluindo suspensão temporária e redução do limite de empréstimos simultâneos.
+- A quantidade máxima de empréstimos simultâneos é configurada pelo administrador e pode ser modificada pelas penalidades aplicáveis ao leitor.
+- A concessão não exige confirmação do administrador quando todas as regras forem satisfeitas.
+- O administrador pode visualizar, alterar e cancelar qualquer empréstimo.
+- Uma devolução antecipada pode antecipar a retirada do próximo leitor sem antecipar obrigatoriamente sua data final, constituindo exceção permitida ao período máximo normal.
 
 ### Invariantes
-- [Condição que nunca pode ser violada.]
+- Um exemplar físico não pode estar associado simultaneamente a mais de um empréstimo ativo.
+- Cada exemplar deve possuir um identificador único.
+- O leitor não deve precisar escolher nem visualizar o código interno do exemplar para solicitar um título.
+- O administrador deve conseguir identificar exatamente qual exemplar participa de cada empréstimo.
+- Nenhum período confirmado pode sobrepor o uso do mesmo exemplar por leitores diferentes.
 
 ### Dados de entrada
-- [Dado.]
+- Cadastro do leitor, incluindo matrícula ou identificador institucional, e-mail e senha inicial.
+- Dados bibliográficos do título.
+- Código único e dados operacionais de cada exemplar físico.
+- Solicitação de empréstimo ou reserva.
 
 ### Resultados e saídas
-- [Dado ou efeito.]
+- Catálogo de títulos e sua disponibilidade para o leitor.
+- Decisão de aprovação ou recusa da solicitação conforme as regras configuradas.
+- Associação entre leitor, período reservado, empréstimo e exemplar físico específico.
+- Visão administrativa do estado de cada exemplar.
 
 ## Experiência e interface
 
@@ -167,7 +213,9 @@ Desenvolver, como projeto de estudo, um sistema online de aluguel de livros que 
 1. [Etapa.]
 
 ### Informações que precisam estar visíveis
-- [Informação.]
+- Para o leitor: título, disponibilidade agregada, calendário e datas confirmadas, sem necessidade de exibir o código único de cada exemplar.
+- Para o administrador: título, exemplares individuais, códigos únicos, estado e empréstimo associado.
+- Para o administrador: painel das políticas vigentes e controles para alterar ou cancelar empréstimos.
 
 ### Estados importantes da interface
 - Carregamento.
@@ -198,7 +246,7 @@ Desenvolver, como projeto de estudo, um sistema online de aluguel de livros que 
 - Segredos e credenciais do banco não podem ser expostos no frontend.
 
 ### Privacidade e dados sensíveis
-- [Dado e tratamento.]
+- Dados cadastrais e histórico de empréstimos dos leitores devem ser acessíveis somente de acordo com as permissões definidas.
 
 ### Legais e regulatórias
 - [Restrição.]
@@ -233,7 +281,7 @@ Frontend React publicado no GitHub Pages, comunicando-se por HTTPS com um backen
 5. O frontend apresenta o resultado ou uma mensagem de indisponibilidade quando não conseguir acessar o backend.
 
 ### Persistência
-Usuários, livros, empréstimos e reservas devem persistir em banco de dados relacional. Política de retenção: Pendente.
+Usuários, títulos, exemplares físicos, calendários de funcionamento, políticas configuráveis, penalidades, empréstimos, reservas e posições da fila de espera devem persistir em banco de dados relacional. Um título pode possuir vários exemplares, e cada exemplar deve possuir identificação única. Política de retenção: Pendente.
 
 ### Integrações externas
 - [Serviço e finalidade.]
@@ -286,8 +334,19 @@ Projeto mantido pelo responsável durante o período de estudo, sem compromisso 
 - O frontend acessará o backend por HTTPS.
 - O backend deverá ser hospedável na Hostinger e poderá ser executado sob demanda.
 - A persistência usará banco de dados relacional.
-- A primeira versão contemplará autenticação, usuários, livros, empréstimos e reservas.
+- A primeira versão contemplará autenticação, usuários, livros, empréstimos, reservas, fila de espera, calendário e configuração administrativa de políticas.
 - A indisponibilidade do backend deve ser informada claramente pelo frontend.
+- O acervo será composto por exemplares físicos de livros.
+- Não haverá cobrança ou pagamento pelo empréstimo.
+- Existirão somente dois tipos de usuário: leitor e administrador; coordenadores e responsáveis pela biblioteca atuarão com perfil administrativo.
+- O Athena não ficará limitado a escolas: poderá atender universidades, bibliotecas públicas e instituições semelhantes.
+- O catálogo do leitor agrupará exemplares iguais por título.
+- O controle administrativo e os empréstimos identificarão individualmente cada exemplar físico.
+- Todo empréstimo começa por uma solicitação de reserva do leitor, inclusive quando houver disponibilidade imediata.
+- O administrador configura o calendário de funcionamento e as políticas de empréstimo, incluindo períodos mínimo e máximo, limite simultâneo e efeitos de penalidades.
+- A concessão permitida pelas regras não exige confirmação administrativa, mas o administrador pode visualizar, alterar e cancelar qualquer empréstimo.
+- Leitores são cadastrados pelo administrador com matrícula ou identificador, e-mail e senha; depois podem alterar o próprio e-mail e senha.
+- A notificação por e-mail em razão de devolução antecipada pertence a uma versão futura distante.
 
 ## Referências
 
@@ -312,14 +371,17 @@ Projeto mantido pelo responsável durante o período de estudo, sem compromisso 
 ## Questões em aberto
 
 ### Dúvidas estratégicas
-- Os livros alugados representam exemplares físicos, arquivos digitais ou ambos?
-- O sistema será apenas uma biblioteca demonstrativa ou haverá alguma simulação de pagamento pelo aluguel?
+- Nenhuma identificada até o momento.
 
 ### Dúvidas de produto
-- Quais tipos de usuário existirão e quais permissões cada um terá?
-- Qual é a diferença pretendida entre reservar e realizar um empréstimo?
-- Quais prazos, limites, renovações, atrasos, multas ou filas de espera existirão?
-- O catálogo controlará apenas títulos ou também exemplares individuais de cada livro?
+- Como ordenar a fila quando duas pessoas desejarem períodos concorrentes: por data da solicitação, prioridade institucional ou outra política configurável?
+- Até quando o leitor deve retirar o exemplar na data marcada antes de perder a reserva?
+- Como tratar feriados e fechamentos excepcionais além dos dias semanais de funcionamento?
+- A penalidade por atraso começa automaticamente e como sua duração será calculada?
+- Quais controles exatos estarão disponíveis na primeira versão do painel de políticas?
+- Uma alteração administrativa em empréstimo confirmado precisa preservar histórico e motivo da alteração?
+- Quais ocorrências sobre um exemplar devem ser registradas, por exemplo dano, perda, manutenção ou descarte?
+- O leitor pode cancelar ou alterar a própria reserva e até qual momento?
 
 ### Dúvidas técnicas
 - Qual tecnologia será utilizada no backend?
