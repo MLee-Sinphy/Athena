@@ -126,6 +126,10 @@ Facilitar o acesso dos leitores ao acervo e permitir que diferentes instituiçõ
 - Fila de espera ordenada para títulos sem exemplar disponível no período desejado.
 - Cadastro de leitores pelo administrador e alteração do próprio e-mail e senha pelo leitor.
 - Visibilidade, alteração e cancelamento de qualquer empréstimo pelo administrador.
+- Alteração e cancelamento da própria reserva pelo leitor, desde que a mudança não conflite com reserva já confirmada de outra pessoa.
+- Tolerância configurável para retirada, com padrão inicial de 1 dia de funcionamento.
+- Reorganização da disponibilidade quando uma reserva expirar sem retirada.
+- Log persistente de auditoria das ações administrativas sobre empréstimos e configurações.
 - Persistência em banco de dados relacional.
 - Apresentação de mensagem de erro quando o frontend não conseguir acessar o backend.
 
@@ -159,6 +163,8 @@ Facilitar o acesso dos leitores ao acervo e permitir que diferentes instituiçõ
 2. Quando uma devolução antecipada liberar o exemplar, o próximo leitor pode retirá-lo antes da data reservada e manter a data final originalmente definida, mesmo que o período total ultrapasse excepcionalmente o máximo normal.
 3. Quando o leitor não satisfizer uma regra configurada de empréstimo, a solicitação deve ser recusada com uma explicação apropriada.
 4. Quando um empréstimo for devolvido depois da data, a penalidade configurada pode impedir novos empréstimos por um período e reduzir o limite de livros permitido.
+5. Quando o leitor não retirar o exemplar dentro da tolerância configurada, sua reserva perde a prioridade; o próximo leitor da fila deve ser avisado e consultado sobre o interesse em antecipar sua retirada.
+6. Quando o próximo leitor não aceitar a antecipação, o exemplar pode ser disponibilizado para outro leitor no período livre, sem afetar reservas futuras confirmadas.
 
 ### Exceções e falhas conhecidas
 - Quando o backend estiver parado ou inacessível, o frontend deve informar ao usuário que não conseguiu acessar o serviço e não deve indicar que a operação foi concluída.
@@ -176,10 +182,19 @@ Facilitar o acesso dos leitores ao acervo e permitir que diferentes instituiçõ
 - Somente dias de funcionamento configurados para a biblioteca contam para determinar os intervalos permitidos.
 - As datas de retirada e devolução devem ser definidas e respeitadas.
 - Quando não houver disponibilidade imediata, o leitor pode escolher um período futuro e participar de uma fila de espera ordenada.
+- A fila de espera deve respeitar a ordem cronológica das solicitações: quem solicita primeiro possui prioridade para reservar o período disponível.
 - O atraso pode gerar uma penalidade configurável, incluindo suspensão temporária e redução do limite de empréstimos simultâneos.
+- A configuração padrão para atraso suspende novos empréstimos por 1 semana; o administrador pode alterar essa política no painel.
 - A quantidade máxima de empréstimos simultâneos é configurada pelo administrador e pode ser modificada pelas penalidades aplicáveis ao leitor.
+- A tolerância para retirada é configurada pelo administrador e possui valor padrão de 1 dia de funcionamento da biblioteca.
+- Se o leitor não retirar o exemplar dentro da tolerância, ele perde a prioridade daquela reserva.
+- O próximo leitor da fila deve ser notificado e pode aceitar ou recusar a antecipação da retirada; o canal e o prazo de resposta ainda precisam ser definidos.
+- Se o próximo leitor não aceitar a antecipação, outro leitor pode usar o período livre, desde que nenhuma reserva confirmada seja afetada.
+- O leitor pode alterar ou cancelar a própria reserva.
+- Uma alteração feita pelo leitor não pode prolongar ou deslocar sua reserva de modo a sobrepor qualquer período já confirmado para outro leitor.
 - A concessão não exige confirmação do administrador quando todas as regras forem satisfeitas.
 - O administrador pode visualizar, alterar e cancelar qualquer empréstimo.
+- Alterações e cancelamentos administrativos devem gerar registro persistente de auditoria para consulta futura.
 - Uma devolução antecipada pode antecipar a retirada do próximo leitor sem antecipar obrigatoriamente sua data final, constituindo exceção permitida ao período máximo normal.
 
 ### Invariantes
@@ -188,18 +203,27 @@ Facilitar o acesso dos leitores ao acervo e permitir que diferentes instituiçõ
 - O leitor não deve precisar escolher nem visualizar o código interno do exemplar para solicitar um título.
 - O administrador deve conseguir identificar exatamente qual exemplar participa de cada empréstimo.
 - Nenhum período confirmado pode sobrepor o uso do mesmo exemplar por leitores diferentes.
+- Uma alteração de reserva não pode reduzir nem invalidar o período confirmado de outro leitor.
+- A ordem de prioridade da fila não pode ser modificada sem uma nova decisão explícita de produto.
+- Registros de auditoria não podem ser alterados ou apagados por operações administrativas comuns.
 
 ### Dados de entrada
 - Cadastro do leitor, incluindo matrícula ou identificador institucional, e-mail e senha inicial.
 - Dados bibliográficos do título.
 - Código único e dados operacionais de cada exemplar físico.
 - Solicitação de empréstimo ou reserva.
+- Configurações administrativas de tolerância, penalidade, limite e demais políticas.
+- Alteração ou cancelamento de reserva pelo leitor.
+- Alteração ou cancelamento de empréstimo pelo administrador, com dados necessários para auditoria.
 
 ### Resultados e saídas
 - Catálogo de títulos e sua disponibilidade para o leitor.
 - Decisão de aprovação ou recusa da solicitação conforme as regras configuradas.
 - Associação entre leitor, período reservado, empréstimo e exemplar físico específico.
 - Visão administrativa do estado de cada exemplar.
+- Nova disponibilidade decorrente da expiração de uma reserva não retirada.
+- Notificação ao próximo leitor elegível e registro de sua resposta.
+- Histórico consultável das alterações administrativas.
 
 ## Experiência e interface
 
@@ -281,7 +305,7 @@ Frontend React publicado no GitHub Pages, comunicando-se por HTTPS com um backen
 5. O frontend apresenta o resultado ou uma mensagem de indisponibilidade quando não conseguir acessar o backend.
 
 ### Persistência
-Usuários, títulos, exemplares físicos, calendários de funcionamento, políticas configuráveis, penalidades, empréstimos, reservas e posições da fila de espera devem persistir em banco de dados relacional. Um título pode possuir vários exemplares, e cada exemplar deve possuir identificação única. Política de retenção: Pendente.
+Usuários, títulos, exemplares físicos, calendários de funcionamento, políticas configuráveis, penalidades, empréstimos, reservas, posições da fila de espera, notificações e registros de auditoria devem persistir em banco de dados relacional. Um título pode possuir vários exemplares, e cada exemplar deve possuir identificação única. Política de retenção: Pendente.
 
 ### Integrações externas
 - [Serviço e finalidade.]
@@ -347,6 +371,11 @@ Projeto mantido pelo responsável durante o período de estudo, sem compromisso 
 - A concessão permitida pelas regras não exige confirmação administrativa, mas o administrador pode visualizar, alterar e cancelar qualquer empréstimo.
 - Leitores são cadastrados pelo administrador com matrícula ou identificador, e-mail e senha; depois podem alterar o próprio e-mail e senha.
 - A notificação por e-mail em razão de devolução antecipada pertence a uma versão futura distante.
+- A fila de espera usa a ordem cronológica da solicitação como prioridade.
+- A tolerância para retirada é configurável, com padrão de 1 dia de funcionamento.
+- A penalidade por atraso é configurável, com padrão de 1 semana sem novos empréstimos.
+- O leitor pode alterar e cancelar reservas próprias, mas não pode criar conflito com período já reservado por outra pessoa.
+- Operações administrativas relevantes devem produzir log persistente de auditoria.
 
 ## Referências
 
@@ -374,14 +403,14 @@ Projeto mantido pelo responsável durante o período de estudo, sem compromisso 
 - Nenhuma identificada até o momento.
 
 ### Dúvidas de produto
-- Como ordenar a fila quando duas pessoas desejarem períodos concorrentes: por data da solicitação, prioridade institucional ou outra política configurável?
-- Até quando o leitor deve retirar o exemplar na data marcada antes de perder a reserva?
 - Como tratar feriados e fechamentos excepcionais além dos dias semanais de funcionamento?
-- A penalidade por atraso começa automaticamente e como sua duração será calculada?
 - Quais controles exatos estarão disponíveis na primeira versão do painel de políticas?
-- Uma alteração administrativa em empréstimo confirmado precisa preservar histórico e motivo da alteração?
+- Quais ações administrativas exigem justificativa obrigatória no log de auditoria?
 - Quais ocorrências sobre um exemplar devem ser registradas, por exemplo dano, perda, manutenção ou descarte?
-- O leitor pode cancelar ou alterar a própria reserva e até qual momento?
+- Até qual momento o leitor pode alterar ou cancelar a própria reserva?
+- Qual canal notificará o próximo leitor quando uma reserva expirar sem retirada?
+- Quanto tempo o próximo leitor terá para aceitar a antecipação antes que o período seja oferecido a outra pessoa?
+- Se o próximo leitor recusar a antecipação, ele preserva integralmente sua reserva futura original?
 
 ### Dúvidas técnicas
 - Qual tecnologia será utilizada no backend?
