@@ -46,7 +46,7 @@ O problema ocorre em escolas, universidades, bibliotecas públicas e instituiç�
 - A instituição precisa aplicar regras configuráveis de elegibilidade e manter rastreabilidade sobre cada exemplar físico.
 
 ### Frequência e dimensão
-[Frequência e escala.]
+Uma instalação atende uma única instituição e deve ser projetada para até 5.000 leitores, 20.000 títulos, 50.000 exemplares e picos simulados de 500 usuários simultâneos.
 
 ### Causas conhecidas ou suspeitas
 - [Causa ou hipótese.]
@@ -66,14 +66,20 @@ O problema ocorre em escolas, universidades, bibliotecas públicas e instituiç�
 Desenvolver, como projeto de estudo, um sistema configurável de empréstimo de livros físicos que possa atender diferentes tipos de biblioteca e funcione de ponta a ponta enquanto seu backend estiver em execução.
 
 ### Objetivos secundários
-- [Objetivo.]
+- Exercitar desenvolvimento full stack, modelagem relacional, autenticação, internacionalização, testes e deploy.
+- Produzir documentação e implementação rastreáveis que possam servir como referência de estudo.
+- Demonstrar o comportamento do sistema com dados realistas e simulações reproduzíveis.
 
 ### Não objetivos
 - Manter o sistema disponível 24 horas por dia.
 - Tratar a primeira versão como um serviço comercial em produção.
 
 ### Critérios gerais de sucesso
-- [Evidência verificável.]
+- Os fluxos principais de leitor e administrador funcionam de ponta a ponta enquanto o backend está ativo.
+- As regras configuráveis de reserva, empréstimo, fila e penalidade são verificadas por testes automatizados.
+- A interface funciona em computadores e smartphones, em português e inglês, e atende aos critérios aplicáveis da WCAG 2.2 nível AA.
+- O comportamento na indisponibilidade do backend é comunicado claramente.
+- A carga-alvo é exercitada por simulação reproduzível, sem depender de centenas de usuários humanos.
 
 ## Público
 
@@ -118,6 +124,7 @@ Facilitar o acesso dos leitores ao acervo e permitir que diferentes instituiçõ
 
 ### Primeira versão
 - Frontend web em React.
+- Interface em português do Brasil e inglês, com detecção inicial pelo idioma preferido do navegador e seleção manual persistente.
 - Backend com autenticação e gerenciamento de usuários.
 - Login por um único campo que aceita e-mail ou matrícula/identificador, acompanhado da senha.
 - Primeiro acesso com troca obrigatória da senha temporária criada pelo administrador.
@@ -159,6 +166,7 @@ Facilitar o acesso dos leitores ao acervo e permitir que diferentes instituiçõ
 ### Limites entre o sistema e o ambiente externo
 - O sistema controla registros e solicitações, mas a entrega e a devolução do exemplar físico ocorrem na instituição responsável pelo acervo.
 - A relação institucional do leitor e qualquer cobrança externa existem fora do Athena; estar cadastrado pelo administrador representa o direito básico de solicitar empréstimos, sujeito às demais regras configuradas.
+- Cada implantação do Athena atende somente uma instituição; não haverá múltiplas instituições compartilhando a mesma instalação na primeira versão.
 
 ## Comportamentos e regras
 
@@ -312,6 +320,7 @@ Facilitar o acesso dos leitores ao acervo e permitir que diferentes instituiçõ
 - Erro.
 - Sucesso.
 - Backend indisponível.
+- Troca de idioma entre português e inglês.
 
 ### Dispositivos e tamanhos de tela
 - Computadores desktop e notebooks.
@@ -340,6 +349,8 @@ Facilitar o acesso dos leitores ao acervo e permitir que diferentes instituiçõ
 - O frontend deve consumir o backend por HTTPS.
 - O backend deve poder ser hospedado em um VPS da Hostinger; planos Web e Cloud comuns não atendem ao runtime Python/Django escolhido.
 - A persistência deve utilizar banco de dados relacional.
+- Cada implantação deve manter acervo, usuários, configurações e histórico de uma única instituição isolada.
+- A seleção automática de idioma deve usar a preferência informada pelo navegador, sem depender de geolocalização por IP; o usuário pode alterar o idioma manualmente.
 
 ### Tecnologias proibidas
 - [Tecnologia e motivo.]
@@ -365,25 +376,31 @@ Facilitar o acesso dos leitores ao acervo e permitir que diferentes instituiçõ
 - Posições e estimativas da fila devem ser apresentadas sem revelar a identidade ou os dados pessoais dos outros leitores.
 
 ### Legais e regulatórias
-- [Restrição.]
+- Dados de demonstração de pessoas devem ser sintéticos e não podem reproduzir dados pessoais de indivíduos reais.
+- Títulos e metadados bibliográficos reais podem ser usados em testes e demonstrações quando sua utilização for legalmente permitida.
+- Capas, descrições e imagens devem respeitar licenças e direitos aplicáveis; quando necessário, devem ser usados materiais em domínio público, licenciados ou substitutos próprios.
 
 ### Financeiras
-- [Orçamento ou limite.]
+- Priorizar ferramentas, bibliotecas, serviços e níveis gratuitos.
+- Qualquer serviço pago deve ser evitado na primeira versão ou submetido à aprovação explícita do responsável.
 
 ### Prazo
 - Não há exigência de disponibilidade contínua; o backend pode ser iniciado e interrompido conforme as sessões de estudo e demonstração.
 
 ### Desempenho e escala
-- [Meta ou volume.]
+- Uma instalação deve ser projetada e testada por simulação para até 5.000 leitores, 20.000 títulos e 50.000 exemplares.
+- Os testes de carga devem simular picos de até 500 usuários simultâneos.
+- Essas metas são objetivos de engenharia e teste; não haverá necessidade de reunir usuários humanos reais para validá-las.
 
 ### Compatibilidade
 - Navegadores modernos com suporte ativo em computadores e smartphones.
+- Duas versões estáveis mais recentes de Chrome, Firefox, Edge e Safari na época de cada versão entregue.
 - Tecnologias assistivas compatíveis com os padrões semânticos da Web.
 
 ## Arquitetura imaginada
 
 ### Visão geral
-Frontend React publicado no GitHub Pages, comunicando-se por HTTPS com um backend hospedável na Hostinger, que centraliza autenticação, regras de negócio e acesso ao banco relacional. Esta é uma arquitetura imaginada e ainda deverá ser formalmente avaliada e validada.
+Frontend React internacionalizado publicado no GitHub Pages, comunicando-se por HTTPS com um backend hospedável na Hostinger, que centraliza autenticação, regras de negócio e acesso ao banco relacional. Cada implantação atende uma única instituição e mantém seu acervo isolado. Esta arquitetura ainda deverá ser formalmente detalhada e validada.
 
 ### Componentes principais
 - Frontend React: interface do usuário e consumo da API.
@@ -426,30 +443,54 @@ Usuários, títulos, exemplares físicos e seus estados, calendários de funcion
 3. Obter funcionamento ponta a ponta durante sessões de estudo e demonstração.
 
 ### Estratégia de testes esperada
-- [Tipo de teste ou qualidade.]
+- Testes unitários para regras puras, validações, cálculos de calendário, filas e penalidades.
+- Testes de integração para API, autenticação, autorização, ORM, PostgreSQL e concorrência de reservas.
+- Testes de contrato entre React e a API Django.
+- Testes de componentes e acessibilidade da interface.
+- Testes ponta a ponta para as jornadas principais de leitor e administrador.
+- Testes de segurança para autenticação, autorização, tokens, CORS, limitação de tentativas e privacidade.
+- Testes de carga totalmente simulados para os volumes e a concorrência definidos.
+- Dados de pessoas inteiramente sintéticos, com nomes realistas; títulos e metadados bibliográficos reais somente quando legalmente utilizáveis.
+- Testes manuais pontuais pelo responsável complementam, mas não substituem, as simulações automatizadas.
 
 ### Critérios para considerar a primeira versão pronta
-- [ ] [Critério verificável.]
+- [ ] Leitor e administrador conseguem autenticar-se e executar somente operações autorizadas ao seu perfil.
+- [ ] O primeiro acesso exige troca da senha temporária e a recuperação assistida funciona sem envio de e-mail.
+- [ ] Administrador consegue cadastrar leitores, títulos, exemplares, calendário e políticas.
+- [ ] Leitor consegue pesquisar, filtrar, reservar, acompanhar, alterar, cancelar, renovar quando permitido e avaliar depois da devolução.
+- [ ] Filas, disponibilidade, prazos, tolerâncias, penalidades e limites respeitam as regras configuradas sem sobreposição de exemplares.
+- [ ] Auditoria registra as operações administrativas definidas sem expor segredos.
+- [ ] Interface funciona em português e inglês, em computadores e smartphones.
+- [ ] Critérios aplicáveis da WCAG 2.2 nível AA possuem evidências automatizadas e manuais.
+- [ ] Frontend publicado consegue consumir o backend por HTTPS e comunica claramente sua indisponibilidade.
+- [ ] Testes unitários, integração, contrato, componentes, ponta a ponta, segurança e regressão aplicáveis estão aprovados.
+- [ ] Testes simulados exercitam os volumes-alvo e registram os resultados e limitações observados.
+- [ ] Nenhum segredo ou dado pessoal real de demonstração está versionado ou exposto.
 
 ### Manutenção esperada
 Projeto mantido pelo responsável durante o período de estudo, sem compromisso de operação 24 horas por dia.
 
 ### Observabilidade esperada
-- [Log, métrica ou alerta.]
+- Logs estruturados para autenticação, erros, alterações administrativas e operações relevantes.
+- Logs não podem registrar senhas, tokens reutilizáveis nem dados pessoais desnecessários.
+- Identificadores de correlação devem permitir acompanhar uma requisição entre frontend, API e persistência quando aplicável.
+- Para o projeto de estudo, consulta local ou no VPS é suficiente; serviços pagos de observabilidade não são exigidos.
 
 ## Riscos, hipóteses e dependências
 
 ### Riscos
 - Backend desligado ou inacessível: operações dinâmicas ficam indisponíveis; o frontend deve comunicar claramente essa condição.
 - Restrições do GitHub Pages para aplicações de página única: a estratégia de roteamento deverá ser definida antes da implementação.
-- Restrições do plano da Hostinger para o runtime escolhido: validar antes de decidir a tecnologia do backend.
+- VPS da Hostinger é autogerenciado e pode gerar custo ou trabalho operacional incompatível com a preferência por serviços gratuitos; o deploy real dependerá da disponibilidade desse ambiente.
 
 ### Hipóteses que precisam ser validadas
-- A hospedagem escolhida suportará o runtime, o processo e a conexão com o banco necessários ao backend.
+- Um VPS da Hostinger com recursos adequados estará disponível quando o deploy precisar ser demonstrado.
 - GitHub Pages e backend em outro domínio poderão comunicar-se de forma segura com a configuração escolhida de autenticação e CORS.
 
 ### Dependências externas
-- [Dependência.]
+- GitHub Pages para publicação do frontend.
+- VPS da Hostinger para execução sob demanda do backend e do PostgreSQL.
+- Serviço gratuito ou mecanismo local de armazenamento de imagens ainda a definir.
 
 ### Decisões já tomadas
 - O Athena é um objeto de estudo, não um serviço que precise permanecer disponível continuamente.
@@ -506,6 +547,11 @@ Projeto mantido pelo responsável durante o período de estudo, sem compromisso 
 - O frontend será responsivo e funcional em computadores e smartphones, com apresentação moderna e minimalista.
 - A fila exibirá posição e estimativas sem identificar outros leitores.
 - A interface terá como meta WCAG 2.2 nível AA, verificada de forma automatizada e manual.
+- Cada implantação atenderá somente uma instituição, mantendo usuários, acervo, políticas e histórico isolados.
+- A interface oferecerá português do Brasil e inglês; detectará inicialmente o idioma do navegador e permitirá troca manual.
+- O projeto priorizará serviços gratuitos e testes com dados sintéticos e carga simulada.
+- A escala-alvo simulada é de 5.000 leitores, 20.000 títulos, 50.000 exemplares e 500 usuários simultâneos.
+- Serão suportadas as duas versões estáveis mais recentes de Chrome, Firefox, Edge e Safari.
 
 ## Referências
 
