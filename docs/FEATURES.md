@@ -107,3 +107,85 @@ A capacidade complementa a fila de espera e a política de antecipação por dev
 ## Resultado
 - Versão entregue: Não entregue.
 - Data: Não aplicável.
+
+---
+
+# FEATURE-002 — Recuperação autônoma de senha por e-mail
+
+## Estado
+- [x] Adiada
+
+## Origem
+- Usuário: contexto fornecido pelo responsável em 2026-08-21.
+
+## Problema ou oportunidade
+Na primeira versão, o sistema não enviará e-mails e a recuperação de acesso dependerá da assistência de um administrador.
+
+## Público beneficiado
+Leitores e administradores que esquecerem suas senhas.
+
+## Proposta
+Permitir que o usuário solicite autonomamente a recuperação da senha por meio de uma mensagem enviada ao e-mail cadastrado.
+
+## Benefício esperado
+Reduzir a dependência de administradores e permitir recuperação segura de acesso sem intervenção manual.
+
+## Alinhamento com o projeto
+A capacidade complementa a autenticação, mas depende da infraestrutura de e-mail que foi deliberadamente adiada.
+
+## Fluxo esperado
+1. O usuário informa seu e-mail ou identificador na recuperação de acesso.
+2. O sistema responde sem revelar se a conta existe.
+3. Quando aplicável, o sistema envia um token de uso único e curta duração ao e-mail cadastrado.
+4. O usuário define uma nova senha válida.
+5. O token é invalidado e as sessões anteriores aplicáveis são encerradas.
+
+## Escopo inicial
+- Solicitação de recuperação.
+- Token aleatório, de uso único e com expiração.
+- Definição de nova senha.
+- Invalidação segura do token e das sessões aplicáveis.
+
+## Fora de escopo
+- Implementação na primeira versão.
+- Escolha antecipada do provedor de e-mail.
+- Recuperação por perguntas de segurança.
+
+## Critérios iniciais de sucesso
+- A resposta pública não permite descobrir se uma conta existe.
+- Tokens expiram, são de uso único e não são armazenados em texto puro.
+- A nova senha respeita a política vigente.
+- Sessões anteriores aplicáveis são invalidadas depois da recuperação.
+
+## Dependências
+- Serviço de envio de e-mail ainda não escolhido.
+- E-mail válido e único no contexto da instituição.
+- Autenticação e gestão de sessões implementadas.
+
+## Riscos
+- Enumeração de contas.
+- Roubo ou reutilização de token.
+- Entrega atrasada ou falha do provedor de e-mail.
+
+## Impactos possíveis
+- Produto: oferece recuperação sem administrador.
+- UX/UI: exige telas de solicitação e redefinição.
+- Arquitetura: exige tokens temporários e integração de e-mail.
+- Dados: exige armazenar estado seguro e expiração da solicitação.
+- Segurança: exige limitação de frequência, respostas neutras e invalidação.
+- Desempenho: o envio não deve bloquear a resposta principal.
+- Documentação: requisitos, arquitetura, UX/UI, testes e decisões serão atualizados quando a feature for priorizada.
+
+## Documentos que precisam ser atualizados
+- Pendente até aprovação e priorização futura.
+
+## Referências
+- Review: Não aplicável; origem anterior à primeira versão.
+- Roadmap: Não incluída.
+- Requisito: Pendente.
+- Decisão: Pendente.
+- Tarefa: Pendente.
+
+## Resultado
+- Versão entregue: Não entregue.
+- Data: Não aplicável.

@@ -118,6 +118,9 @@ Facilitar o acesso dos leitores ao acervo e permitir que diferentes instituiçõ
 ### Primeira versão
 - Frontend web em React.
 - Backend com autenticação e gerenciamento de usuários.
+- Login por um único campo que aceita e-mail ou matrícula/identificador, acompanhado da senha.
+- Primeiro acesso com troca obrigatória da senha temporária criada pelo administrador.
+- Recuperação inicial de acesso assistida pelo administrador, sem envio de e-mail na primeira versão.
 - Gerenciamento de livros.
 - Gerenciamento de empréstimos de livros.
 - Gerenciamento de reservas.
@@ -141,6 +144,7 @@ Facilitar o acesso dos leitores ao acervo e permitir que diferentes instituiçõ
 ### Fora da primeira versão
 - Notificação por e-mail quando uma devolução antecipada permitir que o próximo leitor retire o exemplar antes da data reservada.
 - Central de notificações internas para eventos de antecipação e perda de prioridade.
+- Recuperação autônoma de senha por e-mail.
 
 ### Fora do projeto
 - Cobrança por empréstimo ou processamento de pagamentos.
@@ -148,6 +152,7 @@ Facilitar o acesso dos leitores ao acervo e permitir que diferentes instituiçõ
 
 ### Funcionalidades futuras conhecidas
 - Notificações internas e por e-mail vinculadas à fila de espera, à perda de prioridade e às devoluções antes do prazo.
+- Recuperação autônoma de senha por e-mail.
 
 ### Limites entre o sistema e o ambiente externo
 - O sistema controla registros e solicitações, mas a entrega e a devolução do exemplar físico ocorrem na instituição responsável pelo acervo.
@@ -181,9 +186,13 @@ Facilitar o acesso dos leitores ao acervo e permitir que diferentes instituiçõ
 ### Regras de negócio conhecidas
 - Somente leitores cadastrados por um administrador podem solicitar empréstimos.
 - O administrador cadastra o leitor com matrícula ou identificador institucional, e-mail e senha inicial.
+- A senha inicial é temporária e deve ser substituída obrigatoriamente no primeiro acesso.
+- O sistema pode sugerir uma senha inicial aleatória gerada de forma criptograficamente segura.
 - A matrícula ou o identificador institucional deve ser único dentro de cada instituição.
 - O e-mail do leitor deve ser único dentro de cada instituição.
 - O leitor pode alterar o próprio e-mail e a própria senha depois de cadastrado.
+- O formulário de login possui um único identificador, que aceita o e-mail ou a matrícula/identificador institucional, e um campo separado para a senha.
+- Enquanto o envio de e-mail não fizer parte do sistema, a recuperação de acesso é realizada com assistência do administrador e resulta em nova senha temporária.
 - Não há cobrança financeira pelo empréstimo; o direito básico decorre do cadastro do leitor na instituição.
 - Todo exemplar físico deve possuir identificação única no sistema.
 - Vários exemplares do mesmo livro devem aparecer agrupados como um único título no catálogo do leitor.
@@ -301,7 +310,7 @@ Facilitar o acesso dos leitores ao acervo e permitir que diferentes instituiçõ
 ### Técnicas
 - O frontend deve utilizar React e ser publicável no GitHub Pages.
 - O frontend deve consumir o backend por HTTPS.
-- O backend deve poder ser hospedado na Hostinger.
+- O backend deve poder ser hospedado em um VPS da Hostinger; planos Web e Cloud comuns não atendem ao runtime Python/Django escolhido.
 - A persistência deve utilizar banco de dados relacional.
 
 ### Tecnologias proibidas
@@ -310,6 +319,13 @@ Facilitar o acesso dos leitores ao acervo e permitir que diferentes instituiçõ
 ### Segurança
 - O backend deve possuir autenticação e autorização apropriadas aos tipos de usuário.
 - Segredos e credenciais do banco não podem ser expostos no frontend.
+- Senhas escolhidas pelo usuário devem possuir no mínimo 15 caracteres e o sistema deve aceitar pelo menos 64 caracteres, incluindo espaços e caracteres Unicode normalizados.
+- O sistema não deve impor combinações obrigatórias de maiúsculas, minúsculas, números e símbolos; deve bloquear senhas comuns ou conhecidas como comprometidas e oferecer medidor de força.
+- O gerador de senha deve usar fonte criptograficamente segura e pode combinar letras, números e símbolos.
+- Senhas devem ser armazenadas somente por meio do mecanismo de hash seguro do framework, nunca em texto puro ou de forma reversível.
+- Tentativas de autenticação devem possuir limitação de frequência.
+- Sessões expiram após 30 minutos de inatividade e possuem duração absoluta máxima de 8 horas, com invalidação aplicada pelo backend.
+- Logout, expiração, troca e recuperação de senha devem invalidar as sessões ou credenciais aplicáveis.
 
 ### Privacidade e dados sensíveis
 - Dados cadastrais e histórico de empréstimos dos leitores devem ser acessíveis somente de acordo com as permissões definidas.
@@ -336,8 +352,9 @@ Frontend React publicado no GitHub Pages, comunicando-se por HTTPS com um backen
 
 ### Componentes principais
 - Frontend React: interface do usuário e consumo da API.
-- Backend: autenticação, usuários, livros, empréstimos, reservas e regras de negócio.
-- Banco relacional: persistência dos dados do sistema.
+- Backend Python com Django e Django REST Framework: API, autenticação, autorização, usuários, livros, empréstimos, reservas e regras de negócio.
+- PostgreSQL acessado pelo Django ORM: persistência relacional e migrações.
+- Armazenamento de objetos ou serviço de mídia: arquivos de imagem; o banco mantém referências e metadados.
 
 ### Fluxo de dados esperado
 1. O usuário interage com o frontend.
@@ -354,12 +371,15 @@ Usuários, títulos, exemplares físicos e seus estados, calendários de funcion
 
 ### Tecnologias desejadas
 - React para o frontend, como tecnologia de estudo definida pelo responsável.
-- Banco de dados relacional para exercitar modelagem, relacionamentos e persistência transacional.
-- Tecnologia do backend: Pendente.
+- Python com Django e Django REST Framework para o backend, aproveitando a familiaridade do responsável e os recursos maduros de autenticação, administração, ORM, migrações e APIs.
+- PostgreSQL como sistema gerenciador de banco de dados relacional.
+- Django ORM para modelagem, consultas e migrações.
+- Armazenamento de objetos compatível com a infraestrutura escolhida para imagens; PostgreSQL armazena URLs, metadados e relações, não os arquivos binários por padrão.
 
 ### Ambientes e deploy
 - Frontend publicável no GitHub Pages.
-- Backend publicável na Hostinger e executado sob demanda; não há requisito de operação contínua.
+- Backend publicável em VPS da Hostinger e executado sob demanda; não há requisito de operação contínua.
+- O VPS deve executar Python/Django, PostgreSQL e os serviços necessários à API com HTTPS; a topologia operacional definitiva será formalizada em `ARCHITECTURE.md`.
 
 ## Desenvolvimento e qualidade
 
@@ -398,7 +418,7 @@ Projeto mantido pelo responsável durante o período de estudo, sem compromisso 
 - O Athena é um objeto de estudo, não um serviço que precise permanecer disponível continuamente.
 - O frontend será desenvolvido com React e deverá ser publicável no GitHub Pages.
 - O frontend acessará o backend por HTTPS.
-- O backend deverá ser hospedável na Hostinger e poderá ser executado sob demanda.
+- O backend deverá ser hospedável em VPS da Hostinger e poderá ser executado sob demanda.
 - A persistência usará banco de dados relacional.
 - A primeira versão contemplará autenticação, usuários, livros, empréstimos, reservas, fila de espera, calendário e configuração administrativa de políticas.
 - A indisponibilidade do backend deve ser informada claramente pelo frontend.
@@ -435,6 +455,13 @@ Projeto mantido pelo responsável durante o período de estudo, sem compromisso 
 - Título, autor, ISBN, editora, edição, ano, categoria, descrição e imagem principal de capa são obrigatórios; número de páginas e imagens adicionais são opcionais.
 - O leitor pode avaliar o título e o estado físico do exemplar após concluir a devolução; as médias são derivadas das avaliações individuais.
 - A escala de avaliação é de 0 a 5 estrelas; cada devolução pode gerar uma avaliação independente e avaliações enviadas não podem ser editadas.
+- O backend será desenvolvido em Python com Django e Django REST Framework, usando PostgreSQL e Django ORM.
+- O login usa um único campo para e-mail ou matrícula/identificador e um campo de senha.
+- A senha inicial é temporária e deve ser alterada no primeiro acesso.
+- Na primeira versão, recuperação de acesso é assistida pelo administrador; recuperação autônoma por e-mail fica para o futuro.
+- A política de senha prioriza comprimento mínimo de 15 caracteres, bloqueio de senhas comuns/comprometidas, suporte a gerador seguro e ausência de regras obrigatórias de composição.
+- A sessão expira após 30 minutos de inatividade ou 8 horas de duração absoluta.
+- Imagens ficam preferencialmente em armazenamento de objetos, com referências e metadados no PostgreSQL.
 
 ## Referências
 
@@ -465,11 +492,9 @@ Projeto mantido pelo responsável durante o período de estudo, sem compromisso 
 - Nenhuma identificada neste bloco no momento.
 
 ### Dúvidas técnicas
-- Qual tecnologia será utilizada no backend?
-- Qual sistema gerenciador de banco relacional será utilizado?
 - A autenticação usará cookies de sessão ou tokens enviados pelo cliente?
 - Será utilizado um domínio próprio ou o domínio padrão do GitHub Pages?
-- Qual serviço ou mecanismo armazenará as imagens, mantendo no banco relacional apenas metadados e referências?
+- Qual provedor de armazenamento de objetos será compatível com a hospedagem e o orçamento escolhidos?
 
 ## Observações adicionais
 [Contexto adicional.]
