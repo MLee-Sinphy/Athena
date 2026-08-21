@@ -124,6 +124,7 @@ Facilitar o acesso dos leitores ao acervo e permitir que diferentes instituiçõ
 - Calendário de reserva e empréstimo baseado nos dias em que a biblioteca funciona.
 - Cadastro administrativo de feriados e fechamentos excepcionais.
 - Painel administrativo para configurar intervalos mínimo e máximo, limite de empréstimos, permissões e efeitos de penalidades.
+- Configuração administrativa dos dias regulares de funcionamento, com segunda a sexta-feira como padrão inicial brasileiro.
 - Fila de espera ordenada para títulos sem exemplar disponível no período desejado.
 - Cadastro de leitores pelo administrador e alteração do próprio e-mail e senha pelo leitor.
 - Visibilidade, alteração e cancelamento de qualquer empréstimo pelo administrador.
@@ -133,6 +134,7 @@ Facilitar o acesso dos leitores ao acervo e permitir que diferentes instituiçõ
 - Tolerância configurável para retirada, com padrão inicial de 1 dia de funcionamento.
 - Reorganização da disponibilidade quando uma reserva expirar sem retirada.
 - Log persistente de auditoria das ações administrativas sobre empréstimos e configurações.
+- Avaliação opcional do título e do estado físico do exemplar pelo leitor ao concluir a devolução.
 - Persistência em banco de dados relacional.
 - Apresentação de mensagem de erro quando o frontend não conseguir acessar o backend.
 
@@ -179,6 +181,8 @@ Facilitar o acesso dos leitores ao acervo e permitir que diferentes instituiçõ
 ### Regras de negócio conhecidas
 - Somente leitores cadastrados por um administrador podem solicitar empréstimos.
 - O administrador cadastra o leitor com matrícula ou identificador institucional, e-mail e senha inicial.
+- A matrícula ou o identificador institucional deve ser único dentro de cada instituição.
+- O e-mail do leitor deve ser único dentro de cada instituição.
 - O leitor pode alterar o próprio e-mail e a própria senha depois de cadastrado.
 - Não há cobrança financeira pelo empréstimo; o direito básico decorre do cadastro do leitor na instituição.
 - Todo exemplar físico deve possuir identificação única no sistema.
@@ -189,6 +193,7 @@ Facilitar o acesso dos leitores ao acervo e permitir que diferentes instituiçõ
 - Os valores padrão do intervalo são no mínimo 3 e no máximo 15 dias de funcionamento da biblioteca.
 - Somente dias de funcionamento configurados para a biblioteca contam para determinar os intervalos permitidos.
 - O administrador pode cadastrar feriados e fechamentos excepcionais, que não contam como dias de funcionamento.
+- Por padrão, os dias regulares de funcionamento são de segunda a sexta-feira; o administrador pode alterar livremente os dias em que sua biblioteca funciona.
 - As datas de retirada e devolução devem ser definidas e respeitadas.
 - Quando não houver disponibilidade imediata, o leitor pode escolher um período futuro e participar de uma fila de espera ordenada.
 - A fila de espera deve respeitar a ordem cronológica das solicitações: quem solicita primeiro possui prioridade para reservar o período disponível.
@@ -206,6 +211,7 @@ Facilitar o acesso dos leitores ao acervo e permitir que diferentes instituiçõ
 - Antes da retirada, o leitor pode alterar as datas de retirada e devolução sem sobrepor qualquer período já confirmado para outro leitor.
 - Depois da retirada, uma renovação corresponde à alteração da data de devolução e só é permitida quando não houver outra pessoa na fila e o período resultante não ultrapassar o máximo configurado.
 - Cancelamentos realizados pelo leitor são contados em uma janela móvel de 1 mês iniciada no primeiro cancelamento relevante; a contagem reinicia ao fim dessa janela.
+- Para a regra padrão, 1 mês corresponde a uma janela exata de 30 dias contados a partir do primeiro cancelamento relevante.
 - O limite padrão é de 3 cancelamentos do leitor dentro da janela; ao ultrapassá-lo, novas solicitações ficam bloqueadas até o fim da mesma janela.
 - Cancelamentos realizados pelo administrador não entram na contagem do leitor.
 - A penalidade por cancelamentos frequentes bloqueia somente novas solicitações e preserva reservas já confirmadas.
@@ -215,6 +221,10 @@ Facilitar o acesso dos leitores ao acervo e permitir que diferentes instituiçõ
 - Cada registro de auditoria deve guardar autor, data e hora, ação, valor anterior e valor novo; a justificativa é opcional.
 - O administrador pode suspender novas reservas sem cancelar ou alterar reservas já confirmadas.
 - O administrador pode restaurar para disponível um exemplar danificado, em manutenção, perdido ou descartado, e a transição deve ser auditada.
+- Nenhuma transição de estado do exemplar exige confirmação adicional além da ação autenticada do administrador.
+- O painel administrativo deve permitir configurar: dias regulares de funcionamento; feriados e fechamentos; prazo mínimo e máximo; limite simultâneo; tolerância para retirada; punição por atraso; limite e punição por cancelamentos; permissão para renovação; e suspensão global de novas reservas.
+- Ao finalizar a devolução, o leitor pode avaliar separadamente o conteúdo do título e o estado físico do exemplar devolvido.
+- As médias devem ser derivadas das avaliações individuais: a avaliação do título compõe a média do título, enquanto a avaliação física compõe a média do exemplar específico.
 - Uma devolução antecipada pode antecipar a retirada do próximo leitor sem antecipar obrigatoriamente sua data final, constituindo exceção permitida ao período máximo normal.
 
 ### Invariantes
@@ -231,13 +241,15 @@ Facilitar o acesso dos leitores ao acervo e permitir que diferentes instituiçõ
 
 ### Dados de entrada
 - Cadastro do leitor, incluindo matrícula ou identificador institucional, e-mail e senha inicial.
-- Dados bibliográficos do título.
+- Dados obrigatórios do título: título, autor, ISBN, editora, edição, ano, categoria, descrição e imagem principal de capa.
+- Dados opcionais do título: número de páginas e imagens adicionais.
 - Código único e dados operacionais de cada exemplar físico.
 - Solicitação de empréstimo ou reserva.
 - Configurações administrativas de tolerância, penalidade, limite e demais políticas.
 - Dias regulares de funcionamento, feriados e fechamentos excepcionais.
 - Alteração ou cancelamento de reserva pelo leitor.
 - Alteração ou cancelamento de empréstimo pelo administrador, com dados necessários para auditoria.
+- Avaliações individuais do título e do estado físico do exemplar, vinculadas ao leitor e à devolução concluída.
 
 ### Resultados e saídas
 - Catálogo de títulos e sua disponibilidade para o leitor.
@@ -249,6 +261,7 @@ Facilitar o acesso dos leitores ao acervo e permitir que diferentes instituiçõ
 - Histórico consultável das alterações administrativas.
 - Registro de envio, leitura, aceite e recusa das notificações.
 - Estado operacional do exemplar: disponível, reservado, emprestado, danificado, em manutenção, perdido ou descartado.
+- Média das avaliações do título e média das avaliações do estado físico de cada exemplar.
 
 ## Experiência e interface
 
@@ -262,8 +275,9 @@ Facilitar o acesso dos leitores ao acervo e permitir que diferentes instituiçõ
 1. [Etapa.]
 
 ### Informações que precisam estar visíveis
-- Para o leitor: título, disponibilidade agregada, calendário e datas confirmadas, sem necessidade de exibir o código único de cada exemplar.
+- Para o leitor: dados bibliográficos, disponibilidade agregada, calendário, datas confirmadas e média de avaliação do título, sem necessidade de exibir o código único de cada exemplar.
 - Para o administrador: título, exemplares individuais, códigos únicos, estado e empréstimo associado.
+- Para o administrador: avaliações e média do estado físico de cada exemplar.
 - Para o administrador: painel das políticas vigentes e controles para alterar ou cancelar empréstimos.
 
 ### Estados importantes da interface
@@ -330,10 +344,10 @@ Frontend React publicado no GitHub Pages, comunicando-se por HTTPS com um backen
 5. O frontend apresenta o resultado ou uma mensagem de indisponibilidade quando não conseguir acessar o backend.
 
 ### Persistência
-Usuários, títulos, exemplares físicos e seus estados, calendários de funcionamento, feriados, fechamentos excepcionais, políticas configuráveis, penalidades, empréstimos, reservas, posições da fila de espera, notificações e registros de auditoria devem persistir em banco de dados relacional. Um título pode possuir vários exemplares, e cada exemplar deve possuir identificação única. Política de retenção: Pendente.
+Usuários, títulos, exemplares físicos e seus estados, calendários de funcionamento, feriados, fechamentos excepcionais, políticas configuráveis, penalidades, empréstimos, reservas, posições da fila de espera, avaliações individuais, notificações e registros de auditoria devem persistir em banco de dados relacional. Um título pode possuir vários exemplares, e cada exemplar deve possuir identificação única. As avaliações individuais são a fonte de verdade; suas médias podem ser calculadas sob demanda ou mantidas como dados derivados, sem substituir o histórico. Política de retenção: Pendente.
 
 ### Integrações externas
-- [Serviço e finalidade.]
+- Armazenamento de imagens: serviço ou mecanismo ainda pendente; preferencialmente os arquivos ficam fora do banco relacional e o banco armazena metadados e URLs.
 
 ### Tecnologias desejadas
 - React para o frontend, como tecnologia de estudo definida pelo responsável.
@@ -413,6 +427,10 @@ Projeto mantido pelo responsável durante o período de estudo, sem compromisso 
 - Notificações futuras registrarão envio, leitura, aceite e recusa.
 - A auditoria registra autor, data e hora, ação, valor anterior e novo; justificativa é opcional.
 - Exemplares podem transitar entre disponível, reservado, emprestado, danificado, em manutenção, perdido e descartado, inclusive retornar de qualquer desses estados por ação administrativa.
+- Os dias de funcionamento padrão são segunda a sexta-feira, mas podem ser alterados pelo administrador.
+- Matrícula ou identificador e e-mail são únicos dentro de cada instituição.
+- Título, autor, ISBN, editora, edição, ano, categoria, descrição e imagem principal de capa são obrigatórios; número de páginas e imagens adicionais são opcionais.
+- O leitor pode avaliar o título e o estado físico do exemplar após concluir a devolução; as médias são derivadas das avaliações individuais.
 
 ## Referências
 
@@ -440,15 +458,16 @@ Projeto mantido pelo responsável durante o período de estudo, sem compromisso 
 - Nenhuma identificada até o momento.
 
 ### Dúvidas de produto
-- Quais controles exatos estarão disponíveis na primeira versão do painel de políticas?
-- Quais transições de estado de exemplar exigirão confirmação adicional do administrador?
-- A janela móvel de cancelamentos deve ser calculada por mês de calendário correspondente ou por uma quantidade exata de dias?
+- Qual escala será utilizada nas avaliações do título e do estado físico: de 0 a 1, de 1 a 5 estrelas ou outra?
+- O leitor poderá editar uma avaliação depois de enviá-la?
+- Uma devolução permite somente uma avaliação por leitor ou versões sucessivas com histórico?
 
 ### Dúvidas técnicas
 - Qual tecnologia será utilizada no backend?
 - Qual sistema gerenciador de banco relacional será utilizado?
 - A autenticação usará cookies de sessão ou tokens enviados pelo cliente?
 - Será utilizado um domínio próprio ou o domínio padrão do GitHub Pages?
+- Qual serviço ou mecanismo armazenará as imagens, mantendo no banco relacional apenas metadados e referências?
 
 ## Observações adicionais
 [Contexto adicional.]
