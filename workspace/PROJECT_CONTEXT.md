@@ -309,6 +309,7 @@ Facilitar o acesso dos leitores ao acervo e permitir que diferentes instituiçõ
 
 ### Técnicas
 - O frontend deve utilizar React e ser publicável no GitHub Pages.
+- O frontend utilizará o endereço padrão do GitHub Pages, sem domínio próprio na primeira versão.
 - O frontend deve consumir o backend por HTTPS.
 - O backend deve poder ser hospedado em um VPS da Hostinger; planos Web e Cloud comuns não atendem ao runtime Python/Django escolhido.
 - A persistência deve utilizar banco de dados relacional.
@@ -326,6 +327,11 @@ Facilitar o acesso dos leitores ao acervo e permitir que diferentes instituiçõ
 - Tentativas de autenticação devem possuir limitação de frequência.
 - Sessões expiram após 30 minutos de inatividade e possuem duração absoluta máxima de 8 horas, com invalidação aplicada pelo backend.
 - Logout, expiração, troca e recuperação de senha devem invalidar as sessões ou credenciais aplicáveis.
+- Depois do login, o backend emite um token bearer opaco, aleatório, de curta duração e revogável; o frontend o envia no cabeçalho `Authorization` das requisições autenticadas.
+- O token deve permanecer somente na memória do frontend e não pode ser persistido em `localStorage`, `sessionStorage` ou armazenamento equivalente.
+- O backend deve armazenar somente uma representação segura do token, nunca seu valor reutilizável em texto puro.
+- Atualizar, fechar ou reabrir o frontend pode exigir novo login, pois não haverá credencial persistente no navegador.
+- CORS deve permitir somente a origem exata do frontend publicado no GitHub Pages e os métodos e cabeçalhos necessários.
 
 ### Privacidade e dados sensíveis
 - Dados cadastrais e histórico de empréstimos dos leitores devem ser acessíveis somente de acordo com as permissões definidas.
@@ -357,11 +363,13 @@ Frontend React publicado no GitHub Pages, comunicando-se por HTTPS com um backen
 - Armazenamento de objetos ou serviço de mídia: arquivos de imagem; o banco mantém referências e metadados.
 
 ### Fluxo de dados esperado
-1. O usuário interage com o frontend.
-2. O frontend envia uma requisição HTTPS ao backend.
-3. O backend autentica e autoriza a operação, aplica regras de negócio e acessa o banco quando necessário.
-4. O backend devolve uma resposta ao frontend.
-5. O frontend apresenta o resultado ou uma mensagem de indisponibilidade quando não conseguir acessar o backend.
+1. O usuário informa e-mail ou matrícula/identificador e senha no frontend.
+2. O frontend envia as credenciais ao backend exclusivamente por HTTPS.
+3. O backend valida o login e devolve um token bearer opaco e revogável.
+4. O frontend mantém o token somente em memória e o envia no cabeçalho `Authorization` das requisições autenticadas.
+5. O backend valida o token, autentica e autoriza a operação, aplica regras de negócio e acessa o banco quando necessário.
+6. O backend devolve uma resposta ao frontend.
+7. O frontend apresenta o resultado ou uma mensagem de indisponibilidade quando não conseguir acessar o backend.
 
 ### Persistência
 Usuários, títulos, exemplares físicos e seus estados, calendários de funcionamento, feriados, fechamentos excepcionais, políticas configuráveis, penalidades, empréstimos, reservas, posições da fila de espera, avaliações individuais, notificações e registros de auditoria devem persistir em banco de dados relacional. Um título pode possuir vários exemplares, e cada exemplar deve possuir identificação única. As avaliações individuais são a fonte de verdade; suas médias podem ser calculadas sob demanda ou mantidas como dados derivados, sem substituir o histórico. Política de retenção: Pendente.
@@ -462,6 +470,10 @@ Projeto mantido pelo responsável durante o período de estudo, sem compromisso 
 - A política de senha prioriza comprimento mínimo de 15 caracteres, bloqueio de senhas comuns/comprometidas, suporte a gerador seguro e ausência de regras obrigatórias de composição.
 - A sessão expira após 30 minutos de inatividade ou 8 horas de duração absoluta.
 - Imagens ficam preferencialmente em armazenamento de objetos, com referências e metadados no PostgreSQL.
+- O frontend usará o endereço padrão do GitHub Pages na primeira versão.
+- A autenticação entre os domínios usará token bearer opaco e revogável, mantido somente na memória do React e enviado no cabeçalho `Authorization`.
+- Tokens não serão persistidos no armazenamento do navegador; recarregar ou reabrir a aplicação pode exigir novo login.
+- CORS aceitará somente a origem exata do frontend publicado.
 
 ## Referências
 
@@ -492,8 +504,6 @@ Projeto mantido pelo responsável durante o período de estudo, sem compromisso 
 - Nenhuma identificada neste bloco no momento.
 
 ### Dúvidas técnicas
-- A autenticação usará cookies de sessão ou tokens enviados pelo cliente?
-- Será utilizado um domínio próprio ou o domínio padrão do GitHub Pages?
 - Qual provedor de armazenamento de objetos será compatível com a hospedagem e o orçamento escolhidos?
 
 ## Observações adicionais
