@@ -96,6 +96,7 @@ Leitores e administradores utilizam uma aplicação web vinculada ao acervo fís
 
 ### Limitações e necessidades de acessibilidade
 - A interface deve permanecer compreensível, operável e visualmente consistente em computadores e dispositivos móveis.
+- O produto deve buscar conformidade com WCAG 2.2 nível AA.
 
 ## Proposta
 
@@ -318,7 +319,18 @@ Facilitar o acesso dos leitores ao acervo e permitir que diferentes instituiçõ
 - A experiência responsiva é requisito fundamental; nenhuma função essencial pode existir apenas em um dos contextos.
 
 ### Acessibilidade
-- [Expectativa.]
+- Conformidade planejada com WCAG 2.2 nível AA.
+- Navegação completa por teclado, sem armadilhas de foco.
+- Ordem de foco lógica e indicador de foco sempre visível e não encoberto.
+- Contraste de texto e componentes compatível com os critérios aplicáveis do nível AA.
+- Estrutura semântica, nomes, funções, estados e mensagens compreensíveis por leitores de tela.
+- Textos alternativos para imagens informativas, incluindo capas quando necessário ao contexto.
+- Formulários com rótulos, instruções e mensagens de erro identificáveis e acionáveis.
+- Áreas de toque adequadas em dispositivos móveis.
+- Interface utilizável com zoom, redimensionamento e reorganização do conteúdo.
+- Respeito à preferência por movimento reduzido e ausência de animações indispensáveis à compreensão.
+- Autenticação compatível com gerenciadores de senha, preenchimento automático e colagem.
+- A conformidade deve ser verificada por testes automatizados e revisão manual.
 
 ## Restrições
 
@@ -365,7 +377,8 @@ Facilitar o acesso dos leitores ao acervo e permitir que diferentes instituiçõ
 - [Meta ou volume.]
 
 ### Compatibilidade
-- [Sistema, navegador ou dispositivo.]
+- Navegadores modernos com suporte ativo em computadores e smartphones.
+- Tecnologias assistivas compatíveis com os padrões semânticos da Web.
 
 ## Arquitetura imaginada
 
@@ -492,6 +505,7 @@ Projeto mantido pelo responsável durante o período de estudo, sem compromisso 
 - CORS aceitará somente a origem exata do frontend publicado.
 - O frontend será responsivo e funcional em computadores e smartphones, com apresentação moderna e minimalista.
 - A fila exibirá posição e estimativas sem identificar outros leitores.
+- A interface terá como meta WCAG 2.2 nível AA, verificada de forma automatizada e manual.
 
 ## Referências
 
