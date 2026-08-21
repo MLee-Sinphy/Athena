@@ -89,13 +89,13 @@ Leitores cadastrados pela instituição, incluindo alunos, universitários, clie
 - Administradores precisam configurar as regras que determinam prazos, limites, permissões, penalidades e demais condições de empréstimo.
 
 ### Contexto de uso
-Leitores e administradores utilizam uma aplicação web vinculada ao acervo físico da instituição.
+Leitores e administradores utilizam uma aplicação web vinculada ao acervo físico da instituição, tanto em computadores quanto em dispositivos móveis.
 
 ### Conhecimento esperado
 [Conhecimento prévio.]
 
 ### Limitações e necessidades de acessibilidade
-- [Necessidade.]
+- A interface deve permanecer compreensível, operável e visualmente consistente em computadores e dispositivos móveis.
 
 ## Proposta
 
@@ -122,6 +122,7 @@ Facilitar o acesso dos leitores ao acervo e permitir que diferentes instituiçõ
 - Primeiro acesso com troca obrigatória da senha temporária criada pelo administrador.
 - Recuperação inicial de acesso assistida pelo administrador, sem envio de e-mail na primeira versão.
 - Gerenciamento de livros.
+- Pesquisa textual por título, autor, ISBN, categoria, descrição e palavras-chave, acompanhada de filtros do catálogo.
 - Gerenciamento de empréstimos de livros.
 - Gerenciamento de reservas.
 - Calendário de reserva e empréstimo baseado nos dias em que a biblioteca funciona.
@@ -250,6 +251,7 @@ Facilitar o acesso dos leitores ao acervo e permitir que diferentes instituiçõ
 - Registros de auditoria não podem ser alterados ou apagados por operações administrativas comuns.
 - Um empréstimo retirado não pode ter sua data de início modificada pelo leitor.
 - A prorrogação de um empréstimo retirado não pode prejudicar uma pessoa já presente na fila.
+- A visualização da fila pelo leitor não pode revelar nome, matrícula, e-mail ou qualquer outro dado que identifique as demais pessoas.
 
 ### Dados de entrada
 - Cadastro do leitor, incluindo matrícula ou identificador institucional, e-mail e senha inicial.
@@ -265,6 +267,7 @@ Facilitar o acesso dos leitores ao acervo e permitir que diferentes instituiçõ
 
 ### Resultados e saídas
 - Catálogo de títulos e sua disponibilidade para o leitor.
+- Resultados de pesquisa textual e filtros por título, autor, ISBN, categoria, descrição, palavras-chave, disponibilidade, avaliação e ano.
 - Decisão de aprovação ou recusa da solicitação conforme as regras configuradas.
 - Associação entre leitor, período reservado, empréstimo e exemplar físico específico.
 - Visão administrativa do estado de cada exemplar.
@@ -278,16 +281,26 @@ Facilitar o acesso dos leitores ao acervo e permitir que diferentes instituiçõ
 ## Experiência e interface
 
 ### Experiência desejada
-- [Qualidade.]
+- Moderna, minimalista e visualmente bela.
+- Clara, responsiva e eficiente, sem elementos decorativos que prejudiquem o uso.
+- Consistente entre computadores e dispositivos móveis.
 
 ### Experiência que deve ser evitada
-- [Atrito.]
+- Interface visualmente carregada, com excesso de animações, adornos ou informações sem hierarquia.
+- Experiência incompleta ou difícil de usar em telas móveis.
+- Exposição de identidade ou dados de outros leitores em filas, reservas ou empréstimos.
 
 ### Jornada principal do usuário
-1. [Etapa.]
+1. O leitor autentica-se pelo campo de e-mail ou matrícula e senha.
+2. Pesquisa ou filtra o catálogo por título, autor, ISBN, categoria, descrição, palavra-chave, disponibilidade, avaliação ou ano.
+3. Abre os detalhes de um título, consulta descrição, avaliação, disponibilidade e calendário.
+4. Escolhe um período válido e solicita a reserva.
+5. Acompanha confirmação, posição na fila, datas estimadas, empréstimos, devoluções e eventuais penalidades sem visualizar dados de outros leitores.
+6. Depois da devolução, pode avaliar o título e o estado físico do exemplar.
 
 ### Informações que precisam estar visíveis
 - Para o leitor: dados bibliográficos, disponibilidade agregada, calendário, datas confirmadas e média de avaliação do título, sem necessidade de exibir o código único de cada exemplar.
+- Para o leitor: sua posição na fila e datas estimadas, sem nome, matrícula, e-mail ou qualquer identificador das demais pessoas.
 - Para o administrador: título, exemplares individuais, códigos únicos, estado e empréstimo associado.
 - Para o administrador: avaliações e média do estado físico de cada exemplar.
 - Para o administrador: painel das políticas vigentes e controles para alterar ou cancelar empréstimos.
@@ -300,7 +313,9 @@ Facilitar o acesso dos leitores ao acervo e permitir que diferentes instituiçõ
 - Backend indisponível.
 
 ### Dispositivos e tamanhos de tela
-- [Dispositivo.]
+- Computadores desktop e notebooks.
+- Smartphones.
+- A experiência responsiva é requisito fundamental; nenhuma função essencial pode existir apenas em um dos contextos.
 
 ### Acessibilidade
 - [Expectativa.]
@@ -335,6 +350,7 @@ Facilitar o acesso dos leitores ao acervo e permitir que diferentes instituiçõ
 
 ### Privacidade e dados sensíveis
 - Dados cadastrais e histórico de empréstimos dos leitores devem ser acessíveis somente de acordo com as permissões definidas.
+- Posições e estimativas da fila devem ser apresentadas sem revelar a identidade ou os dados pessoais dos outros leitores.
 
 ### Legais e regulatórias
 - [Restrição.]
@@ -474,6 +490,8 @@ Projeto mantido pelo responsável durante o período de estudo, sem compromisso 
 - A autenticação entre os domínios usará token bearer opaco e revogável, mantido somente na memória do React e enviado no cabeçalho `Authorization`.
 - Tokens não serão persistidos no armazenamento do navegador; recarregar ou reabrir a aplicação pode exigir novo login.
 - CORS aceitará somente a origem exata do frontend publicado.
+- O frontend será responsivo e funcional em computadores e smartphones, com apresentação moderna e minimalista.
+- A fila exibirá posição e estimativas sem identificar outros leitores.
 
 ## Referências
 
