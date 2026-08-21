@@ -225,6 +225,9 @@ Facilitar o acesso dos leitores ao acervo e permitir que diferentes instituiçõ
 - O painel administrativo deve permitir configurar: dias regulares de funcionamento; feriados e fechamentos; prazo mínimo e máximo; limite simultâneo; tolerância para retirada; punição por atraso; limite e punição por cancelamentos; permissão para renovação; e suspensão global de novas reservas.
 - Ao finalizar a devolução, o leitor pode avaliar separadamente o conteúdo do título e o estado físico do exemplar devolvido.
 - As médias devem ser derivadas das avaliações individuais: a avaliação do título compõe a média do título, enquanto a avaliação física compõe a média do exemplar específico.
+- As duas avaliações usam escala de 0 a 5 estrelas.
+- Cada devolução concluída permite uma nova avaliação independente do título e do exemplar pelo leitor responsável pelo empréstimo.
+- Uma avaliação enviada não pode ser editada pelo leitor.
 - Uma devolução antecipada pode antecipar a retirada do próximo leitor sem antecipar obrigatoriamente sua data final, constituindo exceção permitida ao período máximo normal.
 
 ### Invariantes
@@ -431,6 +434,7 @@ Projeto mantido pelo responsável durante o período de estudo, sem compromisso 
 - Matrícula ou identificador e e-mail são únicos dentro de cada instituição.
 - Título, autor, ISBN, editora, edição, ano, categoria, descrição e imagem principal de capa são obrigatórios; número de páginas e imagens adicionais são opcionais.
 - O leitor pode avaliar o título e o estado físico do exemplar após concluir a devolução; as médias são derivadas das avaliações individuais.
+- A escala de avaliação é de 0 a 5 estrelas; cada devolução pode gerar uma avaliação independente e avaliações enviadas não podem ser editadas.
 
 ## Referências
 
@@ -458,9 +462,7 @@ Projeto mantido pelo responsável durante o período de estudo, sem compromisso 
 - Nenhuma identificada até o momento.
 
 ### Dúvidas de produto
-- Qual escala será utilizada nas avaliações do título e do estado físico: de 0 a 1, de 1 a 5 estrelas ou outra?
-- O leitor poderá editar uma avaliação depois de enviá-la?
-- Uma devolução permite somente uma avaliação por leitor ou versões sucessivas com histórico?
+- Nenhuma identificada neste bloco no momento.
 
 ### Dúvidas técnicas
 - Qual tecnologia será utilizada no backend?
