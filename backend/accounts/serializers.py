@@ -38,3 +38,25 @@ class PasswordResetSerializer(serializers.Serializer):
     def validate_temporary_password(self, value):
         validate_password(value)
         return value
+
+
+class ReaderCreateSerializer(serializers.ModelSerializer):
+    temporary_password = serializers.CharField(trim_whitespace=False, write_only=True)
+
+    class Meta:
+        model = get_user_model()
+        fields = ("id", "email", "registration_id", "temporary_password")
+        read_only_fields = ("id",)
+
+    def validate_email(self, value):
+        if get_user_model().objects.filter(email__iexact=value).exists():
+            raise serializers.ValidationError("This email address is already in use.")
+        return value
+
+    def validate_temporary_password(self, value):
+        validate_password(value)
+        return value
+
+    def create(self, validated_data):
+        password = validated_data.pop("temporary_password")
+        return get_user_model().objects.create_user(password=password, **validated_data)

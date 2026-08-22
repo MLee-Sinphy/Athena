@@ -15,6 +15,7 @@ from .serializers import (
     PasswordChangeSerializer,
     PasswordResetSerializer,
     ProfileSerializer,
+    ReaderCreateSerializer,
 )
 
 INVALID_CREDENTIALS = {"detail": "Invalid identifier or password."}
@@ -100,3 +101,13 @@ class PasswordResetView(APIView):
         target.save(update_fields=["password", "must_change_password", "updated_at"])
         revoke_user_tokens(target)
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class ReaderCreateView(APIView):
+    permission_classes = [AdministratorOnly]
+
+    def post(self, request):
+        serializer = ReaderCreateSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)

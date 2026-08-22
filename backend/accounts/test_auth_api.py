@@ -174,6 +174,32 @@ class FirstAccessAndRecoveryTests(APITestCase):
         self.user.refresh_from_db()
         self.assertTrue(self.user.must_change_password)
 
+    def test_only_administrator_can_create_a_reader_with_temporary_password(self):
+        admin = get_user_model().objects.create_superuser(
+            email="admin-create@example.com",
+            registration_id="ADMIN-002",
+            password="an administrative passphrase",
+        )
+        reader_token = self.login(self.user, self.old_password).data["access_token"]
+        self.authorize(reader_token)
+        payload = {
+            "email": "new-reader@example.com",
+            "registration_id": "NEW-001",
+            "temporary_password": "a new temporary passphrase",
+        }
+        forbidden = self.client.post("/api/v1/admin/users/", payload, format="json")
+
+        self.client.credentials()
+        self.authorize(self.login(admin, "an administrative passphrase").data["access_token"])
+        created = self.client.post("/api/v1/admin/users/", payload, format="json")
+
+        self.assertEqual(forbidden.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(created.status_code, status.HTTP_201_CREATED)
+        new_reader = get_user_model().objects.get(registration_id="NEW-001")
+        self.assertEqual(new_reader.role, UserRole.READER)
+        self.assertTrue(new_reader.must_change_password)
+        self.assertTrue(new_reader.check_password(payload["temporary_password"]))
+
     def test_reader_role_cannot_be_supplied_by_client_as_administrator(self):
         self.user.must_change_password = False
         self.user.save(update_fields=["must_change_password"])
