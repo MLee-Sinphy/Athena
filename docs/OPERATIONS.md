@@ -11,7 +11,19 @@ make app-up
 ATHENA_DEMO_PASSWORD='<senha forte mantida fora do Git>' make demo-seed
 ```
 
-`app-up` constrói e inicia PostgreSQL e API, executa migrações e aguarda os healthchecks. O seed é idempotente, cria `mlee.admin@proton.me` (`ADM-001`), `mlee.student@proton.me` (`ALU-000001`), oito títulos reais e 25 exemplares; `--enrich-open-library` consulta metadados em baixo volume e as capas continuam externas.
+`app-up` constrói e inicia PostgreSQL e API, executa migrações e aguarda os healthchecks. O seed é idempotente, cria `mlee.admin@proton.me` (`ADM-001`, `+5500000000001`), `mlee.student@proton.me` (`ALU-000001`, `+5500000000002`), oito títulos reais e 25 exemplares; os telefones são deliberadamente sintéticos. `--enrich-open-library` consulta metadados em baixo volume e as capas continuam externas.
+
+O ambiente demonstrativo publicado usa `https://athena.179-197-79-149.sslip.io/api/v1`. Quando os containers forem interrompidos, o Pages permanece disponível e apresenta o estado de serviço indisponível.
+
+No VPS, as credenciais de teste ficam em `.env.demo` e os segredos dos serviços em `.env.production`; ambos são ignorados pelo Git e devem permanecer com permissão `600`. O ambiente HTTPS publicado é controlado por:
+
+```bash
+docker compose -f compose.production.yaml up -d --build
+docker compose -f compose.production.yaml stop
+docker compose -f compose.production.yaml down
+```
+
+`stop` preserva tudo para retomada rápida. `down` remove os contêineres e a rede, mas preserva os volumes e os dados. A destruição deliberada do banco exige `docker compose -f compose.production.yaml down --volumes` e não deve ser usada apenas para interromper o serviço.
 
 - `make app-logs`: acompanha API e banco.
 - `make app-stop`: para os contêineres, preservando contêineres e dados.

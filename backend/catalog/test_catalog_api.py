@@ -126,10 +126,12 @@ class DemoDataCommandTests(TestCase):
             call_command("seed_demo_data", verbosity=0)
 
         admin = get_user_model().objects.get(email="mlee.admin@proton.me")
+        self.assertEqual(admin.whatsapp_number, "+5500000000001")
         student = get_user_model().objects.get(email="mlee.student@proton.me")
         self.assertEqual(admin.registration_id, "ADM-001")
         self.assertEqual(admin.role, "administrator")
         self.assertEqual(student.registration_id, "ALU-000001")
+        self.assertEqual(student.whatsapp_number, "+5500000000002")
         self.assertEqual(student.role, "reader")
         self.assertTrue(admin.check_password("Valid-demo-passphrase!42"))
         self.assertTrue(student.check_password("Valid-demo-passphrase!42"))
