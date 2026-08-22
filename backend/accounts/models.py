@@ -1,5 +1,6 @@
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.core.validators import RegexValidator
 from django.db import models
 from django.db.models.functions import Lower
 
@@ -44,6 +45,16 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     registration_id = models.CharField(max_length=100, unique=True)
+    whatsapp_number = models.CharField(
+        max_length=16,
+        blank=True,
+        validators=[
+            RegexValidator(
+                regex=r"^\+[1-9]\d{7,14}$",
+                message="Use international format, for example +5511999999999.",
+            )
+        ],
+    )
     role = models.CharField(max_length=20, choices=UserRole, default=UserRole.READER)
     must_change_password = models.BooleanField(default=True)
     is_active = models.BooleanField(default=True)
@@ -59,6 +70,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     class Meta:
         constraints = [
             models.UniqueConstraint(Lower("email"), name="accounts_user_email_ci_unique"),
+            models.UniqueConstraint(
+                fields=["whatsapp_number"],
+                condition=~models.Q(whatsapp_number=""),
+                name="accounts_user_whatsapp_nonempty_unique",
+            ),
         ]
         ordering = ["email"]
 

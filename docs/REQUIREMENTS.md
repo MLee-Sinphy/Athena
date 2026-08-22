@@ -19,13 +19,13 @@ Leitor ou administrador.
 ### Atores secundários
 Administrador, na criação e recuperação assistida.
 ### Objetivo
-Entrar com e-mail ou matrícula, trocar senha temporária e manter credenciais próprias.
+Entrar com e-mail, matrícula ou WhatsApp opcional, trocar senha temporária e manter credenciais próprias.
 ### Pré-condições
 Conta criada pelo administrador.
 ### Gatilho
 Usuário abre o login ou uma função de credenciais.
 ### Fluxo principal
-1. Informa identificador e senha. 2. Sistema valida e cria sessão. 3. Se a senha for temporária, exige troca antes das demais funções.
+1. Seleciona acesso de aluno ou administrador. 2. Informa identificador e senha. 3. Sistema valida também a correspondência do perfil e cria sessão. 4. Se a senha for temporária, exige troca antes das demais funções.
 ### Fluxos alternativos
 Administrador redefine o acesso com nova senha temporária; usuário autenticado altera e-mail ou senha.
 ### Exceções
@@ -275,21 +275,21 @@ REQ-NF-001, REQ-NF-009.
 
 # Requisitos funcionais
 
-## REQ-F-001 — Autenticar por e-mail ou matrícula
+## REQ-F-001 — Autenticar por e-mail, matrícula ou WhatsApp
 ### Estado
 Aprovado.
 ### Descrição
-Validar um único identificador e senha e emitir sessão segura.
+Validar perfil escolhido, um único identificador e senha e emitir sessão segura.
 ### Objetivo
 Oferecer acesso uniforme aos dois perfis.
 ### Pré-condições
 Conta existente.
 ### Entradas
-Identificador e senha.
+Perfil de acesso, identificador e senha.
 ### Saídas
 Sessão ou erro neutro.
 ### Critérios de aceitação
-- Ambos os identificadores funcionam; credencial inválida não revela existência da conta; limitação de tentativas é aplicada.
+- Os três identificadores funcionam quando cadastrados; WhatsApp informado é único e usa formato internacional; perfil divergente é rejeitado como credencial inválida; a falha não revela existência da conta; limitação de tentativas é aplicada.
 ### Casos de uso relacionados
 UC-001.
 ### Regras de negócio aplicáveis
@@ -313,9 +313,9 @@ RULE-001, RULE-002.
 ### Estado
 Aprovado.
 ### Descrição
-Permitir alteração de e-mail e senha e logout.
+Permitir alteração de e-mail, WhatsApp opcional, senha e logout.
 ### Critérios de aceitação
-- Unicidade é validada; troca de senha e logout invalidam sessões aplicáveis.
+- Unicidade é validada; WhatsApp vazio é aceito e, quando informado, usa formato internacional; troca de senha e logout invalidam sessões aplicáveis.
 ### Casos de uso relacionados
 UC-001.
 
@@ -326,6 +326,7 @@ Aprovado.
 Exibir cada título uma vez, com disponibilidade agregada e detalhes bibliográficos.
 ### Critérios de aceitação
 - Códigos internos não aparecem na listagem; dados de outros leitores nunca aparecem.
+- Capas com ISBN podem ser carregadas pelo navegador diretamente da Open Library; falha externa usa mídia local ou placeholder sem impedir o catálogo.
 ### Casos de uso relacionados
 UC-002.
 

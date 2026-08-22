@@ -4,6 +4,23 @@
 
 A API escreve logs JSON em `stdout` com método, caminho, status, duração e UUID de correlação. O mesmo UUID retorna em `X-Request-ID`. Tokens, corpos, senhas e dados pessoais não são registrados. Os logs podem ser consultados com `docker compose -f compose.production.yaml logs api`.
 
+## Docker sob demanda no servidor
+
+```bash
+make app-up
+ATHENA_DEMO_PASSWORD='<senha forte mantida fora do Git>' make demo-seed
+```
+
+`app-up` constrói e inicia PostgreSQL e API, executa migrações e aguarda os healthchecks. O seed é idempotente, cria `mlee.admin@proton.me` (`ADM-001`), `mlee.student@proton.me` (`ALU-000001`), oito títulos reais e 25 exemplares; `--enrich-open-library` consulta metadados em baixo volume e as capas continuam externas.
+
+- `make app-logs`: acompanha API e banco.
+- `make app-stop`: para os contêineres, preservando contêineres e dados.
+- `make app-down`: remove contêineres e rede, preservando os volumes.
+- `make app-up`: recria e retoma usando os mesmos dados.
+- `ATHENA_DESTROY_CONFIRM=destroy-athena-data make app-destroy`: remove contêineres, rede e volumes; apaga definitivamente banco e mídia local.
+
+Não use `app-destroy` para apenas economizar recursos; `app-stop` ou `app-down` são suficientes. A senha demonstrativa é uma configuração do ambiente e nunca deve ser versionada.
+
 ## Backup
 
 `scripts/backup.sh DIRETORIO` produz um pacote AES-256-CBC criptografado contendo dump PostgreSQL, mídia e checksums SHA-256. A senha vem somente de `ATHENA_BACKUP_PASSPHRASE`. Execuções diárias retêm sete dias; a execução de domingo é semanal e fica quatro semanas. O diretório deve ser sincronizado para armazenamento criptografado fora do VPS.

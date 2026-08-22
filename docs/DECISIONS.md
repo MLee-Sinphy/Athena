@@ -199,3 +199,36 @@ Volume medido justificar data warehouse ou projeções persistentes.
 Nenhuma.
 ## Substituída por
 Nenhuma.
+
+# DECISION-007 — Open Library para enriquecimento e capas externas
+## Estado
+Aprovada.
+## Data
+2026-08-22.
+## Responsável
+Lee.
+## Contexto
+O catálogo demonstrativo precisa de dados realistas sem aumentar desnecessariamente o banco e o volume de mídia.
+## Problema
+Obter metadados e capas mantendo o backend sob demanda e leve.
+## Decisão
+Usar a API pública da Open Library em importações identificadas e de baixo volume. Persistir somente metadados essenciais e URL da fonte; o frontend carrega capas diretamente pelo ISBN, com fallback local.
+## Motivação
+Serviço gratuito e alinhado a bibliotecas/educação, menor uso de armazenamento e seed realista.
+## Alternativas consideradas
+Google Books com chave, upload de todas as capas e armazenamento binário no PostgreSQL.
+## Consequências
+### Positivas
+Menor backup e tráfego do backend; dados demonstrativos mais realistas.
+### Negativas
+Capas dependem de um serviço externo e podem variar ou faltar.
+### Riscos
+Rate limit, indisponibilidade e metadados de edições divergentes; curadoria local e fallback permanecem obrigatórios.
+## Documentos afetados
+`ARCHITECTURE.md`, `REQUIREMENTS.md`, `UX_UI.md`, `OPERATIONS.md`.
+## Critério para revisar esta decisão
+Uso comercial, alto volume, exigência de controle integral das imagens ou mudança das diretrizes da Open Library.
+## Substitui
+Nenhuma.
+## Substituída por
+Nenhuma.

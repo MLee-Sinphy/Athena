@@ -14,7 +14,12 @@ export function AdminDashboard({ text, theme, setTheme, onLogout }: Props) {
   async function readerSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const data = new FormData(event.currentTarget)
-    await createReader(String(data.get('email')), String(data.get('registration')), String(data.get('password')))
+    await createReader(
+      String(data.get('email')),
+      String(data.get('registration')),
+      String(data.get('password')),
+      String(data.get('whatsapp')),
+    )
     event.currentTarget.reset(); setMessage(text.success)
   }
 
@@ -62,6 +67,7 @@ export function AdminDashboard({ text, theme, setTheme, onLogout }: Props) {
       </form><form className="panel" onSubmit={readerSubmit}><h2>{text.createReader}</h2>
         <label>{text.email}<input name="email" type="email" required /></label>
         <label>{text.registration}<input name="registration" required /></label>
+        <label>{text.whatsapp}<input name="whatsapp" type="tel" placeholder="+5511999999999" /></label>
         <label>{text.temporaryPassword}<input name="password" type="password" minLength={15} required /></label>
         <button type="submit">{text.save}</button></form>
       <form className="panel" onSubmit={policySubmit}><h2>{text.policy}</h2>

@@ -23,6 +23,7 @@ class BookTitle(models.Model):
     cover = models.FileField(upload_to="covers/")
     isbn = models.CharField(max_length=20, blank=True)
     page_count = models.PositiveIntegerField(null=True, blank=True)
+    metadata_source_url = models.URLField(blank=True)
     tags = models.ManyToManyField(Tag, blank=True, related_name="titles")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

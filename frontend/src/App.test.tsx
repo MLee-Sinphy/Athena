@@ -19,6 +19,21 @@ describe('App', () => {
     render(<App />)
 
     expect(await screen.findByRole('heading', { name: /entrar|sign in/i })).toBeVisible()
+    expect(screen.getByRole('button', { name: /aluno|student/i })).toHaveAttribute('aria-pressed', 'true')
+  })
+
+  it('animates between student and administrator login profiles', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: true, json: async () => ({ status: 'ok', service: 'athena-api', theme: 'calculus' }),
+    }))
+    const { container } = render(<App />)
+    await screen.findByRole('heading', { name: /entrar|sign in/i })
+
+    fireEvent.click(screen.getByRole('button', { name: /administrador|administrator/i }))
+
+    expect(screen.getByRole('button', { name: /administrador|administrator/i })).toHaveAttribute('aria-pressed', 'true')
+    expect(container.querySelector('.auth-card')).toHaveClass('login-administrator')
+    expect(container.querySelector('.role-login-panel')).toBeInTheDocument()
   })
 
   it('shows a clear error and no false success when the backend is unavailable', async () => {
@@ -51,7 +66,7 @@ describe('App', () => {
     const storageSpy = vi.spyOn(Storage.prototype, 'setItem')
     render(<App />)
 
-    fireEvent.change(await screen.findByLabelText(/e-mail ou matrícula|email or registration/i), {
+    fireEvent.change(await screen.findByLabelText(/e-mail|email/i), {
       target: { value: 'reader@example.com' },
     })
     fireEvent.change(screen.getByLabelText(/^senha$|^password$/i), {
@@ -98,7 +113,8 @@ describe('App', () => {
       return { ok: false, status: 404 }
     }))
     render(<App />)
-    fireEvent.change(await screen.findByLabelText(/e-mail ou matrícula|email or registration/i), {
+    fireEvent.click(await screen.findByRole('button', { name: /administrador|administrator/i }))
+    fireEvent.change(await screen.findByLabelText(/e-mail|email/i), {
       target: { value: 'admin@example.com' },
     })
     fireEvent.change(screen.getByLabelText(/^senha$|^password$/i), {

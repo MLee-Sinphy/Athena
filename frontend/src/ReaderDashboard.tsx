@@ -25,6 +25,22 @@ type Props = {
   onLogout: () => void
 }
 
+function BookCover({ title }: { title: CatalogTitle }) {
+  const openLibraryCover = title.isbn
+    ? `https://covers.openlibrary.org/b/isbn/${encodeURIComponent(title.isbn)}-M.jpg?default=false`
+    : ''
+  const [source, setSource] = useState(openLibraryCover || title.cover)
+
+  if (!source) return <div className="cover-placeholder" aria-hidden="true" />
+  return <img
+    src={source}
+    alt={`Capa de ${title.name}`}
+    loading="lazy"
+    referrerPolicy="no-referrer"
+    onError={() => setSource(source === openLibraryCover ? title.cover : '')}
+  />
+}
+
 export function ReaderDashboard(props: Props) {
   const { text, profile, onLogout } = props
   const [section, setSection] = useState<Section>('catalog')
@@ -115,9 +131,10 @@ export function ReaderDashboard(props: Props) {
           <div className="book-grid">
             {titles.length === 0 && <p>{text.empty}</p>}
             {titles.map((title) => <article className="book-card" key={title.id}>
-              {title.cover ? <img src={title.cover} alt="" loading="lazy" /> : <div className="cover-placeholder" aria-hidden="true" />}
+              <BookCover title={title} />
               <div><p className="meta">{title.category}</p><h2>{title.name}</h2><p>{title.author}</p>
                 <p>{title.available_copies} {text.available}</p><p>{title.tags.map((tag) => `#${tag}`).join(' ')}</p>
+                {title.metadata_source_url && <p><a href={title.metadata_source_url} target="_blank" rel="noreferrer">{text.dataSource}</a></p>}
                 <button type="button" onClick={() => setSelectedTitle(title)}>{text.reserve}</button>
               </div>
             </article>)}
@@ -160,7 +177,7 @@ export function ReaderDashboard(props: Props) {
             {!notice.response && <div className="actions"><button type="button" onClick={() => void answerNotice(notice.id, 'accepted')}>{text.accepted}</button><button type="button" className="secondary" onClick={() => void answerNotice(notice.id, 'declined')}>{text.declined}</button></div>}
           </article>)}</div>
         </section>}
-        {section === 'profile' && <section><h1>{text.profile}</h1><div className="panel"><p>{profile.email}</p><p>{profile.registration_id}</p></div></section>}
+        {section === 'profile' && <section><h1>{text.profile}</h1><div className="panel"><p>{profile.email}</p><p>{profile.registration_id}</p>{profile.whatsapp_number && <p>{profile.whatsapp_number}</p>}</div></section>}
       </div>
     </div>
   )

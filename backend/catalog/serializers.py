@@ -53,11 +53,14 @@ class CatalogTitleSerializer(serializers.ModelSerializer):
             "cover",
             "isbn",
             "page_count",
+            "metadata_source_url",
             "tags",
             "available_copies",
         )
 
     def get_cover(self, obj):
+        if not obj.cover.name:
+            return ""
         request = self.context.get("request")
         path = f"/api/v1/catalog/media/{obj.cover.name}"
         return request.build_absolute_uri(path) if request else path
@@ -94,8 +97,10 @@ class AdminTitleSerializer(serializers.ModelSerializer):
             "cover",
             "isbn",
             "page_count",
+            "metadata_source_url",
             "tag_names",
         )
+        read_only_fields = ("metadata_source_url",)
 
     def create(self, validated_data):
         tag_names = validated_data.pop("tag_names", [])

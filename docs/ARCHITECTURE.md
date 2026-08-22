@@ -8,6 +8,7 @@ Aplicação web cliente-servidor: SPA React estática no GitHub Pages consome um
 
 ```text
 Navegador -> GitHub Pages (React)
+          -> HTTPS -> Open Library Covers (somente imagens por ISBN)
           -> HTTPS/CORS -> Reverse proxy -> Django/DRF -> PostgreSQL
                                                |-> diretório de mídia
                                                |-> backup externo criptografado
@@ -75,7 +76,7 @@ Dados consistentes e bloqueios concorrentes.
 #### Dependências
 Volume persistente e rotina de backup.
 #### Limites
-Não armazena imagens binárias por padrão.
+Não armazena imagens binárias por padrão. WhatsApp é contato pessoal opcional em formato internacional; não representa consentimento para envio nem segundo fator ativo.
 
 ### Storage de mídia
 #### Responsabilidade
@@ -87,12 +88,18 @@ Caminhos e streams.
 #### Dependências
 Diretório persistente no VPS na v1.
 #### Limites
-Regras de negócio não conhecem o caminho físico.
+Regras de negócio não conhecem o caminho físico. Capas externas por ISBN não são copiadas para o banco ou volume: o frontend consulta diretamente a Open Library, com mídia local como fallback.
+
+### Open Library
+#### Responsabilidade
+Fornecer, em baixo volume, metadados bibliográficos opcionais no seed e capas públicas por ISBN.
+#### Limites
+Não é fonte transacional nem requisito para login, catálogo ou circulação. O backend armazena somente metadados fundamentais e a URL de atribuição; o navegador carrega a imagem externa. Importações identificam o Athena, respeitam limite de requisições e mantêm fallback offline.
 
 ## Fluxos principais
 
 ### Login
-React envia identificador e senha; API limita tentativas, valida credencial e primeiro acesso, cria token opaco e devolve seu valor uma única vez. Backend guarda somente digest e metadados.
+React envia perfil escolhido, identificador (e-mail, matrícula ou WhatsApp) e senha; API limita tentativas, valida perfil, credencial e primeiro acesso, cria token opaco e devolve seu valor uma única vez. Backend guarda somente digest e metadados.
 
 ### Reserva concorrente
 API abre transação, valida política e penalidades, consulta disponibilidade com bloqueio adequado, associa exemplar e confirma. Uma operação concorrente reavalia o estado e recebe conflito explicável.

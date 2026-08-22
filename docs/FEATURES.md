@@ -23,6 +23,66 @@
 
 ---
 
+# FEATURE-004 — WhatsApp e autenticação em dois fatores
+
+## Estado
+- [x] Adiada
+
+## Origem
+- Usuário: contexto fornecido pelo responsável em 2026-08-22.
+
+## Problema ou oportunidade
+O cadastro já pode guardar telefone WhatsApp opcional; no futuro ele pode complementar avisos e proteção de acesso.
+
+## Público beneficiado
+Leitores e administradores que optarem pelo canal.
+
+## Proposta
+Integrar um provedor aprovado para notificações e, após desenho específico de segurança, códigos de segundo fator. E-mail e WhatsApp permanecem canais independentes e consentidos.
+
+## Benefício esperado
+Comunicação mais imediata e possibilidade de reforçar autenticação.
+
+## Alinhamento com o projeto
+Reutiliza o contato opcional sem transformar sua mera presença em consentimento ou autenticação ativa.
+
+## Fluxo esperado
+1. Usuário informa e confirma o número. 2. Escolhe os usos permitidos. 3. Sistema envia mensagem pelo provedor. 4. Tentativa e resultado são auditados sem registrar códigos ou conteúdo sensível em logs.
+
+## Escopo inicial
+- Verificação do número, preferências e revogação de consentimento.
+- Notificações transacionais e eventual segundo fator em fases separadas.
+
+## Fora de escopo
+- Envio na versão atual.
+- Escolha antecipada de provedor.
+- Considerar número não verificado como fator de autenticação.
+
+## Critérios iniciais de sucesso
+- Funciona somente após verificação e consentimento explícitos.
+- Códigos expiram, têm limite de tentativas e nunca aparecem em logs.
+- Perda do telefone possui recuperação segura sem reduzir proteção da conta.
+
+## Dependências
+- Provedor, política de privacidade, consentimento, verificação e análise de ameaça.
+
+## Riscos
+- Custo, SIM swap, entrega atrasada, privacidade e dependência de fornecedor.
+
+## Impactos possíveis
+- Segurança, dados pessoais, UX, operação assíncrona e auditoria.
+
+## Documentos que precisam ser atualizados
+- Requisitos, arquitetura, privacidade, testes e decisões quando priorizada.
+
+## Referências
+- Roadmap: horizonte futuro sem versão aprovada.
+
+## Resultado
+- Versão entregue: Não entregue.
+
+---
+
 # FEATURE-001 — E-mails de disponibilidade antecipada
 
 ## Estado

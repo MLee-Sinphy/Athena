@@ -41,12 +41,40 @@ class AuthenticationApiTests(APITestCase):
         self.assertEqual(email_response.data.keys(), registration_response.data.keys())
         self.assertIn("access_token", email_response.data)
 
+    def test_whatsapp_number_authenticates_when_present(self):
+        self.user.whatsapp_number = "+5511987654321"
+        self.user.save(update_fields=["whatsapp_number"])
+
+        response = self.login(identifier="+5511987654321")
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
     def test_invalid_credentials_do_not_reveal_whether_account_exists(self):
         unknown = self.login(identifier="missing@example.com", password="wrong password value")
         wrong_password = self.login(password="wrong password value")
 
         self.assertEqual(unknown.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(unknown.data, wrong_password.data)
+
+    def test_selected_login_profile_must_match_account_role(self):
+        accepted = self.client.post(
+            "/api/v1/auth/login/",
+            {"identifier": self.user.email, "password": self.password, "role": "reader"},
+            format="json",
+        )
+        rejected = self.client.post(
+            "/api/v1/auth/login/",
+            {
+                "identifier": self.user.email,
+                "password": self.password,
+                "role": "administrator",
+            },
+            format="json",
+        )
+
+        self.assertEqual(accepted.status_code, status.HTTP_200_OK)
+        self.assertEqual(rejected.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(rejected.data, {"detail": "Invalid identifier or password."})
 
     def test_only_a_digest_of_the_opaque_token_is_persisted(self):
         response = self.login()
@@ -100,6 +128,29 @@ class AuthenticationApiTests(APITestCase):
         )
 
         self.assertEqual(conflict.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_optional_whatsapp_uses_international_format_and_is_user_editable(self):
+        self.authorize(self.login().data["access_token"])
+
+        invalid = self.client.patch("/api/v1/auth/me/", {"whatsapp_number": "11999999999"})
+        accepted = self.client.patch("/api/v1/auth/me/", {"whatsapp_number": "+5511999999999"})
+
+        self.assertEqual(invalid.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(accepted.status_code, status.HTTP_200_OK)
+        self.assertEqual(accepted.data["whatsapp_number"], "+5511999999999")
+
+    def test_whatsapp_number_is_unique_when_present(self):
+        get_user_model().objects.create_user(
+            email="with-phone@example.com",
+            registration_id="PHONE-002",
+            whatsapp_number="+5511888888888",
+            password=self.password,
+        )
+        self.authorize(self.login().data["access_token"])
+
+        response = self.client.patch("/api/v1/auth/me/", {"whatsapp_number": "+5511888888888"})
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
 
 class FirstAccessAndRecoveryTests(APITestCase):

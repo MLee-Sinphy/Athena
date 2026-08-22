@@ -28,6 +28,15 @@ O comando executa formatação e lint do Python, valida migrações, roda os tes
 
 ## Desenvolvimento
 
+### Aplicação completa em Docker
+
+```bash
+make app-up
+ATHENA_DEMO_PASSWORD='<senha forte escolhida>' make demo-seed
+```
+
+A API fica em `http://localhost:8000`. Use `make app-stop` para pausar preservando tudo, `make app-down` para remover os contêineres preservando os volumes e consulte `docs/OPERATIONS.md` antes de destruir dados.
+
 Backend:
 
 ```bash
