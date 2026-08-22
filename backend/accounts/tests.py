@@ -72,7 +72,7 @@ class PasswordPolicyTests(TestCase):
 
     def test_common_password_is_rejected(self):
         with self.assertRaises(ValidationError):
-            validate_password("passwordpassword")
+            validate_password("polniypizdec0211")
 
     def test_long_passphrase_is_accepted_without_composition_rules(self):
         validate_password("a calm library phrase with spaces")
