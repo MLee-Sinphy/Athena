@@ -81,7 +81,13 @@ jobs:
         run: npx playwright install --with-deps chromium firefox webkit
         working-directory: frontend
       - name: Test responsive and accessible frontend journeys
-        run: npm run test:e2e
+        run: |
+          output_file="$(mktemp)"
+          if ! npm run test:e2e 2>&1 | tee "$output_file"; then
+            message="$(tail -120 "$output_file" | sed ':a;N;$!ba;s/%/%25/g;s/\r/%0D/g;s/\n/%0A/g')"
+            echo "::error title=Frontend E2E failure::$message"
+            exit 1
+          fi
         working-directory: frontend
       - name: Verify repository structure
         run: ./scripts/verify_bootstrap.sh
