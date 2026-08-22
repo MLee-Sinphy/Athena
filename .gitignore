@@ -10,6 +10,8 @@ __pycache__/
 htmlcov/
 node_modules/
 frontend/dist/
+frontend/test-results/
+frontend/playwright-report/
 backend/staticfiles/
 backend/media/
 .DS_Store

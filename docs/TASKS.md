@@ -212,7 +212,7 @@ Avaliações opcionais e únicas por devolução, sugestões de tags rastreávei
 
 # TASK-007 — Consolidar UX, acessibilidade e temas
 ## Estado
-Pronta para iniciar; dependência TASK-006 satisfeita.
+Em andamento — testes do GATE-007 iniciados.
 ## Tipo
 Feature.
 ## Prioridade

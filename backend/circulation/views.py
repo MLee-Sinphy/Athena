@@ -159,6 +159,14 @@ class ReturnView(APIView):
         return Response(LoanSerializer(returned).data)
 
 
+class LoanListView(APIView):
+    permission_classes = [PasswordChanged]
+
+    def get(self, request):
+        loans = Loan.objects.filter(reservation__reader=request.user)
+        return Response({"results": LoanSerializer(loans, many=True).data})
+
+
 class RenewView(APIView):
     permission_classes = [PasswordChanged]
 

@@ -1,5 +1,6 @@
 import '@testing-library/jest-dom/vitest'
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
+import axe from 'axe-core'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import App from './App'
@@ -8,6 +9,7 @@ describe('App', () => {
   afterEach(() => {
     cleanup()
     vi.unstubAllGlobals()
+    localStorage.clear()
   })
 
   it('shows login when the backend responds', async () => {
@@ -33,6 +35,13 @@ describe('App', () => {
         ok: true,
         json: async () => ({ access_token: 'opaque-secret', must_change_password: false }),
       })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ id: 1, email: 'reader@example.com', role: 'reader' }),
+      })
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ results: [] }) })
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ results: [] }) })
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ results: [] }) })
       .mockResolvedValueOnce({ ok: true, json: async () => ({ results: [] }) })
     vi.stubGlobal('fetch', fetchMock)
     const storageSpy = vi.spyOn(Storage.prototype, 'setItem')
@@ -46,7 +55,30 @@ describe('App', () => {
     })
     fireEvent.click(screen.getByRole('button', { name: /entrar|sign in/i }))
 
-    expect(await screen.findByRole('heading', { name: /biblioteca em preparação|library in preparation/i })).toBeVisible()
-    expect(storageSpy).not.toHaveBeenCalled()
+    expect(await screen.findByRole('heading', { name: /catálogo|catalog/i })).toBeVisible()
+    expect(storageSpy).not.toHaveBeenCalledWith(expect.stringMatching(/token/i), expect.anything())
+  })
+
+  it('persists manual language and theme preferences and offers all six themes', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true }))
+    render(<App />)
+    await screen.findByRole('heading', { name: /entrar|sign in/i })
+
+    fireEvent.click(screen.getByRole('button', { name: /english|português/i }))
+    fireEvent.change(screen.getByLabelText(/tema|theme/i), { target: { value: 'aqua' } })
+
+    expect(localStorage.getItem('athena-language')).toMatch(/pt|en/)
+    expect(localStorage.getItem('athena-theme')).toBe('aqua')
+    expect(screen.getByLabelText(/tema|theme/i).querySelectorAll('option')).toHaveLength(6)
+    expect(document.documentElement.dataset.theme).toBe('aqua')
+  })
+
+  it('has no detectable structural accessibility violations on the login screen', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true }))
+    const { container } = render(<App />)
+    await screen.findByRole('heading', { name: /entrar|sign in/i })
+
+    const result = await axe.run(container, { rules: { 'color-contrast': { enabled: false } } })
+    expect(result.violations).toEqual([])
   })
 })

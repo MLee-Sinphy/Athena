@@ -77,6 +77,12 @@ jobs:
           DJANGO_SECRET_KEY: ci-only-not-a-production-secret
       - name: Check frontend
         run: make check-frontend
+      - name: Install browser for frontend E2E
+        run: npx playwright install --with-deps chromium
+        working-directory: frontend
+      - name: Test responsive and accessible frontend journeys
+        run: npm run test:e2e
+        working-directory: frontend
       - name: Verify repository structure
         run: ./scripts/verify_bootstrap.sh
         env:
