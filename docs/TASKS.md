@@ -41,7 +41,7 @@ GATE-000; TEST-001, TEST-002 e TEST-003.
 
 # TASK-002 — Implementar contas e autenticação
 ## Estado
-Planejada; depende de TASK-001.
+Concluída — GATE-001 e GATE-002 aprovados.
 ## Tipo
 Feature.
 ## Prioridade
@@ -65,10 +65,20 @@ GATE-001 e GATE-002; TEST-010 a TEST-014.
 UC-001 e indisponibilidade da API verificados.
 ## Riscos
 Enumeração, token vazado ou autorização apenas visual.
+## Resultado
+Contas de leitor e administrador, login por identificador único, token opaco revogável, primeiro acesso, troca e redefinição de senha, logout, CORS restrito e tratamento visual da API indisponível foram implementados. O token permanece apenas em memória no frontend e a interface pública inicial permite alternar entre português e inglês.
+## Evidências
+- Falha inicial: importação de `UserRole` inexistente antes da implementação.
+- Modelo customizado, perfis, unicidade, hash, primeiro acesso e política de senha cobertos por 7 testes.
+- CI PostgreSQL aprovada na execução `32584631836` para o commit `0446d38`.
+- Falhas iniciais do GATE-002: modelo `AccessToken`, rotas de autenticação e estado de indisponibilidade ainda inexistentes.
+- Backend: 21 testes cobrem identidades, erro neutro, rate limit, digest do token, limites de 30 minutos/8 horas, revogação, autorização, cadastro e recuperação administrativa e CORS.
+- Frontend: 3 testes cobrem disponibilidade, falha sem falso sucesso e login sem persistência do token; lint, tipos e build aprovados.
+- CI PostgreSQL aprovada nas execuções `32594658408` e `32594901125`; implementação final no commit `1f38c2c`.
 
 # TASK-003 — Implementar acervo e catálogo
 ## Estado
-Planejada; depende de TASK-002.
+Pronta para iniciar; dependência TASK-002 satisfeita.
 ## Tipo
 Feature.
 ## Prioridade
