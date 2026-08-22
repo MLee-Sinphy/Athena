@@ -1,631 +1,224 @@
-# PROJECT_CONTEXT.md
+# Contexto do projeto Athena
 
-> Este arquivo recebe o contexto humano inicial do Athena.
-> As instruções entre colchetes são gabaritos, não dados do projeto.
-> Preserve a ordem e use `Pendente` quando uma resposta ainda não existir.
+> Entrada humana para derivar a documentação oficial. Decisões não validadas permanecem explícitas como pendências.
 
-## Identidade
+## 1. Identidade e objetivo
 
-### Nome
-Athena.
+- **Responsável:** Lee. **Estado:** planejamento.
+- Sistema web configurável para empréstimo gratuito de livros físicos em escolas, universidades, bibliotecas públicas e instituições semelhantes.
+- Projeto de estudo full stack, documentado, testado e implantável; não é serviço comercial nem precisa operar 24 horas.
+- Cada implantação atende uma instituição, com acervo, usuários, políticas e histórico isolados.
+- Deve funcionar de ponta a ponta enquanto o backend estiver ativo e informar claramente quando estiver indisponível.
 
-### Descrição curta
-Sistema online de empréstimo de livros físicos para escolas, universidades, bibliotecas públicas e instituições semelhantes, composto por frontend web, backend com autenticação e módulos do domínio, além de persistência em banco de dados relacional.
+Leitores consultam o acervo, reservam períodos e acompanham empréstimos. Administradores controlam usuários, títulos, exemplares, calendário, políticas e ocorrências.
 
-### Estado atual
-Planejamento.
+**Fora do projeto:** cobranças, pagamentos, aluguel comercial e distribuição de livros digitais.
 
-### Responsável
-Lee.
+## 2. Usuários e acesso
 
-## Origem e motivação
+Existem somente dois perfis:
 
-### Como a ideia surgiu
-O projeto surgiu como objeto de estudo prático de desenvolvimento de um sistema web completo com frontend, backend, autenticação, banco relacional, documentação e deploy distribuído.
+- **Leitor:** consulta o catálogo e gerencia as próprias operações dentro das regras.
+- **Administrador:** cadastra leitores e acervo, configura políticas e pode acompanhar, alterar ou cancelar qualquer operação.
 
-### Por que vale a pena resolver
-Permitir o estudo integrado de engenharia de software, incluindo regras de negócio, arquitetura cliente-servidor, APIs, autenticação, persistência, testes, documentação e operação.
+- O administrador cadastra o leitor com matrícula/identificador institucional, e-mail e senha temporária. Matrícula e e-mail são únicos na instituição.
+- O primeiro acesso exige troca da senha temporária. Depois, o leitor pode alterar seu e-mail e senha.
+- Login: um campo para e-mail ou matrícula e outro para senha.
+- Na primeira versão, recuperação de acesso exige nova senha temporária criada pelo administrador; não há e-mail.
+- O sistema pode sugerir senha aleatória criptograficamente segura.
 
-### Resultado que motivou o projeto
-Construir e compreender um sistema completo a partir de documentação validada, usando desenvolvimento incremental assistido por IA.
+## 3. Acervo
 
-## Problema
+- O catálogo agrupa cópias equivalentes por título.
+- Cada exemplar físico possui código único e estado próprio: disponível, reservado, emprestado, danificado, em manutenção, perdido ou descartado.
+- O leitor solicita um título sem escolher nem ver o código do exemplar.
+- Toda concessão associa um exemplar específico, visível ao administrador.
+- O administrador pode alterar ou restaurar qualquer estado; a ação é auditada.
 
-### Descrição
-Leitores precisam consultar um acervo físico, reservar períodos de uso e solicitar empréstimos, enquanto a instituição precisa configurar suas políticas, controlar a disponibilidade e identificar exatamente qual exemplar foi entregue a cada pessoa.
+### Dados bibliográficos
 
-### Contexto
-O problema ocorre em escolas, universidades, bibliotecas públicas e instituições semelhantes que mantêm acervos de exemplares físicos administrados por pessoas responsáveis pela biblioteca.
+- **Obrigatórios:** título, autor, ISBN, editora, edição, ano, categoria, descrição e capa principal.
+- **Opcionais:** número de páginas e imagens adicionais.
+- Busca: título, autor, ISBN, categoria, descrição e palavras-chave.
+- Filtros: disponibilidade, avaliação e ano.
 
-### Quem é afetado
-- Leitores cadastrados, como alunos, universitários, clientes ou usuários de bibliotecas públicas.
-- Administradores responsáveis pelos cadastros, pelo acervo, pelas políticas, pelas reservas e pelos empréstimos.
+### Imagens
 
-### Impacto
-- O leitor precisa saber quais títulos estão disponíveis, reservar um período e organizar previamente as datas de retirada e devolução.
-- A instituição precisa aplicar regras configuráveis de elegibilidade e manter rastreabilidade sobre cada exemplar físico.
+- Na primeira versão, arquivos ficam em diretório persistente no VPS; PostgreSQL guarda caminhos, metadados e relações.
+- A abstração de armazenamento do Django deve permitir migração futura para um serviço de objetos.
 
-### Frequência e dimensão
-Uma instalação atende uma única instituição e deve ser projetada para até 5.000 leitores, 20.000 títulos, 50.000 exemplares e picos simulados de 500 usuários simultâneos.
+## 4. Calendário e políticas
 
-### Causas conhecidas ou suspeitas
-- Processos de biblioteca podem depender de atendimento presencial, registros manuais, planilhas ou sistemas com políticas pouco configuráveis.
-- Títulos com vários exemplares exigem controle individual sem tornar a experiência do leitor desnecessariamente complexa.
-- Reservas futuras, filas e calendários produzem conflitos difíceis de controlar sem regras consistentes e automação.
+O administrador configura:
 
-### Como o problema é resolvido atualmente
-Como o Athena é um projeto teórico, não existe uma instituição-alvo já analisada. O projeto parte do cenário plausível de bibliotecas que combinam atendimento presencial, registros manuais, planilhas ou sistemas existentes.
+- dias regulares de funcionamento, inicialmente segunda a sexta-feira;
+- feriados e fechamentos;
+- prazo do empréstimo, inicialmente entre 3 e 15 dias de funcionamento;
+- limite simultâneo, inicialmente 3 empréstimos;
+- tolerância para retirada, inicialmente 1 dia de funcionamento;
+- penalidades por atraso e cancelamentos frequentes;
+- permissão para renovação;
+- suspensão de novas reservas sem afetar as confirmadas.
 
-### Limitações das soluções atuais
-- Baixa visibilidade da disponibilidade futura para o leitor.
-- Dificuldade de adaptar prazos, penalidades e calendário à política de cada biblioteca.
-- Risco de inconsistência ao controlar títulos, exemplares, filas e empréstimos em registros separados.
+Somente dias de funcionamento contam nos prazos, exceto penalidades explicitamente definidas em dias corridos.
 
-### Aspectos atuais que devem ser preservados
-- A entrega e a devolução continuam sendo atos físicos vinculados à biblioteca.
-- A equipe administrativa mantém autoridade para acompanhar e intervir nas operações.
+## 5. Reservas, empréstimos e fila
 
-## Objetivos
+### Solicitação
 
-### Objetivo principal
-Desenvolver, como projeto de estudo, um sistema configurável de empréstimo de livros físicos que possa atender diferentes tipos de biblioteca e funcione de ponta a ponta enquanto seu backend estiver em execução.
+1. Todo empréstimo começa com reserva, mesmo havendo disponibilidade imediata.
+2. O leitor escolhe retirada e devolução dentro do calendário e das políticas.
+3. O sistema valida elegibilidade, limite, período e disponibilidade.
+4. Se permitido, concede sem confirmação administrativa e associa um exemplar; se recusar, explica o impedimento.
 
-### Objetivos secundários
-- Exercitar desenvolvimento full stack, modelagem relacional, autenticação, internacionalização, testes e deploy.
-- Produzir documentação e implementação rastreáveis que possam servir como referência de estudo.
-- Demonstrar o comportamento do sistema com dados realistas e simulações reproduzíveis.
+### Disponibilidade e prioridade
 
-### Não objetivos
-- Manter o sistema disponível 24 horas por dia.
-- Tratar a primeira versão como um serviço comercial em produção.
+- Um exemplar não pode ter períodos confirmados sobrepostos.
+- Sem disponibilidade, o leitor pode escolher período futuro.
+- A fila é FIFO: a solicitação mais antiga tem prioridade.
+- O leitor vê sua posição e datas estimadas, nunca a identidade de outras pessoas.
+- A ordem da fila só pode mudar por nova decisão explícita de produto.
 
-### Critérios gerais de sucesso
-- Os fluxos principais de leitor e administrador funcionam de ponta a ponta enquanto o backend está ativo.
-- As regras configuráveis de reserva, empréstimo, fila e penalidade são verificadas por testes automatizados.
-- A interface funciona em computadores e smartphones, em português e inglês, e atende aos critérios aplicáveis da WCAG 2.2 nível AA.
-- O comportamento na indisponibilidade do backend é comunicado claramente.
-- A carga-alvo é exercitada por simulação reproduzível, sem depender de centenas de usuários humanos.
+### Retirada não realizada e antecipação
 
-## Público
+- Quem não retirar dentro da tolerância perde a prioridade daquela reserva.
+- O próximo leitor pode aceitar ou recusar retirada antecipada até a data original de sua reserva.
+- Se aceitar, pode retirar antes e manter a devolução original, mesmo excedendo excepcionalmente o prazo máximo.
+- Se recusar, preserva integralmente sua reserva.
+- O período livre pode ser usado por outra pessoa sem afetar reservas confirmadas.
 
-### Público principal
-Leitores cadastrados pela instituição, incluindo alunos, universitários, clientes e usuários de bibliotecas públicas.
+### Alteração, cancelamento e renovação
 
-### Públicos secundários
-- Administradores da plataforma responsáveis pelos usuários, pelo acervo e pelas políticas da biblioteca.
+- Antes da retirada, o leitor pode alterar ambas as datas ou cancelar, sem conflito com períodos confirmados.
+- Após a retirada, pode apenas prorrogar a devolução, se não houver fila e respeitar o prazo máximo.
+- O administrador pode visualizar, alterar e cancelar qualquer reserva ou empréstimo.
 
-### Necessidades do público
-- Leitores precisam consultar o catálogo, escolher períodos válidos, reservar e solicitar empréstimos sem precisar distinguir cópias equivalentes de um mesmo título.
-- Administradores precisam cadastrar títulos e exemplares físicos, identificar cada cópia e acompanhar empréstimos e ocorrências.
-- Administradores precisam configurar as regras que determinam prazos, limites, permissões, penalidades e demais condições de empréstimo.
+### Cancelamentos frequentes
 
-### Contexto de uso
-Leitores e administradores utilizam uma aplicação web vinculada ao acervo físico da instituição, tanto em computadores quanto em dispositivos móveis.
+- Padrão: até 3 cancelamentos do leitor em janela exata de 30 dias iniciada no primeiro cancelamento relevante.
+- Ao ultrapassar o limite, novas solicitações são bloqueadas até o fim da janela; reservas confirmadas permanecem.
+- Cancelamentos administrativos não contam. Limite, janela e penalidade são configuráveis.
 
-### Conhecimento esperado
-O leitor deve conseguir usar o sistema sem conhecimento técnico ou treinamento especializado. Administradores podem receber orientação inicial sobre cadastro do acervo e configuração das políticas.
+## 6. Atrasos e penalidades
 
-### Limitações e necessidades de acessibilidade
-- A interface deve permanecer compreensível, operável e visualmente consistente em computadores e dispositivos móveis.
-- O produto deve buscar conformidade com WCAG 2.2 nível AA.
+- Leitor com empréstimo atrasado não pode criar reservas.
+- Padrão após atraso: bloquear novos empréstimos e reservas por 7 dias corridos.
+- O administrador configura duração, suspensão e eventual redução do limite simultâneo.
+- Reservas confirmadas não são alteradas retroativamente, salvo ação administrativa explícita e auditada.
 
-## Proposta
+## 7. Devolução e avaliações
 
-### Solução imaginada
-Uma plataforma web configurável na qual administradores cadastram usuários e o acervo físico, definem políticas da biblioteca e acompanham as operações; leitores consultam títulos, escolhem datas válidas, fazem reservas e solicitam empréstimos sujeitos às regras da instituição.
+- A cada devolução, o leitor pode avaliar separadamente conteúdo do título e estado do exemplar, de 0 a 5 estrelas.
+- Avaliações são opcionais, independentes por devolução e não editáveis pelo leitor após o envio.
+- Médias do título e do exemplar derivam das respectivas avaliações individuais, que são a fonte de verdade.
 
-### Valor entregue
-Facilitar o acesso dos leitores ao acervo e permitir que diferentes instituições controlem disponibilidade, reservas, empréstimos e a situação individual de cada exemplar físico segundo suas próprias políticas.
+## 8. Auditoria e histórico
 
-### Diferenciais
-- Catálogo simplificado para o leitor, agrupado por título.
-- Controle individual de exemplares para o administrador sem expor detalhes operacionais desnecessários ao leitor.
-- Painel administrativo para adaptar as políticas de empréstimo à dinâmica de cada biblioteca.
+- Alterações administrativas relevantes em operações, estados e configurações geram registros persistentes.
+- Registro: autor, data/hora, ação, valor anterior e novo; justificativa opcional.
+- Auditoria não pode ser editada nem apagada por operações administrativas comuns.
+- Históricos de empréstimos e auditoria são preservados.
+- Exclusão ou anonimização de leitores preserva integridade referencial e auditoria.
+- Tokens expirados são removidos periodicamente; dados sintéticos de teste podem ser recriados.
 
-### Hipótese de valor
-Se leitores puderem visualizar disponibilidade, organizar datas e acompanhar reservas, enquanto administradores configuram políticas e rastreiam exemplares individualmente, a operação da biblioteca se tornará mais previsível, transparente e controlável.
+## 9. Escopo da primeira versão
 
-## Escopo
+### Incluído
 
-### Primeira versão
-- Frontend web em React.
-- Interface em português do Brasil e inglês, com detecção inicial pelo idioma preferido do navegador e seleção manual persistente.
-- Backend com autenticação e gerenciamento de usuários.
-- Login por um único campo que aceita e-mail ou matrícula/identificador, acompanhado da senha.
-- Primeiro acesso com troca obrigatória da senha temporária criada pelo administrador.
-- Recuperação inicial de acesso assistida pelo administrador, sem envio de e-mail na primeira versão.
-- Gerenciamento de livros.
-- Pesquisa textual por título, autor, ISBN, categoria, descrição e palavras-chave, acompanhada de filtros do catálogo.
-- Gerenciamento de empréstimos de livros.
-- Gerenciamento de reservas.
-- Calendário de reserva e empréstimo baseado nos dias em que a biblioteca funciona.
-- Cadastro administrativo de feriados e fechamentos excepcionais.
-- Painel administrativo para configurar intervalos mínimo e máximo, limite de empréstimos, permissões e efeitos de penalidades.
-- Configuração administrativa dos dias regulares de funcionamento, com segunda a sexta-feira como padrão inicial brasileiro.
-- Fila de espera ordenada para títulos sem exemplar disponível no período desejado.
-- Cadastro de leitores pelo administrador e alteração do próprio e-mail e senha pelo leitor.
-- Visibilidade, alteração e cancelamento de qualquer empréstimo pelo administrador.
-- Alteração e cancelamento da própria reserva pelo leitor, desde que a mudança não conflite com reserva já confirmada de outra pessoa.
-- Prorrogação da devolução após a retirada, condicionada à ausência de fila e ao período máximo configurado.
-- Controle configurável de cancelamentos frequentes e suas penalidades.
-- Tolerância configurável para retirada, com padrão inicial de 1 dia de funcionamento.
-- Reorganização da disponibilidade quando uma reserva expirar sem retirada.
-- Log persistente de auditoria das ações administrativas sobre empréstimos e configurações.
-- Avaliação opcional do título e do estado físico do exemplar pelo leitor ao concluir a devolução.
-- Persistência em banco de dados relacional.
-- Apresentação de mensagem de erro quando o frontend não conseguir acessar o backend.
+- Frontend React responsivo e internacionalizado.
+- Backend com autenticação, autorização, usuários, acervo, reservas, empréstimos, fila, calendário, políticas, penalidades, avaliações e auditoria.
+- Painéis de leitor e administrador; catálogo, busca, filtros e disponibilidade futura.
+- Persistência relacional e mensagem de backend indisponível sem indicar sucesso indevido.
 
-### Fora da primeira versão
-- Notificação por e-mail quando uma devolução antecipada permitir que o próximo leitor retire o exemplar antes da data reservada.
-- Central de notificações internas para eventos de antecipação e perda de prioridade.
+### Futuro
+
+- Notificações internas e por e-mail sobre antecipações e perda de prioridade, registrando envio, leitura, aceite e recusa.
 - Recuperação autônoma de senha por e-mail.
-- Integração com leitores ópticos, scanners, totens ou outros componentes físicos para retirada e devolução autônomas.
+- Leitores ópticos, scanners ou totens para registrar retirada e devolução físicas sob as mesmas regras e auditoria da API.
 
-### Fora do projeto
-- Cobrança por empréstimo ou processamento de pagamentos.
-- Distribuição de livros ou arquivos digitais.
+## 10. Experiência e acessibilidade
 
-### Funcionalidades futuras conhecidas
-- Notificações internas e por e-mail vinculadas à fila de espera, à perda de prioridade e às devoluções antes do prazo.
-- Recuperação autônoma de senha por e-mail.
-- Integração com hardware capaz de identificar leitor e exemplar para registrar retirada e devolução físicas.
+- Interface moderna, minimalista, bela e funcional em computadores e smartphones.
+- Português do Brasil e inglês; seleção inicial pelo idioma do navegador e escolha manual persistente. Não usar geolocalização por IP.
+- Meta WCAG 2.2 AA, com testes automatizados e revisão manual.
+- Cobrir teclado, foco, contraste, semântica, leitor de tela, texto alternativo, formulários, toque, zoom/reflow, movimento reduzido e gerenciadores de senha.
+- Estados essenciais: carregamento, vazio, erro, sucesso e backend indisponível.
 
-### Limites entre o sistema e o ambiente externo
-- O sistema controla registros e solicitações, mas a entrega e a devolução do exemplar físico ocorrem na instituição responsável pelo acervo.
-- A relação institucional do leitor e qualquer cobrança externa existem fora do Athena; estar cadastrado pelo administrador representa o direito básico de solicitar empréstimos, sujeito às demais regras configuradas.
-- Cada implantação do Athena atende somente uma instituição; não haverá múltiplas instituições compartilhando a mesma instalação na primeira versão.
+### Temas
 
-## Comportamentos e regras
+Todos os componentes usam tokens semânticos; o tema é escolhido em um único ponto. Cor nunca é o único indicador de estado.
 
-### Fluxo principal esperado
-1. Um administrador cadastra um título e seus exemplares físicos, atribuindo identificação única a cada exemplar.
-2. Um leitor cadastrado pelo administrador autentica-se e consulta o catálogo, no qual cópias do mesmo livro aparecem agrupadas pelo título.
-3. O leitor escolhe, em um calendário, datas de retirada e devolução permitidas pelas políticas configuradas e pelos dias de funcionamento da biblioteca.
-4. O leitor solicita a reserva do título para o período escolhido.
-5. O sistema avalia as regras aplicáveis ao leitor, ao título, ao período e aos exemplares disponíveis.
-6. Quando houver exemplar disponível e as regras permitirem, a reserva e o empréstimo são concedidos sem exigir confirmação administrativa.
-7. Um exemplar específico é associado ao empréstimo e o administrador pode acompanhar, alterar ou cancelar a operação.
+| Tema | Primária | Secundária | Destaque | Fundo | Intenção |
+|---|---|---|---|---|---|
+| 1. Calculus | `#111827` | `#8B6F47` | `#D9CCB4` | `#FAF9F6` | acadêmico e sóbrio |
+| 2. Oceano e cobre | `#0F3D3E` | `#285E61` | `#B66A3C` | `#F4F7F6` | moderno e institucional |
+| 3. Vinho e ouro | `#3B1021` | `#6B213C` | `#A67C32` | `#FBF7EF` | clássico e acolhedor |
+| 4. Ardósia e sálvia | `#243447` | `#496273` | `#667B68` | `#F5F7F2` | discreto e contemporâneo |
+| 5. Índigo e âmbar | `#1E1B4B` | `#3730A3` | `#B45309` | `#F8FAFC` | digital e expressivo |
+| 6. Aqua Glass | `#0B3B60` | `#1677A6` | `#67D4E8` | `#EAF7FB` | aquático e translúcido |
 
-### Fluxos alternativos conhecidos
-1. Quando nenhuma cópia estiver disponível imediatamente, o leitor pode reservar um período futuro e entra em uma fila de espera organizada.
-2. Quando uma devolução antecipada liberar o exemplar, o próximo leitor pode retirá-lo antes da data reservada e manter a data final originalmente definida, mesmo que o período total ultrapasse excepcionalmente o máximo normal.
-3. Quando o leitor não satisfizer uma regra configurada de empréstimo, a solicitação deve ser recusada com uma explicação apropriada.
-4. Quando um empréstimo for devolvido depois da data, a penalidade configurada pode impedir novos empréstimos por um período e reduzir o limite de livros permitido.
-5. Quando o leitor não retirar o exemplar dentro da tolerância configurada, sua reserva perde a prioridade; o próximo leitor da fila deve ser avisado e consultado sobre o interesse em antecipar sua retirada.
-6. Quando o próximo leitor não aceitar a antecipação, o exemplar pode ser disponibilizado para outro leitor no período livre, sem afetar reservas futuras confirmadas.
-7. Antes da retirada, o leitor pode alterar as datas de retirada e devolução, desde que o novo período não conflite com outra reserva confirmada.
-8. Depois da retirada, o leitor pode alterar somente a data de devolução, desde que não haja outra pessoa na fila e o período resultante não ultrapasse o máximo configurado.
-9. Quando o leitor cancelar reservas acima do limite configurado dentro da janela aplicável, novas solicitações podem ser bloqueadas sem cancelar as reservas já confirmadas.
+O Tema 1 referencia [First Principles of Calculus](https://mlee-sinphy.github.io/First-Principles-of-Calculus/). Tokens completos serão derivados para `UX_UI.md`. O Tema 6 exige fallback opaco e não pode prejudicar contraste, legibilidade nem preferências de redução de transparência e movimento.
 
-### Exceções e falhas conhecidas
-- Quando o backend estiver parado ou inacessível, o frontend deve informar ao usuário que não conseguiu acessar o serviço e não deve indicar que a operação foi concluída.
+## 11. Arquitetura e segurança
 
-### Regras de negócio conhecidas
-- Somente leitores cadastrados por um administrador podem solicitar empréstimos.
-- O administrador cadastra o leitor com matrícula ou identificador institucional, e-mail e senha inicial.
-- A senha inicial é temporária e deve ser substituída obrigatoriamente no primeiro acesso.
-- O sistema pode sugerir uma senha inicial aleatória gerada de forma criptograficamente segura.
-- A matrícula ou o identificador institucional deve ser único dentro de cada instituição.
-- O e-mail do leitor deve ser único dentro de cada instituição.
-- O leitor pode alterar o próprio e-mail e a própria senha depois de cadastrado.
-- O formulário de login possui um único identificador, que aceita o e-mail ou a matrícula/identificador institucional, e um campo separado para a senha.
-- Enquanto o envio de e-mail não fizer parte do sistema, a recuperação de acesso é realizada com assistência do administrador e resulta em nova senha temporária.
-- Não há cobrança financeira pelo empréstimo; o direito básico decorre do cadastro do leitor na instituição.
-- Todo exemplar físico deve possuir identificação única no sistema.
-- Vários exemplares do mesmo livro devem aparecer agrupados como um único título no catálogo do leitor.
-- Um empréstimo concedido deve estar associado a um exemplar físico específico.
-- O leitor deve solicitar uma reserva mesmo quando houver disponibilidade imediata.
-- O leitor escolhe o intervalo do empréstimo dentro do mínimo e do máximo configurados pelo administrador.
-- Os valores padrão do intervalo são no mínimo 3 e no máximo 15 dias de funcionamento da biblioteca.
-- Somente dias de funcionamento configurados para a biblioteca contam para determinar os intervalos permitidos.
-- O administrador pode cadastrar feriados e fechamentos excepcionais, que não contam como dias de funcionamento.
-- Por padrão, os dias regulares de funcionamento são de segunda a sexta-feira; o administrador pode alterar livremente os dias em que sua biblioteca funciona.
-- As datas de retirada e devolução devem ser definidas e respeitadas.
-- Quando não houver disponibilidade imediata, o leitor pode escolher um período futuro e participar de uma fila de espera ordenada.
-- A fila de espera deve respeitar a ordem cronológica das solicitações: quem solicita primeiro possui prioridade para reservar o período disponível.
-- O atraso pode gerar uma penalidade configurável, incluindo suspensão temporária e redução do limite de empréstimos simultâneos.
-- A configuração padrão para atraso suspende novos empréstimos e novas reservas por 7 dias corridos; o administrador pode alterar essa política no painel.
-- Um leitor com empréstimo atrasado não pode criar novas reservas enquanto o atraso persistir ou durante a penalidade aplicável.
-- A quantidade máxima de empréstimos simultâneos é configurada pelo administrador e pode ser modificada pelas penalidades aplicáveis ao leitor.
-- A quantidade máxima padrão é de 3 empréstimos simultâneos.
-- A tolerância para retirada é configurada pelo administrador e possui valor padrão de 1 dia de funcionamento da biblioteca.
-- Se o leitor não retirar o exemplar dentro da tolerância, ele perde a prioridade daquela reserva.
-- O próximo leitor da fila deve ser notificado e pode aceitar ou recusar a antecipação da retirada até a data em que sua reserva original começaria.
-- Se recusar a antecipação, o leitor preserva integralmente sua reserva original.
-- Se o próximo leitor não aceitar a antecipação, outro leitor pode usar o período livre, desde que nenhuma reserva confirmada seja afetada.
-- O leitor pode cancelar a própria reserva em qualquer momento anterior à retirada.
-- Antes da retirada, o leitor pode alterar as datas de retirada e devolução sem sobrepor qualquer período já confirmado para outro leitor.
-- Depois da retirada, uma renovação corresponde à alteração da data de devolução e só é permitida quando não houver outra pessoa na fila e o período resultante não ultrapassar o máximo configurado.
-- Cancelamentos realizados pelo leitor são contados em uma janela móvel de 1 mês iniciada no primeiro cancelamento relevante; a contagem reinicia ao fim dessa janela.
-- Para a regra padrão, 1 mês corresponde a uma janela exata de 30 dias contados a partir do primeiro cancelamento relevante.
-- O limite padrão é de 3 cancelamentos do leitor dentro da janela; ao ultrapassá-lo, novas solicitações ficam bloqueadas até o fim da mesma janela.
-- Cancelamentos realizados pelo administrador não entram na contagem do leitor.
-- A penalidade por cancelamentos frequentes bloqueia somente novas solicitações e preserva reservas já confirmadas.
-- A concessão não exige confirmação do administrador quando todas as regras forem satisfeitas.
-- O administrador pode visualizar, alterar e cancelar qualquer empréstimo.
-- Alterações e cancelamentos administrativos devem gerar registro persistente de auditoria para consulta futura.
-- Cada registro de auditoria deve guardar autor, data e hora, ação, valor anterior e valor novo; a justificativa é opcional.
-- O administrador pode suspender novas reservas sem cancelar ou alterar reservas já confirmadas.
-- O administrador pode restaurar para disponível um exemplar danificado, em manutenção, perdido ou descartado, e a transição deve ser auditada.
-- Nenhuma transição de estado do exemplar exige confirmação adicional além da ação autenticada do administrador.
-- O painel administrativo deve permitir configurar: dias regulares de funcionamento; feriados e fechamentos; prazo mínimo e máximo; limite simultâneo; tolerância para retirada; punição por atraso; limite e punição por cancelamentos; permissão para renovação; e suspensão global de novas reservas.
-- Ao finalizar a devolução, o leitor pode avaliar separadamente o conteúdo do título e o estado físico do exemplar devolvido.
-- As médias devem ser derivadas das avaliações individuais: a avaliação do título compõe a média do título, enquanto a avaliação física compõe a média do exemplar específico.
-- As duas avaliações usam escala de 0 a 5 estrelas.
-- Cada devolução concluída permite uma nova avaliação independente do título e do exemplar pelo leitor responsável pelo empréstimo.
-- Uma avaliação enviada não pode ser editada pelo leitor.
-- Uma devolução antecipada pode antecipar a retirada do próximo leitor sem antecipar obrigatoriamente sua data final, constituindo exceção permitida ao período máximo normal.
+- **Frontend:** React, `HashRouter`, endereço padrão do GitHub Pages.
+- **Backend:** Python, Django e Django REST Framework em VPS da Hostinger, executado sob demanda.
+- **Banco:** PostgreSQL via Django ORM.
+- **Comunicação:** API HTTPS; CORS restrito à origem exata do frontend.
+- Priorizar recursos gratuitos; serviço pago exige aprovação.
 
-### Invariantes
-- Um exemplar físico não pode estar associado simultaneamente a mais de um empréstimo ativo.
-- Cada exemplar deve possuir um identificador único.
-- O leitor não deve precisar escolher nem visualizar o código interno do exemplar para solicitar um título.
-- O administrador deve conseguir identificar exatamente qual exemplar participa de cada empréstimo.
-- Nenhum período confirmado pode sobrepor o uso do mesmo exemplar por leitores diferentes.
-- Uma alteração de reserva não pode reduzir nem invalidar o período confirmado de outro leitor.
-- A ordem de prioridade da fila não pode ser modificada sem uma nova decisão explícita de produto.
-- Registros de auditoria não podem ser alterados ou apagados por operações administrativas comuns.
-- Um empréstimo retirado não pode ter sua data de início modificada pelo leitor.
-- A prorrogação de um empréstimo retirado não pode prejudicar uma pessoa já presente na fila.
-- A visualização da fila pelo leitor não pode revelar nome, matrícula, e-mail ou qualquer outro dado que identifique as demais pessoas.
+### Autenticação
 
-### Dados de entrada
-- Cadastro do leitor, incluindo matrícula ou identificador institucional, e-mail e senha inicial.
-- Dados obrigatórios do título: título, autor, ISBN, editora, edição, ano, categoria, descrição e imagem principal de capa.
-- Dados opcionais do título: número de páginas e imagens adicionais.
-- Código único e dados operacionais de cada exemplar físico.
-- Solicitação de empréstimo ou reserva.
-- Configurações administrativas de tolerância, penalidade, limite e demais políticas.
-- Dias regulares de funcionamento, feriados e fechamentos excepcionais.
-- Alteração ou cancelamento de reserva pelo leitor.
-- Alteração ou cancelamento de empréstimo pelo administrador, com dados necessários para auditoria.
-- Avaliações individuais do título e do estado físico do exemplar, vinculadas ao leitor e à devolução concluída.
+- Backend emite token bearer opaco, aleatório, revogável e de curta duração.
+- React mantém token somente em memória e o envia em `Authorization`; proibir persistência no navegador.
+- Backend armazena apenas representação segura. Recarregar a página pode exigir login.
+- Sessão expira após 30 minutos de inatividade ou 8 horas absolutas.
+- Logout, expiração e troca/recuperação de senha invalidam credenciais aplicáveis.
+- Senhas: mínimo 15 caracteres; aceitar ao menos 64, espaços e Unicode normalizado.
+- Não exigir composição artificial; bloquear senhas comuns/comprometidas e oferecer medidor de força.
+- Usar hash seguro do framework e limitar tentativas de login.
+- Nunca expor ou registrar senhas, tokens reutilizáveis, credenciais do banco ou dados pessoais desnecessários.
 
-### Resultados e saídas
-- Catálogo de títulos e sua disponibilidade para o leitor.
-- Resultados de pesquisa textual e filtros por título, autor, ISBN, categoria, descrição, palavras-chave, disponibilidade, avaliação e ano.
-- Decisão de aprovação ou recusa da solicitação conforme as regras configuradas.
-- Associação entre leitor, período reservado, empréstimo e exemplar físico específico.
-- Visão administrativa do estado de cada exemplar.
-- Nova disponibilidade decorrente da expiração de uma reserva não retirada.
-- Notificação ao próximo leitor elegível e registro de sua resposta.
-- Histórico consultável das alterações administrativas.
-- Registro de envio, leitura, aceite e recusa das notificações.
-- Estado operacional do exemplar: disponível, reservado, emprestado, danificado, em manutenção, perdido ou descartado.
-- Média das avaliações do título e média das avaliações do estado físico de cada exemplar.
+## 12. Dados, compatibilidade e escala
 
-## Experiência e interface
+- Dados pessoais de demonstração e teste são sintéticos.
+- Metadados e capas reais só quando legalmente permitidos; respeitar direitos e licenças.
+- Compatibilidade: duas versões estáveis mais recentes de Chrome, Firefox, Edge e Safari na entrega.
+- Meta simulada: 5.000 leitores, 20.000 títulos, 50.000 exemplares e pico de 500 usuários simultâneos por instalação.
 
-### Experiência desejada
-- Moderna, minimalista e visualmente bela.
-- Clara, responsiva e eficiente, sem elementos decorativos que prejudiquem o uso.
-- Consistente entre computadores e dispositivos móveis.
-- Baseada em tokens semânticos de design, permitindo comparar paletas completas sem reescrever componentes.
+## 13. Qualidade e aceite
 
-### Experiência que deve ser evitada
-- Interface visualmente carregada, com excesso de animações, adornos ou informações sem hierarquia.
-- Experiência incompleta ou difícil de usar em telas móveis.
-- Exposição de identidade ou dados de outros leitores em filas, reservas ou empréstimos.
+### Testes
 
-### Jornada principal do usuário
-1. O leitor autentica-se pelo campo de e-mail ou matrícula e senha.
-2. Pesquisa ou filtra o catálogo por título, autor, ISBN, categoria, descrição, palavra-chave, disponibilidade, avaliação ou ano.
-3. Abre os detalhes de um título, consulta descrição, avaliação, disponibilidade e calendário.
-4. Escolhe um período válido e solicita a reserva.
-5. Acompanha confirmação, posição na fila, datas estimadas, empréstimos, devoluções e eventuais penalidades sem visualizar dados de outros leitores.
-6. Depois da devolução, pode avaliar o título e o estado físico do exemplar.
+- Unitários: regras, validações, calendários, filas e penalidades.
+- Integração: API, autenticação, autorização, ORM, PostgreSQL e concorrência.
+- Contrato entre React e API; componentes e acessibilidade; ponta a ponta; segurança; carga simulada.
 
-### Informações que precisam estar visíveis
-- Para o leitor: dados bibliográficos, disponibilidade agregada, calendário, datas confirmadas e média de avaliação do título, sem necessidade de exibir o código único de cada exemplar.
-- Para o leitor: sua posição na fila e datas estimadas, sem nome, matrícula, e-mail ou qualquer identificador das demais pessoas.
-- Para o administrador: título, exemplares individuais, códigos únicos, estado e empréstimo associado.
-- Para o administrador: avaliações e média do estado físico de cada exemplar.
-- Para o administrador: painel das políticas vigentes e controles para alterar ou cancelar empréstimos.
+### Primeira versão pronta quando
 
-### Estados importantes da interface
-- Carregamento.
-- Vazio.
-- Erro.
-- Sucesso.
-- Backend indisponível.
-- Troca de idioma entre português e inglês.
+- Perfis executarem somente ações autorizadas e os fluxos de acesso funcionarem.
+- Administrador gerenciar leitores, acervo, calendário, políticas e operações.
+- Leitor pesquisar, reservar, acompanhar, alterar, cancelar, renovar quando permitido e avaliar.
+- Filas, prazos, limites e penalidades não provocarem sobreposição de exemplar.
+- Auditoria funcionar sem expor segredos.
+- Interface funcionar nos dois idiomas e dispositivos, com evidências de WCAG 2.2 AA.
+- Frontend publicado consumir a API por HTTPS e informar indisponibilidade.
+- Testes aplicáveis e simulação de carga passarem com resultados registrados.
+- Nenhum segredo nem dado pessoal real estiver versionado.
 
-### Dispositivos e tamanhos de tela
-- Computadores desktop e notebooks.
-- Smartphones.
-- A experiência responsiva é requisito fundamental; nenhuma função essencial pode existir apenas em um dos contextos.
-
-### Acessibilidade
-- Conformidade planejada com WCAG 2.2 nível AA.
-- Navegação completa por teclado, sem armadilhas de foco.
-- Ordem de foco lógica e indicador de foco sempre visível e não encoberto.
-- Contraste de texto e componentes compatível com os critérios aplicáveis do nível AA.
-- Estrutura semântica, nomes, funções, estados e mensagens compreensíveis por leitores de tela.
-- Textos alternativos para imagens informativas, incluindo capas quando necessário ao contexto.
-- Formulários com rótulos, instruções e mensagens de erro identificáveis e acionáveis.
-- Áreas de toque adequadas em dispositivos móveis.
-- Interface utilizável com zoom, redimensionamento e reorganização do conteúdo.
-- Respeito à preferência por movimento reduzido e ausência de animações indispensáveis à compreensão.
-- Autenticação compatível com gerenciadores de senha, preenchimento automático e colagem.
-- A conformidade deve ser verificada por testes automatizados e revisão manual.
-
-## Restrições
-
-### Técnicas
-- O frontend deve utilizar React e ser publicável no GitHub Pages.
-- O frontend utilizará o endereço padrão do GitHub Pages, sem domínio próprio na primeira versão.
-- O frontend deve consumir o backend por HTTPS.
-- O backend deve poder ser hospedado em um VPS da Hostinger; planos Web e Cloud comuns não atendem ao runtime Python/Django escolhido.
-- A persistência deve utilizar banco de dados relacional.
-- Cada implantação deve manter acervo, usuários, configurações e histórico de uma única instituição isolada.
-- A seleção automática de idioma deve usar a preferência informada pelo navegador, sem depender de geolocalização por IP; o usuário pode alterar o idioma manualmente.
-- Nenhum componente deve usar cores de interface literais quando existir um token semântico correspondente.
-- O tema visual ativo deve ser selecionável em um único ponto de configuração, permitindo testar seis paletas candidatas.
-- Temas translúcidos devem possuir fallback opaco, não podem comprometer contraste ou legibilidade e devem respeitar preferências de redução de transparência ou movimento quando disponíveis.
-- O frontend usará `HashRouter` para que rotas da SPA funcionem no endereço padrão do GitHub Pages sem depender de fallback do servidor.
-
-### Tecnologias proibidas
-- Persistência de tokens no armazenamento do navegador, por risco de exposição a scripts.
-- Geolocalização por IP apenas para selecionar idioma, por ser desnecessária, imprecisa e potencialmente invasiva.
-- Armazenamento de senhas, tokens reutilizáveis ou segredos em texto puro.
-- Dependência obrigatória de serviço pago na primeira versão.
-- Acoplamento direto das regras de negócio ao filesystem do VPS ou a um fornecedor específico de armazenamento.
-
-### Segurança
-- O backend deve possuir autenticação e autorização apropriadas aos tipos de usuário.
-- Segredos e credenciais do banco não podem ser expostos no frontend.
-- Senhas escolhidas pelo usuário devem possuir no mínimo 15 caracteres e o sistema deve aceitar pelo menos 64 caracteres, incluindo espaços e caracteres Unicode normalizados.
-- O sistema não deve impor combinações obrigatórias de maiúsculas, minúsculas, números e símbolos; deve bloquear senhas comuns ou conhecidas como comprometidas e oferecer medidor de força.
-- O gerador de senha deve usar fonte criptograficamente segura e pode combinar letras, números e símbolos.
-- Senhas devem ser armazenadas somente por meio do mecanismo de hash seguro do framework, nunca em texto puro ou de forma reversível.
-- Tentativas de autenticação devem possuir limitação de frequência.
-- Sessões expiram após 30 minutos de inatividade e possuem duração absoluta máxima de 8 horas, com invalidação aplicada pelo backend.
-- Logout, expiração, troca e recuperação de senha devem invalidar as sessões ou credenciais aplicáveis.
-- Depois do login, o backend emite um token bearer opaco, aleatório, de curta duração e revogável; o frontend o envia no cabeçalho `Authorization` das requisições autenticadas.
-- O token deve permanecer somente na memória do frontend e não pode ser persistido em `localStorage`, `sessionStorage` ou armazenamento equivalente.
-- O backend deve armazenar somente uma representação segura do token, nunca seu valor reutilizável em texto puro.
-- Atualizar, fechar ou reabrir o frontend pode exigir novo login, pois não haverá credencial persistente no navegador.
-- CORS deve permitir somente a origem exata do frontend publicado no GitHub Pages e os métodos e cabeçalhos necessários.
-
-### Privacidade e dados sensíveis
-- Dados cadastrais e histórico de empréstimos dos leitores devem ser acessíveis somente de acordo com as permissões definidas.
-- Posições e estimativas da fila devem ser apresentadas sem revelar a identidade ou os dados pessoais dos outros leitores.
-
-### Legais e regulatórias
-- Dados de demonstração de pessoas devem ser sintéticos e não podem reproduzir dados pessoais de indivíduos reais.
-- Títulos e metadados bibliográficos reais podem ser usados em testes e demonstrações quando sua utilização for legalmente permitida.
-- Capas, descrições e imagens devem respeitar licenças e direitos aplicáveis; quando necessário, devem ser usados materiais em domínio público, licenciados ou substitutos próprios.
-
-### Financeiras
-- Priorizar ferramentas, bibliotecas, serviços e níveis gratuitos.
-- Qualquer serviço pago deve ser evitado na primeira versão ou submetido à aprovação explícita do responsável.
-
-### Prazo
-- Não há exigência de disponibilidade contínua; o backend pode ser iniciado e interrompido conforme as sessões de estudo e demonstração.
-
-### Desempenho e escala
-- Uma instalação deve ser projetada e testada por simulação para até 5.000 leitores, 20.000 títulos e 50.000 exemplares.
-- Os testes de carga devem simular picos de até 500 usuários simultâneos.
-- Essas metas são objetivos de engenharia e teste; não haverá necessidade de reunir usuários humanos reais para validá-las.
-
-### Compatibilidade
-- Navegadores modernos com suporte ativo em computadores e smartphones.
-- Duas versões estáveis mais recentes de Chrome, Firefox, Edge e Safari na época de cada versão entregue.
-- Tecnologias assistivas compatíveis com os padrões semânticos da Web.
-
-## Arquitetura imaginada
-
-### Visão geral
-Frontend React internacionalizado publicado no GitHub Pages, comunicando-se por HTTPS com um backend hospedável na Hostinger, que centraliza autenticação, regras de negócio e acesso ao banco relacional. Cada implantação atende uma única instituição e mantém seu acervo isolado. Esta arquitetura ainda deverá ser formalmente detalhada e validada.
-
-### Componentes principais
-- Frontend React: interface do usuário e consumo da API.
-- Backend Python com Django e Django REST Framework: API, autenticação, autorização, usuários, livros, empréstimos, reservas e regras de negócio.
-- PostgreSQL acessado pelo Django ORM: persistência relacional e migrações.
-- Armazenamento de objetos ou serviço de mídia: arquivos de imagem; o banco mantém referências e metadados.
-
-### Fluxo de dados esperado
-1. O usuário informa e-mail ou matrícula/identificador e senha no frontend.
-2. O frontend envia as credenciais ao backend exclusivamente por HTTPS.
-3. O backend valida o login e devolve um token bearer opaco e revogável.
-4. O frontend mantém o token somente em memória e o envia no cabeçalho `Authorization` das requisições autenticadas.
-5. O backend valida o token, autentica e autoriza a operação, aplica regras de negócio e acessa o banco quando necessário.
-6. O backend devolve uma resposta ao frontend.
-7. O frontend apresenta o resultado ou uma mensagem de indisponibilidade quando não conseguir acessar o backend.
-
-### Persistência
-Usuários, títulos, exemplares físicos e seus estados, calendários de funcionamento, feriados, fechamentos excepcionais, políticas configuráveis, penalidades, empréstimos, reservas, posições da fila de espera, avaliações individuais, notificações e registros de auditoria devem persistir em banco de dados relacional. Um título pode possuir vários exemplares, e cada exemplar deve possuir identificação única. As avaliações individuais são a fonte de verdade; suas médias podem ser calculadas sob demanda ou mantidas como dados derivados, sem substituir o histórico. Históricos de empréstimos e auditoria são preservados; tokens expirados são removidos periodicamente; dados sintéticos de teste podem ser recriados. Exclusão ou anonimização de leitores é administrativa e deve preservar a integridade referencial e da auditoria.
-
-### Integrações externas
-- Na primeira versão, imagens ficam em diretório persistente no VPS e o PostgreSQL armazena caminhos, metadados e relações.
-- A camada de armazenamento deve usar uma abstração que permita migrar futuramente para serviço de objetos sem alterar as regras de negócio.
-
-### Tecnologias desejadas
-- React para o frontend, como tecnologia de estudo definida pelo responsável.
-- Python com Django e Django REST Framework para o backend, aproveitando a familiaridade do responsável e os recursos maduros de autenticação, administração, ORM, migrações e APIs.
-- PostgreSQL como sistema gerenciador de banco de dados relacional.
-- Django ORM para modelagem, consultas e migrações.
-- Armazenamento de arquivos no VPS na primeira versão, atrás da abstração de storage do Django; PostgreSQL armazena caminhos, metadados e relações, não os arquivos binários por padrão.
-
-### Ambientes e deploy
-- Frontend publicável no GitHub Pages.
-- Backend publicável em VPS da Hostinger e executado sob demanda; não há requisito de operação contínua.
-- O VPS deve executar Python/Django, PostgreSQL e os serviços necessários à API com HTTPS; a topologia operacional definitiva será formalizada em `ARCHITECTURE.md`.
-
-## Desenvolvimento e qualidade
-
-### Prioridades
-1. Compreender e documentar o domínio e suas regras.
-2. Construir o sistema incrementalmente a partir de testes e documentação validados.
-3. Obter funcionamento ponta a ponta durante sessões de estudo e demonstração.
-
-### Estratégia de testes esperada
-- Testes unitários para regras puras, validações, cálculos de calendário, filas e penalidades.
-- Testes de integração para API, autenticação, autorização, ORM, PostgreSQL e concorrência de reservas.
-- Testes de contrato entre React e a API Django.
-- Testes de componentes e acessibilidade da interface.
-- Testes ponta a ponta para as jornadas principais de leitor e administrador.
-- Testes de segurança para autenticação, autorização, tokens, CORS, limitação de tentativas e privacidade.
-- Testes de carga totalmente simulados para os volumes e a concorrência definidos.
-- Dados de pessoas inteiramente sintéticos, com nomes realistas; títulos e metadados bibliográficos reais somente quando legalmente utilizáveis.
-- Testes manuais pontuais pelo responsável complementam, mas não substituem, as simulações automatizadas.
-
-### Critérios para considerar a primeira versão pronta
-- [ ] Leitor e administrador conseguem autenticar-se e executar somente operações autorizadas ao seu perfil.
-- [ ] O primeiro acesso exige troca da senha temporária e a recuperação assistida funciona sem envio de e-mail.
-- [ ] Administrador consegue cadastrar leitores, títulos, exemplares, calendário e políticas.
-- [ ] Leitor consegue pesquisar, filtrar, reservar, acompanhar, alterar, cancelar, renovar quando permitido e avaliar depois da devolução.
-- [ ] Filas, disponibilidade, prazos, tolerâncias, penalidades e limites respeitam as regras configuradas sem sobreposição de exemplares.
-- [ ] Auditoria registra as operações administrativas definidas sem expor segredos.
-- [ ] Interface funciona em português e inglês, em computadores e smartphones.
-- [ ] Critérios aplicáveis da WCAG 2.2 nível AA possuem evidências automatizadas e manuais.
-- [ ] Frontend publicado consegue consumir o backend por HTTPS e comunica claramente sua indisponibilidade.
-- [ ] Testes unitários, integração, contrato, componentes, ponta a ponta, segurança e regressão aplicáveis estão aprovados.
-- [ ] Testes simulados exercitam os volumes-alvo e registram os resultados e limitações observados.
-- [ ] Nenhum segredo ou dado pessoal real de demonstração está versionado ou exposto.
-
-### Manutenção esperada
-Projeto mantido pelo responsável durante o período de estudo, sem compromisso de operação 24 horas por dia.
-
-### Observabilidade esperada
-- Logs estruturados para autenticação, erros, alterações administrativas e operações relevantes.
-- Logs não podem registrar senhas, tokens reutilizáveis nem dados pessoais desnecessários.
-- Identificadores de correlação devem permitir acompanhar uma requisição entre frontend, API e persistência quando aplicável.
-- Para o projeto de estudo, consulta local ou no VPS é suficiente; serviços pagos de observabilidade não são exigidos.
-
-## Riscos, hipóteses e dependências
+## 14. Riscos e pendências
 
 ### Riscos
-- Backend desligado ou inacessível: operações dinâmicas ficam indisponíveis; o frontend deve comunicar claramente essa condição.
-- Restrições do GitHub Pages para aplicações de página única: a estratégia de roteamento deverá ser definida antes da implementação.
-- VPS da Hostinger é autogerenciado e pode gerar custo ou trabalho operacional incompatível com a preferência por serviços gratuitos; o deploy real dependerá da disponibilidade desse ambiente.
 
-### Hipóteses que precisam ser validadas
-- Um VPS da Hostinger com recursos adequados estará disponível quando o deploy precisar ser demonstrado.
-- GitHub Pages e backend em outro domínio poderão comunicar-se de forma segura com a configuração escolhida de autenticação e CORS.
+- O deploy depende de VPS Hostinger adequado e pode gerar custo e administração operacional.
+- A comunicação entre GitHub Pages e VPS depende de HTTPS, CORS e configuração correta.
+- Backend desligado torna funções dinâmicas indisponíveis; isso é intencional e deve ser explicado na interface.
 
-### Dependências externas
-- GitHub Pages para publicação do frontend.
-- VPS da Hostinger para execução sob demanda do backend e do PostgreSQL.
-- Serviço gratuito ou mecanismo local de armazenamento de imagens ainda a definir.
+### Decisões de produto pendentes
 
-### Decisões já tomadas
-- O Athena é um objeto de estudo, não um serviço que precise permanecer disponível continuamente.
-- O frontend será desenvolvido com React e deverá ser publicável no GitHub Pages.
-- O frontend acessará o backend por HTTPS.
-- O backend deverá ser hospedável em VPS da Hostinger e poderá ser executado sob demanda.
-- A persistência usará banco de dados relacional.
-- A primeira versão contemplará autenticação, usuários, livros, empréstimos, reservas, fila de espera, calendário e configuração administrativa de políticas.
-- A indisponibilidade do backend deve ser informada claramente pelo frontend.
-- O acervo será composto por exemplares físicos de livros.
-- Não haverá cobrança ou pagamento pelo empréstimo.
-- Existirão somente dois tipos de usuário: leitor e administrador; coordenadores e responsáveis pela biblioteca atuarão com perfil administrativo.
-- O Athena não ficará limitado a escolas: poderá atender universidades, bibliotecas públicas e instituições semelhantes.
-- O catálogo do leitor agrupará exemplares iguais por título.
-- O controle administrativo e os empréstimos identificarão individualmente cada exemplar físico.
-- Todo empréstimo começa por uma solicitação de reserva do leitor, inclusive quando houver disponibilidade imediata.
-- O administrador configura o calendário de funcionamento e as políticas de empréstimo, incluindo períodos mínimo e máximo, limite simultâneo e efeitos de penalidades.
-- A concessão permitida pelas regras não exige confirmação administrativa, mas o administrador pode visualizar, alterar e cancelar qualquer empréstimo.
-- Leitores são cadastrados pelo administrador com matrícula ou identificador, e-mail e senha; depois podem alterar o próprio e-mail e senha.
-- A notificação por e-mail em razão de devolução antecipada pertence a uma versão futura distante.
-- A fila de espera usa a ordem cronológica da solicitação como prioridade.
-- A tolerância para retirada é configurável, com padrão de 1 dia de funcionamento.
-- A penalidade por atraso é configurável, com padrão de 1 semana sem novos empréstimos.
-- O leitor pode alterar e cancelar reservas próprias, mas não pode criar conflito com período já reservado por outra pessoa.
-- Operações administrativas relevantes devem produzir log persistente de auditoria.
-- O administrador pode cadastrar feriados e fechamentos excepcionais.
-- O intervalo padrão de empréstimo é de 3 a 15 dias de funcionamento, configurável pelo administrador.
-- O limite padrão é de 3 empréstimos simultâneos, configurável pelo administrador.
-- A penalidade padrão por atraso bloqueia novos empréstimos e reservas por 7 dias corridos.
-- Leitores com empréstimos atrasados não podem criar novas reservas.
-- Renovação é a alteração da devolução e exige ausência de fila e respeito ao período máximo.
-- O leitor pode cancelar antes da retirada; mais de 3 cancelamentos em uma janela móvel de 1 mês bloqueiam novas solicitações até o fim da janela.
-- Cancelamentos administrativos não contam para a punição, e reservas já confirmadas são preservadas.
-- O administrador pode suspender novas reservas sem afetar as existentes.
-- Notificações futuras registrarão envio, leitura, aceite e recusa.
-- A auditoria registra autor, data e hora, ação, valor anterior e novo; justificativa é opcional.
-- Exemplares podem transitar entre disponível, reservado, emprestado, danificado, em manutenção, perdido e descartado, inclusive retornar de qualquer desses estados por ação administrativa.
-- Os dias de funcionamento padrão são segunda a sexta-feira, mas podem ser alterados pelo administrador.
-- Matrícula ou identificador e e-mail são únicos dentro de cada instituição.
-- Título, autor, ISBN, editora, edição, ano, categoria, descrição e imagem principal de capa são obrigatórios; número de páginas e imagens adicionais são opcionais.
-- O leitor pode avaliar o título e o estado físico do exemplar após concluir a devolução; as médias são derivadas das avaliações individuais.
-- A escala de avaliação é de 0 a 5 estrelas; cada devolução pode gerar uma avaliação independente e avaliações enviadas não podem ser editadas.
-- O backend será desenvolvido em Python com Django e Django REST Framework, usando PostgreSQL e Django ORM.
-- O login usa um único campo para e-mail ou matrícula/identificador e um campo de senha.
-- A senha inicial é temporária e deve ser alterada no primeiro acesso.
-- Na primeira versão, recuperação de acesso é assistida pelo administrador; recuperação autônoma por e-mail fica para o futuro.
-- A política de senha prioriza comprimento mínimo de 15 caracteres, bloqueio de senhas comuns/comprometidas, suporte a gerador seguro e ausência de regras obrigatórias de composição.
-- A sessão expira após 30 minutos de inatividade ou 8 horas de duração absoluta.
-- Imagens ficam em diretório persistente do VPS na primeira versão, por uma abstração de armazenamento; caminhos e metadados ficam no PostgreSQL.
-- O frontend usará o endereço padrão do GitHub Pages na primeira versão.
-- A autenticação entre os domínios usará token bearer opaco e revogável, mantido somente na memória do React e enviado no cabeçalho `Authorization`.
-- Tokens não serão persistidos no armazenamento do navegador; recarregar ou reabrir a aplicação pode exigir novo login.
-- CORS aceitará somente a origem exata do frontend publicado.
-- O frontend será responsivo e funcional em computadores e smartphones, com apresentação moderna e minimalista.
-- A fila exibirá posição e estimativas sem identificar outros leitores.
-- A interface terá como meta WCAG 2.2 nível AA, verificada de forma automatizada e manual.
-- Cada implantação atenderá somente uma instituição, mantendo usuários, acervo, políticas e histórico isolados.
-- A interface oferecerá português do Brasil e inglês; detectará inicialmente o idioma do navegador e permitirá troca manual.
-- O projeto priorizará serviços gratuitos e testes com dados sintéticos e carga simulada.
-- A escala-alvo simulada é de 5.000 leitores, 20.000 títulos, 50.000 exemplares e 500 usuários simultâneos.
-- Serão suportadas as duas versões estáveis mais recentes de Chrome, Firefox, Edge e Safari.
-- O frontend usará `HashRouter` para compatibilidade confiável com o GitHub Pages.
-- As imagens serão armazenadas no VPS na primeira versão, por uma abstração que permitirá migração futura.
-- Históricos de empréstimos e auditoria serão preservados; tokens expirados serão removidos e exclusões de leitores deverão preservar o histórico por anonimização quando aplicável.
-- Seis paletas completas serão implementadas por tokens semânticos e selecionadas em um único ponto de configuração durante a avaliação visual.
+1. Quando uma reserva concedida se torna empréstimo ativo: na concessão, na data prevista ou na confirmação física da retirada?
+2. Como o próximo leitor descobrirá disponibilidade antecipada na primeira versão, sem notificações internas ou por e-mail?
 
-## Referências
+### Decisão técnica pendente
 
-### Projetos semelhantes
-- Referência:
-- O que observar:
-- O que não copiar:
-
-### Referências visuais
-- Referência: First Principles of Calculus — `https://mlee-sinphy.github.io/First-Principles-of-Calculus/`.
-- Elemento relevante: primária `#111827`, secundária `#8B6F47`, destaque `#D9CCB4`, fundo `#FAF9F6`, superfície `#FFFDF8`, texto `#252525`, texto secundário `#5F5B53`, texto sobre primária `#F8F4EC`, borda `#DDD7CC`, sucesso `#2F6B4F`, alerta `#9A6700`, erro `#B42318` e informação `#175CD3`.
-- Intenção: servir como Tema 1 e referência preferencial de sobriedade, clareza e identidade acadêmica.
-
-- Referência: Tema 2 — Oceano e cobre.
-- Elemento relevante: primária `#0F3D3E`, secundária `#285E61`, destaque `#B66A3C`, fundo `#F4F7F6`, superfície `#FFFFFF`, texto `#172121`, texto secundário `#52605E`, texto sobre primária `#FFFFFF`, borda `#CBD8D5`, sucesso `#257A52`, alerta `#9A6700`, erro `#B42318` e informação `#176B87`.
-- Intenção: alternativa moderna, serena e institucional.
-
-- Referência: Tema 3 — Vinho e ouro antigo.
-- Elemento relevante: primária `#3B1021`, secundária `#6B213C`, destaque `#A67C32`, fundo `#FBF7EF`, superfície `#FFFFFF`, texto `#261B1F`, texto secundário `#69575E`, texto sobre primária `#FFF8F3`, borda `#E2D5C3`, sucesso `#2F6B4F`, alerta `#9A6700`, erro `#B42318` e informação `#365F91`.
-- Intenção: alternativa clássica e acolhedora sem excesso ornamental.
-
-- Referência: Tema 4 — Ardósia e sálvia.
-- Elemento relevante: primária `#243447`, secundária `#496273`, destaque `#667B68`, fundo `#F5F7F2`, superfície `#FFFFFF`, texto `#1F2933`, texto secundário `#5F6B76`, texto sobre primária `#F8FAFC`, borda `#D5DDD2`, sucesso `#3F6B4F`, alerta `#8A6508`, erro `#A9342A` e informação `#315F7D`.
-- Intenção: alternativa discreta, contemporânea e neutra.
-
-- Referência: Tema 5 — Índigo e âmbar.
-- Elemento relevante: primária `#1E1B4B`, secundária `#3730A3`, destaque `#B45309`, fundo `#F8FAFC`, superfície `#FFFFFF`, texto `#1E293B`, texto secundário `#64748B`, texto sobre primária `#F8FAFC`, borda `#D8DEE9`, sucesso `#287A52`, alerta `#A15C00`, erro `#B42318` e informação `#2563EB`.
-- Intenção: alternativa digital, nítida e expressiva.
-
-- Referência: Tema 6 — Aqua Glass.
-- Elemento relevante: primária `#0B3B60`, secundária `#1677A6`, destaque `#67D4E8`, fundo `#EAF7FB`, superfície translúcida `rgba(255, 255, 255, 0.72)`, superfície elevada `rgba(255, 255, 255, 0.86)`, texto `#0B1F33`, texto secundário `#46657A`, texto sobre primária `#FFFFFF`, borda translúcida `rgba(120, 180, 205, 0.38)`, sucesso `#167A5A`, alerta `#9A6700`, erro `#B42318` e informação `#087EA4`.
-- Intenção: alternativa moderna e aquática, com camadas translúcidas, reflexos discretos, profundidade suave e `backdrop-filter` moderado; deve possuir superfícies opacas de fallback e nunca sacrificar contraste ou legibilidade.
-
-Todas as paletas devem mapear os mesmos tokens semânticos. Contraste e estados de interação serão validados antes da aprovação em `UX_UI.md`; cor nunca será o único meio de comunicar estado. Efeitos translúcidos e desfoque pertencem a tokens próprios e podem ser desativados sem alterar a estrutura dos componentes.
-
-### Referências técnicas
-- Referência:
-- Por que é relevante:
-
-### Artigos e documentos
-- Referência:
-- Informação importante:
-
-## Questões em aberto
-
-### Dúvidas estratégicas
-- Nenhuma identificada até o momento.
-
-### Dúvidas de produto
-- Nenhuma identificada neste bloco no momento.
-
-### Dúvidas técnicas
-- Como será realizada a estratégia de backup do diretório de imagens e do PostgreSQL no VPS?
-
-## Observações adicionais
-Uma evolução futura poderá integrar leitores ópticos ou outros dispositivos físicos. O leitor poderá identificar a si próprio e escanear o exemplar para registrar retirada ou devolução, sempre sujeito às mesmas regras, autorização, auditoria e prevenção de conflitos da API.
+3. Qual será a estratégia conjunta de backup do PostgreSQL e das imagens no VPS?
