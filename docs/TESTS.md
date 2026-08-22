@@ -87,7 +87,7 @@ Zero bloqueador; desvios não bloqueadores documentados e aceitos.
 ## Sequência de portões
 | Portão | Incremento | Condição para avançar | Tarefa |
 |---|---|---|---|
-| GATE-000 | documentação e bootstrap | validação humana, build/lint/testes base | TASK-001 |
+| GATE-000 | documentação e bootstrap | **Aprovado** — validação humana, build/lint/testes base | TASK-001 |
 | GATE-001 | modelo de contas | unidades de senha/perfis falham e depois passam | TASK-002 |
 | GATE-002 | autenticação ponta a ponta | autorização, sessão e indisponibilidade passam | TASK-002 |
 | GATE-003 | acervo e catálogo | CRUD, agrupamento, busca e privacidade passam | TASK-003 |
@@ -97,14 +97,14 @@ Zero bloqueador; desvios não bloqueadores documentados e aceitos.
 | GATE-007 | experiência completa | responsividade, i18n, temas e AA passam | TASK-007 |
 | GATE-008 | aceite 1.0 | deploy, segurança, backup, E2E e carga passam | TASK-008 |
 
-Todos os portões estão **Planejados**. A regressão exigida em cada linha inclui todos os portões anteriores.
+GATE-000 foi aprovado em 2026-08-22. Os demais portões estão **Planejados**. A regressão exigida em cada linha inclui todos os portões anteriores.
 
 ## Casos de teste
 | ID | Nível | Tipo | Objetivo e resultado esperado | Fonte |
 |---|---:|---|---|---|
-| TEST-001 | 0 | estático | formatação, lint, tipos e build sem erro | STYLE |
-| TEST-002 | 0 | segurança | scanner não encontra segredo ou credencial real | CON-005 |
-| TEST-003 | 3 | banco | migrações aplicam em PostgreSQL vazio | ARCHITECTURE |
+| TEST-001 | 0 | estático | **Aprovado:** formatação, lint, tipos e build sem erro | STYLE |
+| TEST-002 | 0 | segurança | **Aprovado:** scanner não encontra segredo ou credencial real | CON-005 |
+| TEST-003 | 3 | banco | **Aprovado:** migrações e teste da API executam em PostgreSQL vazio | ARCHITECTURE |
 | TEST-010 | 1 | unidade | política de senha aceita/rejeita limites definidos | REQ-NF-002 |
 | TEST-011 | 3 | integração | e-mail e matrícula autenticam sem enumeração | REQ-F-001 |
 | TEST-012 | 5 | fluxo | senha temporária obriga troca e recuperação assistida revoga sessão | REQ-F-002 |
@@ -156,7 +156,7 @@ Todos os portões estão **Planejados**. A regressão exigida em cada linha incl
 ## Regressão acumulada
 | Após o portão | Testes e suítes obrigatórios | Resultado exigido |
 |---|---|---|
-| 000–003 | SUITE-001 + testes do portão | 100% aprovados |
+| 000–003 | SUITE-001 + testes do portão | GATE-000 aprovado; próximos exigem 100% |
 | 004–007 | SUITE-001 e SUITE-002 | 100% aprovados |
 | 008 | SUITE-003 | aceite final registrado |
 
