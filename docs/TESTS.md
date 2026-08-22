@@ -91,13 +91,13 @@ Zero bloqueador; desvios não bloqueadores documentados e aceitos.
 | GATE-001 | modelo de contas | **Aprovado** — unidades de senha/perfis falharam e depois passaram | TASK-002 |
 | GATE-002 | autenticação ponta a ponta | **Aprovado** — autorização, sessão e indisponibilidade passam | TASK-002 |
 | GATE-003 | acervo e catálogo | **Aprovado** — CRUD, agrupamento, busca e privacidade passam | TASK-003 |
-| GATE-004 | calendário e disponibilidade | bordas e concorrência PostgreSQL passam | TASK-004 |
+| GATE-004 | calendário e disponibilidade | **Aprovado** — bordas e concorrência PostgreSQL passam | TASK-004 |
 | GATE-005 | circulação | reserva até devolução, fila e avisos passam | TASK-005 |
 | GATE-006 | governança histórica | penalidades, auditoria, avaliações e análises passam | TASK-006 |
 | GATE-007 | experiência completa | responsividade, i18n, temas e AA passam | TASK-007 |
 | GATE-008 | aceite 1.0 | deploy, segurança, backup, E2E e carga passam | TASK-008 |
 
-GATE-000 a GATE-003 foram aprovados em 2026-08-22. Os demais portões estão **Planejados**. A regressão exigida em cada linha inclui todos os portões anteriores.
+GATE-000 a GATE-004 foram aprovados em 2026-08-22. Os demais portões estão **Planejados**. A regressão exigida em cada linha inclui todos os portões anteriores.
 
 ## Casos de teste
 | ID | Nível | Tipo | Objetivo e resultado esperado | Fonte |
@@ -114,11 +114,11 @@ GATE-000 a GATE-003 foram aprovados em 2026-08-22. Os demais portões estão **P
 | TEST-021 | 3 | integração | **Aprovado:** busca encontra descrição e tags; ISBN ausente é válido | REQ-F-005 |
 | TEST-022 | 5 | fluxo | **Aprovado:** leitor escolhe exemplar pela conservação sem ver código | REQ-F-005 |
 | TEST-023 | 3 | segurança | **Aprovado:** upload inválido é rejeitado e mídia autorizada funciona | ARCHITECTURE |
-| TEST-030 | 1 | unidade | calendário cobre fechamentos, mínimo/máximo e bordas | RULE-005 |
-| TEST-031 | 1 | unidade | penalidades cobrem atraso e janela de cancelamento | RULE-012 |
-| TEST-032 | 3 | concorrência | duas reservas simultâneas não usam o mesmo exemplar/período | RULE-007 |
-| TEST-033 | 3 | integração | FIFO e desempate são determinísticos e privados | RULE-008 |
-| TEST-034 | 3 | integração | mudança de política preserva reservas existentes | RULE-015 |
+| TEST-030 | 1 | unidade | **Aprovado:** calendário cobre fechamentos, mínimo/máximo e bordas | RULE-005 |
+| TEST-031 | 1 | unidade | **Aprovado:** penalidades cobrem atraso e janela de cancelamento | RULE-012 |
+| TEST-032 | 3 | concorrência | **Aprovado:** duas reservas simultâneas não usam o mesmo exemplar/período | RULE-007 |
+| TEST-033 | 3 | integração | **Aprovado:** FIFO e desempate são determinísticos e privados | RULE-008 |
+| TEST-034 | 3 | integração | **Aprovado:** mudança de política preserva reservas existentes | RULE-015 |
 | TEST-040 | 5 | fluxo | reserva válida é automática e recusa explica regra | REQ-F-006 |
 | TEST-041 | 5 | fluxo | retirada cria empréstimo somente na confirmação física | RULE-009 |
 | TEST-042 | 5 | fluxo | devolução encerra uma vez e libera disponibilidade | REQ-F-010 |

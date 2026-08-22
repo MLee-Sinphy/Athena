@@ -112,7 +112,7 @@ Catálogo agrupado por título, comparação de exemplares disponíveis, busca t
 
 # TASK-004 — Implementar calendário, políticas e disponibilidade
 ## Estado
-Em andamento — testes do GATE-004 iniciados.
+Concluída — GATE-004 aprovado.
 ## Tipo
 Feature.
 ## Prioridade
@@ -136,10 +136,17 @@ GATE-004; TEST-030 a TEST-034.
 Disponibilidade e políticas passam testes de fronteira e concorrência.
 ## Riscos
 Off-by-one e política retroativa.
+## Resultado
+Calendário semanal configurável, exceções de abertura/fechamento, políticas versionadas, limites e suspensão, penalidades, FIFO determinístico e alocação transacional sem sobreposição foram implementados.
+## Evidências
+- Falha inicial: módulo `circulation.models` inexistente antes da implementação.
+- TEST-030 a TEST-034 cobertos por 13 testes de unidade, integração, autorização e concorrência.
+- Teste concorrente executado no PostgreSQL real; exatamente uma das duas alocações simultâneas foi confirmada.
+- Regressão de 45 testes de backend, lint e build do frontend aprovados na CI `32596027546` para `af1968d`.
 
 # TASK-005 — Implementar circulação, fila e avisos
 ## Estado
-Planejada; depende de TASK-004.
+Pronta para iniciar; dependência TASK-004 satisfeita.
 ## Tipo
 Feature.
 ## Prioridade
