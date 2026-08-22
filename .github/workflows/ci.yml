@@ -130,3 +130,20 @@ jobs:
           ATHENA_BACKUP_PASSPHRASE: ci-only-backup-passphrase
           POSTGRES_DB: athena
           POSTGRES_USER: athena
+      - name: Simulate documented data volume and 500 concurrent clients
+        run: |
+          python backend/manage.py migrate --noinput
+          python backend/manage.py seed_load_data --readers 5000 --titles 20000 --copies 50000
+          gunicorn --chdir backend config.wsgi:application \
+            --bind 127.0.0.1:8000 --workers 4 --access-logfile - --error-logfile - &
+          server_pid="$!"
+          trap 'kill "$server_pid"' EXIT
+          for attempt in {1..30}; do
+            if curl --fail --silent http://127.0.0.1:8000/api/v1/health/ >/dev/null; then
+              break
+            fi
+            sleep 1
+          done
+          python3 scripts/load_test.py http://127.0.0.1:8000/api/v1/health/ --clients 500
+        env:
+          DJANGO_SECRET_KEY: ci-only-not-a-production-secret
