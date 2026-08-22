@@ -145,12 +145,12 @@ GATE-000 a GATE-007 foram aprovados em 2026-08-22. A parte automatizável do GAT
 ## Matriz de rastreabilidade
 | Fonte | Critério ou comportamento | Testes | Portões | Estado |
 |---|---|---|---|---|
-| UC-001 | acesso e credenciais | 010–014 | 001–002 | Planejado |
-| UC-002/008 | catálogo e acervo | 020–023 | 003 | Planejado |
-| UC-003/009 | calendário e reserva | 030–040 | 004–005 | Planejado |
-| UC-004/005/006 | circulação e avisos | 041–047 | 005 | Planejado |
-| UC-007/010 | avaliações, histórico e auditoria | 050–053 | 006 | Planejado |
-| REQ-NF-004/005/006/012 | experiência | 060–064 | 007 | Planejado |
+| UC-001 | acesso e credenciais | 010–014 | 001–002 | Aprovado |
+| UC-002/008 | catálogo e acervo | 020–023 | 003 | Aprovado |
+| UC-003/009 | calendário e reserva | 030–040 | 004–005 | Aprovado |
+| UC-004/005/006 | circulação e avisos | 041–047 | 005 | Aprovado |
+| UC-007/010 | avaliações, histórico e auditoria | 050–053 | 006 | Aprovado |
+| REQ-NF-004/005/006/012 | experiência | 060–064 | 007 | Aprovado |
 | REQ-NF-001/003/008/010 | aceite operacional | 070–074 | 008 | Em validação |
 
 ## Regressão acumulada
