@@ -8,7 +8,7 @@
 - Estado atual: Planejamento concluído — documentação validada; implementação ainda não iniciada.
 
 ## Validação
-- Aprovada por Lee em 2026-08-22.
+- Aprovada por M Lee em 2026-08-22.
 - A implementação deve seguir `TASKS.md` e os portões de `TESTS.md`.
 
 ## Visão
