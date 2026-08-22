@@ -99,6 +99,10 @@ jobs:
             python backend/manage.py check --deploy
       - name: Prove encrypted database and media restoration
         run: |
+          output_file="$(mktemp)"
+          set +e
+          (
+          set -euxo pipefail
           docker compose -f compose.production.yaml up -d --wait postgres
           docker compose -f compose.production.yaml exec -T postgres \
             psql -U athena -d athena -c 'CREATE TABLE backup_probe (value text); INSERT INTO backup_probe VALUES ('\''preserved'\'');'
@@ -115,6 +119,13 @@ jobs:
             psql -U athena -d athena -tAc "SELECT value FROM backup_probe WHERE value = 'preserved'" | grep -qx preserved
           docker compose -f compose.production.yaml run --rm --no-deps -T api \
             test -f /app/media/backup-probe
+          ) 2>&1 | tee "$output_file"
+          result="${PIPESTATUS[0]}"
+          if [[ "$result" -ne 0 ]]; then
+            message="$(tail -80 "$output_file" | sed ':a;N;$!ba;s/%/%25/g;s/\r/%0D/g;s/\n/%0A/g')"
+            echo "::error title=Backup restoration failure::$message"
+          fi
+          exit "$result"
         env:
           ATHENA_BACKUP_PASSPHRASE: ci-only-backup-passphrase
           POSTGRES_DB: athena
