@@ -6,6 +6,7 @@
 - A variável de repositório `VITE_API_BASE_URL` deve conter a URL HTTPS pública da API.
 - No VPS, Caddy termina HTTPS e encaminha requisições ao Gunicorn/Django.
 - PostgreSQL e mídia usam volumes Docker distintos e persistentes.
+- A imagem PostgreSQL 18 monta o volume em `/var/lib/postgresql`, conforme o layout versionado dessa geração da imagem.
 
 ## Preparação do VPS
 
