@@ -77,8 +77,8 @@ jobs:
           DJANGO_SECRET_KEY: ci-only-not-a-production-secret
       - name: Check frontend
         run: make check-frontend
-      - name: Install browser for frontend E2E
-        run: npx playwright install --with-deps chromium
+      - name: Install browsers for frontend E2E
+        run: npx playwright install --with-deps chromium firefox webkit
         working-directory: frontend
       - name: Test responsive and accessible frontend journeys
         run: npm run test:e2e
@@ -87,3 +87,35 @@ jobs:
         run: ./scripts/verify_bootstrap.sh
         env:
           DJANGO_SECRET_KEY: ci-only-not-a-production-secret
+      - name: Validate production deployment configuration
+        run: |
+          cp .env.production.example .env.production
+          docker compose -f compose.production.yaml config --quiet
+          docker build -t athena-api:test backend
+          DJANGO_SETTINGS_MODULE=config.production \
+            DJANGO_SECRET_KEY='CI-only-7vQ2!pL9#xR4@kM8%tN6&zW3*eS5-uH1+aD0=fG9?cB' \
+            DJANGO_ALLOWED_HOSTS=api.example.org \
+            CORS_ALLOWED_ORIGINS=https://example.github.io \
+            python backend/manage.py check --deploy
+      - name: Prove encrypted database and media restoration
+        run: |
+          docker compose -f compose.production.yaml up -d --wait postgres
+          docker compose -f compose.production.yaml exec -T postgres \
+            psql -U athena -d athena -c 'CREATE TABLE backup_probe (value text); INSERT INTO backup_probe VALUES ('\''preserved'\'');'
+          docker compose -f compose.production.yaml run --rm --no-deps -T api \
+            touch /app/media/backup-probe
+          mkdir -p "$RUNNER_TEMP/athena-backups"
+          backup_file="$(./scripts/backup.sh "$RUNNER_TEMP/athena-backups")"
+          docker compose -f compose.production.yaml exec -T postgres \
+            psql -U athena -d athena -c 'DROP TABLE backup_probe;'
+          docker compose -f compose.production.yaml run --rm --no-deps -T api \
+            sh -c 'find /app/media -mindepth 1 -delete'
+          ATHENA_RESTORE_CONFIRM=restore-athena ./scripts/restore_backup.sh "$backup_file"
+          docker compose -f compose.production.yaml exec -T postgres \
+            psql -U athena -d athena -tAc "SELECT value FROM backup_probe WHERE value = 'preserved'" | grep -qx preserved
+          docker compose -f compose.production.yaml run --rm --no-deps -T api \
+            test -f /app/media/backup-probe
+        env:
+          ATHENA_BACKUP_PASSPHRASE: ci-only-backup-passphrase
+          POSTGRES_DB: athena
+          POSTGRES_USER: athena

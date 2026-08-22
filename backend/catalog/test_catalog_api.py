@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.core.management import call_command
 from django.test import TestCase
 from rest_framework.test import APIClient
 
@@ -64,6 +65,30 @@ class CatalogApiTests(TestCase):
         self.assertEqual(len(by_description.data["results"]), 1)
         self.assertEqual(len(by_tag.data["results"]), 1)
 
+    def test_catalog_limits_page_size_for_large_collections(self):
+        BookTitle.objects.bulk_create(
+            [
+                BookTitle(
+                    name=f"Livro {index}",
+                    author="Autoria de teste",
+                    publisher="Editora de teste",
+                    edition="1ª edição",
+                    publication_year=2020,
+                    category="Teste",
+                    description="Volume sintético para validar paginação.",
+                    cover=f"covers/{index}.jpg",
+                )
+                for index in range(101)
+            ]
+        )
+
+        response = self.client.get("/api/v1/catalog/titles/?page_size=500")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["count"], 102)
+        self.assertEqual(len(response.data["results"]), 100)
+        self.assertIsNotNone(response.data["next"])
+
     def test_isbn_and_page_count_are_optional(self):
         title = BookTitle.objects.create(
             name="Livro sem ISBN",
@@ -78,6 +103,17 @@ class CatalogApiTests(TestCase):
 
         self.assertEqual(title.isbn, "")
         self.assertIsNone(title.page_count)
+
+
+class LoadDataCommandTests(TestCase):
+    def test_command_creates_requested_synthetic_volume(self):
+        call_command("seed_load_data", readers=2, titles=3, copies=5, verbosity=0)
+
+        self.assertEqual(
+            get_user_model().objects.filter(registration_id__startswith="LOAD-").count(), 2
+        )
+        self.assertEqual(BookTitle.objects.filter(name__startswith="Volume sintético").count(), 3)
+        self.assertEqual(BookCopy.objects.filter(internal_code__startswith="LOAD-COPY-").count(), 5)
 
 
 class CatalogAdministrationTests(TestCase):
