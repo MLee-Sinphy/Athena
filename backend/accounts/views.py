@@ -32,11 +32,14 @@ class LoginView(APIView):
         serializer = LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         identifier = serializer.validated_data["identifier"]
-        user = (
-            get_user_model()
-            .objects.filter(Q(email__iexact=identifier) | Q(registration_id=identifier))
-            .first()
+        users = get_user_model().objects.filter(
+            Q(email__iexact=identifier)
+            | Q(registration_id=identifier)
+            | Q(whatsapp_number=identifier)
         )
+        if role := serializer.validated_data.get("role"):
+            users = users.filter(role=role)
+        user = users.first()
         password_hash = user.password if user else DUMMY_PASSWORD_HASH
         password_valid = check_password(serializer.validated_data["password"], password_hash)
         if not user or not user.is_active or not password_valid:

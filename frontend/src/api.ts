@@ -47,10 +47,10 @@ export async function setVisualTheme(theme: string) {
   })
 }
 
-export async function login(identifier: string, password: string) {
+export async function login(identifier: string, password: string, role: 'reader' | 'administrator') {
   const response = await request('/auth/login/', {
     method: 'POST',
-    body: JSON.stringify({ identifier, password }),
+    body: JSON.stringify({ identifier, password, role }),
   })
   const result = await response.json() as {
     access_token: string
@@ -83,6 +83,8 @@ export type CatalogTitle = {
   category: string
   description: string
   cover: string
+  isbn: string
+  metadata_source_url: string
   tags: string[]
   available_copies: number
 }
@@ -98,6 +100,7 @@ export type Profile = {
   id: number
   email: string
   registration_id: string
+  whatsapp_number: string
   role: 'reader' | 'administrator'
 }
 
@@ -151,12 +154,13 @@ export async function respondNotice(id: number, response: 'accepted' | 'declined
   })
 }
 
-export async function createReader(email: string, registrationId: string, temporaryPassword: string) {
+export async function createReader(email: string, registrationId: string, temporaryPassword: string, whatsappNumber = '') {
   return jsonRequest<Profile>('/admin/users/', {
     method: 'POST',
     body: JSON.stringify({
       email,
       registration_id: registrationId,
+      whatsapp_number: whatsappNumber,
       temporary_password: temporaryPassword,
     }),
   })

@@ -150,4 +150,5 @@ Em validação — candidata implementada na cadeia de branches; ainda não entr
 - FEATURE-001: e-mails de disponibilidade antecipada.
 - FEATURE-002: recuperação autônoma de senha por e-mail.
 - FEATURE-003: retirada e devolução por leitor físico.
+- FEATURE-004: notificações e autenticação em dois fatores por WhatsApp, condicionadas a consentimento, provedor e análise de segurança.
 - Dashboards analíticos baseados no histórico preservado.

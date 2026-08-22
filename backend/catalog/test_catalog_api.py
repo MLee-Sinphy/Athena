@@ -1,7 +1,9 @@
+from unittest.mock import patch
+
 from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.management import call_command
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from rest_framework.test import APIClient
 
 from accounts.authentication import issue_token
@@ -114,6 +116,27 @@ class LoadDataCommandTests(TestCase):
         )
         self.assertEqual(BookTitle.objects.filter(name__startswith="Volume sintético").count(), 3)
         self.assertEqual(BookCopy.objects.filter(internal_code__startswith="LOAD-COPY-").count(), 5)
+
+
+class DemoDataCommandTests(TestCase):
+    @override_settings(MEDIA_ROOT="/tmp/athena-test-demo-media")
+    def test_command_is_idempotent_and_creates_known_profiles_and_collection(self):
+        with patch.dict("os.environ", {"ATHENA_DEMO_PASSWORD": "Valid-demo-passphrase!42"}):
+            call_command("seed_demo_data", verbosity=0)
+            call_command("seed_demo_data", verbosity=0)
+
+        admin = get_user_model().objects.get(email="mlee.admin@proton.me")
+        student = get_user_model().objects.get(email="mlee.student@proton.me")
+        self.assertEqual(admin.registration_id, "ADM-001")
+        self.assertEqual(admin.role, "administrator")
+        self.assertEqual(student.registration_id, "ALU-000001")
+        self.assertEqual(student.role, "reader")
+        self.assertTrue(admin.check_password("Valid-demo-passphrase!42"))
+        self.assertTrue(student.check_password("Valid-demo-passphrase!42"))
+        self.assertEqual(
+            BookTitle.objects.filter(publisher="Edição demonstrativa Athena").count(), 8
+        )
+        self.assertEqual(BookCopy.objects.filter(internal_code__startswith="DEMO-").count(), 25)
 
 
 class CatalogAdministrationTests(TestCase):

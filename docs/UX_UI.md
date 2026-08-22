@@ -25,7 +25,7 @@ Leitores sem treinamento técnico e administradores com orientação inicial, em
 1. Entrar por e-mail ou matrícula. 2. Pesquisar ou explorar. 3. Abrir título e disponibilidade. 4. Comparar conservação se desejar. 5. Escolher datas. 6. Reservar ou entrar na fila. 7. Acompanhar avisos e operações. 8. Avaliar e sugerir tags após devolver.
 
 ## Arquitetura da informação
-- Pública: login, primeiro acesso e indisponibilidade.
+- Pública: escolha animada e acessível entre login de aluno/administrador, primeiro acesso e indisponibilidade.
 - Leitor: catálogo, título, calendário, minhas reservas/empréstimos, avisos, perfil.
 - Administrador: visão geral, circulação, leitores, acervo, calendário/políticas, auditoria.
 
@@ -61,7 +61,7 @@ Leitura limitada aproximadamente a 80 caracteres; áreas operacionais podem alca
 ### Botões
 Primário único por contexto; secundário, terciário e destrutivo; estados foco, hover, ativo, desabilitado e carregando.
 ### Campos de entrada
-Rótulo sempre visível, ajuda associada e erro acionável. Login possui identificador e senha.
+Rótulo sempre visível, ajuda associada e erro acionável. Login possui seletor de perfil, identificador e senha; a transição curta preserva foco, semântica e redução de movimento.
 ### Cards
 Título mostra capa, metadados essenciais, avaliação e disponibilidade; exemplar mostra conservação sem expor código ao leitor.
 ### Navegação
@@ -84,7 +84,7 @@ Usar somente quando o motivo estiver visível; quando útil, permitir ação e e
 Banner ou tela clara: serviço temporariamente inacessível, nenhuma operação concluída, ação para tentar novamente.
 
 ## Animações
-Curtas, funcionais e dispensáveis; respeitar `prefers-reduced-motion`.
+Curtas, funcionais e dispensáveis; respeitar `prefers-reduced-motion`. A troca Aluno ⇄ Administrador usa indicador deslizante e entrada suave do formulário.
 
 ## Responsividade
 Projetar mobile-first; testar larguras de 320 px até desktop amplo; nenhuma função essencial ou informação crítica desaparece.

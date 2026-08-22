@@ -96,6 +96,7 @@ Zero bloqueador; desvios não bloqueadores documentados e aceitos.
 | GATE-006 | governança histórica | **Aprovado** — penalidades, auditoria, avaliações e análises passam | TASK-006 |
 | GATE-007 | experiência completa | **Aprovado** — responsividade, i18n, temas e AA aplicável passam | TASK-007 |
 | GATE-008 | aceite 1.0 | **Em validação** — automação verde; publicação real, ensaios no VPS, tecnologia assistiva e aceite humano pendentes | TASK-008 |
+| GATE-009 | demonstração operacional | perfis, seed, Open Library, WhatsApp e ciclo Docker passam sem segredo versionado | TASK-009 |
 
 GATE-000 a GATE-007 foram aprovados em 2026-08-22. A parte automatizável do GATE-008 passou no CI `32599541412`; o portão permanece **Em validação** até as evidências externas e o aceite humano. A regressão exigida em cada linha inclui todos os portões anteriores.
 
@@ -141,6 +142,10 @@ GATE-000 a GATE-007 foram aprovados em 2026-08-22. A parte automatizável do GAT
 | TEST-072 | 7 | operação | **Aprovado na automação:** banco e mídia foram cifrados e restaurados com checksums; ensaio no VPS permanece pendente | REQ-NF-010 |
 | TEST-073 | 7 | carga | **Aprovado na automação:** 5.000 leitores, 20.000 títulos, 50.000 exemplares e 500 clientes simultâneos passaram; medição no VPS permanece pendente | REQ-NF-008 |
 | TEST-074 | 7 | compatibilidade | **Parcial:** Chromium, Firefox e WebKit passaram; duas versões estáveis e tecnologias assistivas exigem revisão humana | REQ-NF-004/005 |
+| TEST-075 | 3 | segurança | perfil selecionado deve corresponder à conta sem alterar resposta neutra | REQ-F-001 |
+| TEST-076 | 3 | dados | seed repetido preserva duas contas, oito títulos e 25 exemplares sem duplicar ou versionar senha | TASK-009 |
+| TEST-077 | 3 | integração | metadados Open Library têm fallback e capas são requisitadas diretamente pelo frontend por ISBN | DECISION-007 |
+| TEST-078 | 3 | operação | WhatsApp opcional/único autentica; subir, parar, remover e destruir Docker respeitam persistência e confirmação | TASK-009 |
 
 ## Matriz de rastreabilidade
 | Fonte | Critério ou comportamento | Testes | Portões | Estado |
@@ -152,6 +157,7 @@ GATE-000 a GATE-007 foram aprovados em 2026-08-22. A parte automatizável do GAT
 | UC-007/010 | avaliações, histórico e auditoria | 050–053 | 006 | Aprovado |
 | REQ-NF-004/005/006/012 | experiência | 060–064 | 007 | Aprovado |
 | REQ-NF-001/003/008/010 | aceite operacional | 070–074 | 008 | Em validação |
+| REQ-F-001/003/004 e DECISION-007 | demonstração operacional | 075–078 | 009 | Em desenvolvimento |
 
 ## Regressão acumulada
 | Após o portão | Testes e suítes obrigatórios | Resultado exigido |

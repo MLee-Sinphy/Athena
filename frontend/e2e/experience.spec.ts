@@ -22,7 +22,7 @@ for (const viewport of [{ width: 320, height: 700 }, { width: 1440, height: 900 
     await page.setViewportSize(viewport)
     await mockApi(page)
     await page.goto('/')
-    await page.getByLabel(/email or registration|e-mail ou matrícula/i).fill('reader@example.com')
+    await page.getByLabel(/e-mail|email/i).fill('reader@example.com')
     await page.getByLabel(/^password$|^senha$/i).fill('a valid library passphrase')
     await page.getByRole('button', { name: /sign in|entrar/i }).click()
 

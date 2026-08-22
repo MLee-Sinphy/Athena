@@ -270,3 +270,30 @@ GATE-008; TEST-070 a TEST-074.
 Aceite final humano, evidências registradas e somente então tag SemVer/changelog.
 ## Riscos
 Ambiente VPS e resultados abaixo da meta.
+
+# TASK-009 — Disponibilizar demonstração autenticada e catálogo enriquecido
+## Estado
+Em andamento.
+## Tipo
+Feature/Chore.
+## Prioridade
+Alta.
+## Origem
+Solicitação do responsável após aprovação da candidata inicial.
+## Objetivo
+Executar API e PostgreSQL sob demanda no servidor, criar dados demonstrativos idempotentes e diferenciar visualmente o login de aluno e administrador.
+## Escopo
+### Incluído
+Seletor animado de perfil, validação do perfil no login, WhatsApp opcional e utilizável como identidade, seed sem senha versionada, Open Library em baixo volume, capas externas por ISBN e ciclo Docker seguro.
+### Não incluído
+Envio de WhatsApp/e-mail, 2FA ativo, armazenamento local de todas as capas ou funcionamento público sem HTTPS/domínio acessível.
+## Dependências
+TASK-008, Docker autorizado no servidor e configuração pública HTTPS.
+## Fontes de verdade obrigatórias
+REQUIREMENTS, ARCHITECTURE, UX_UI, DECISIONS e OPERATIONS.
+## Testes e portões relacionados
+GATE-009; TEST-075 a TEST-078.
+## Critérios de conclusão
+Regressão verde, seed repetível, contêineres operáveis sem segredo no Git, frontend publicado e backend acessível por HTTPS quando a infraestrutura for autorizada.
+## Riscos
+Permissão Docker, DNS/firewall, serviço bibliográfico externo e exposição indevida de credenciais demonstrativas.

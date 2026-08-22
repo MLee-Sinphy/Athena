@@ -15,6 +15,7 @@ import type { Theme } from './themes'
 import './App.css'
 
 type Screen = 'checking' | 'login' | 'password' | 'dashboard' | 'unavailable'
+type LoginRole = 'reader' | 'administrator'
 
 function preference<T extends string>(key: string, fallback: T): T {
   return (localStorage.getItem(key) as T | null) ?? fallback
@@ -22,6 +23,7 @@ function preference<T extends string>(key: string, fallback: T): T {
 
 function App() {
   const [screen, setScreen] = useState<Screen>('checking')
+  const [loginRole, setLoginRole] = useState<LoginRole>('reader')
   const [language, updateLanguage] = useState<Language>(() =>
     preference('athena-language', navigator.language.startsWith('pt') ? 'pt' : 'en'),
   )
@@ -82,7 +84,7 @@ function App() {
     const data = new FormData(event.currentTarget)
     const password = String(data.get('password'))
     try {
-      const result = await login(String(data.get('identifier')), password)
+      const result = await login(String(data.get('identifier')), password, loginRole)
       if (result.must_change_password) { setTemporaryPassword(password); setScreen('password') }
       else await loadDashboard()
     } catch (reason) {
@@ -110,11 +112,17 @@ function App() {
     <main id="main-content" className={screen === 'dashboard' ? 'app-wide' : 'app-shell'}>
       {screen === 'checking' && <p aria-live="polite" aria-busy="true">Athena…</p>}
       {screen === 'unavailable' && <section><p className="eyebrow">Athena</p><h1>{text.unavailable}</h1><p role="alert">{text.connectionError}</p><button type="button" onClick={() => { setScreen('checking'); void probe() }}>{text.retry}</button></section>}
-      {screen === 'login' && <section className="auth-card"><p className="eyebrow">Athena</p><h1>{text.login}</h1><form onSubmit={submitLogin}>
+      {screen === 'login' && <section className={`auth-card login-${loginRole}`}><p className="eyebrow">Athena</p><h1>{text.login}</h1>
+        <div className="role-switch" role="group" aria-label={text.loginAs}>
+          <button type="button" aria-pressed={loginRole === 'reader'} onClick={() => setLoginRole('reader')}>{text.studentAccess}</button>
+          <button type="button" aria-pressed={loginRole === 'administrator'} onClick={() => setLoginRole('administrator')}>{text.adminAccess}</button>
+          <span className="role-switch-indicator" aria-hidden="true" />
+        </div>
+        <div key={loginRole} className="role-login-panel"><p className="meta">{loginRole === 'reader' ? text.studentWelcome : text.adminWelcome}</p><form onSubmit={submitLogin}>
         <label>{text.identifier}<input name="identifier" required autoComplete="username" /></label>
         <label>{text.password}<input name="password" type="password" required autoComplete="current-password" /></label>
         {error && <p role="alert">{error}</p>}<button type="submit">{text.login}</button>
-      </form></section>}
+      </form></div></section>}
       {screen === 'password' && <section className="auth-card"><h1>{text.firstAccess}</h1><form onSubmit={submitPassword}>
         <label>{text.current}<input value={temporaryPassword} disabled /></label>
         <label>{text.next}<input name="newPassword" type="password" minLength={15} required autoComplete="new-password" /></label>
