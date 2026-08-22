@@ -212,7 +212,7 @@ Avaliações opcionais e únicas por devolução, sugestões de tags rastreávei
 
 # TASK-007 — Consolidar UX, acessibilidade e temas
 ## Estado
-Em andamento — testes do GATE-007 iniciados.
+Concluída — GATE-007 aprovado.
 ## Tipo
 Feature.
 ## Prioridade
@@ -236,10 +236,17 @@ GATE-007; TEST-060 a TEST-064.
 Funções essenciais operam nos dispositivos, idiomas e temas definidos.
 ## Riscos
 Contraste do tema translúcido e regressões mobile.
+## Resultado
+Experiência responsiva por perfil, fluxos de catálogo/circulação/administração, catálogos completos pt-BR/en, preferências persistentes, seis temas tokenizados e recursos WCAG aplicáveis foram implementados.
+## Evidências
+- 8 testes de componente/qualidade cobrem estados, idioma, temas, contraste e ausência de persistência do token.
+- 3 testes Playwright exercitam login e catálogo em 320 × 700 e 1440 × 900, ausência de overflow e Axe Core.
+- Revisão incremental registrada em `ACCESSIBILITY_REVIEW.md`; matriz final de navegadores e tecnologias assistivas pertence ao GATE-008.
+- CI completa aprovada na execução `32598062053` para o commit `4de11d7`.
 
 # TASK-008 — Implantar, proteger e validar a versão 1.0.0
 ## Estado
-Planejada; depende de TASK-007.
+Pronta para iniciar; dependência TASK-007 satisfeita.
 ## Tipo
 Chore/Test.
 ## Prioridade

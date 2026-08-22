@@ -94,10 +94,10 @@ Zero bloqueador; desvios não bloqueadores documentados e aceitos.
 | GATE-004 | calendário e disponibilidade | **Aprovado** — bordas e concorrência PostgreSQL passam | TASK-004 |
 | GATE-005 | circulação | **Aprovado** — reserva até devolução, fila e avisos passam | TASK-005 |
 | GATE-006 | governança histórica | **Aprovado** — penalidades, auditoria, avaliações e análises passam | TASK-006 |
-| GATE-007 | experiência completa | responsividade, i18n, temas e AA passam | TASK-007 |
+| GATE-007 | experiência completa | **Aprovado** — responsividade, i18n, temas e AA aplicável passam | TASK-007 |
 | GATE-008 | aceite 1.0 | deploy, segurança, backup, E2E e carga passam | TASK-008 |
 
-GATE-000 a GATE-006 foram aprovados em 2026-08-22. Os demais portões estão **Planejados**. A regressão exigida em cada linha inclui todos os portões anteriores.
+GATE-000 a GATE-007 foram aprovados em 2026-08-22. O GATE-008 permanece **Planejado**. A regressão exigida em cada linha inclui todos os portões anteriores.
 
 ## Casos de teste
 | ID | Nível | Tipo | Objetivo e resultado esperado | Fonte |
@@ -131,11 +131,11 @@ GATE-000 a GATE-006 foram aprovados em 2026-08-22. Os demais portões estão **P
 | TEST-051 | 3 | integração | **Aprovado:** tags preservam autor/data e participam da busca | RULE-013 |
 | TEST-052 | 3 | segurança | **Aprovado:** auditoria é completa e imutável por operação comum | REQ-F-019 |
 | TEST-053 | 3 | dados | **Aprovado:** histórico responde aos exemplos analíticos após anonimização | DECISION-006 |
-| TEST-060 | 2 | componente | estados de UI e formulários são acessíveis | UX_UI |
-| TEST-061 | 6 | E2E | jornadas essenciais funcionam a partir de 320 px e desktop | REQ-NF-004 |
-| TEST-062 | 2 | i18n | pt-BR/en completos, seleção inicial e troca persistente | REQ-NF-006 |
-| TEST-063 | 7 | acessibilidade | automação e revisão manual atendem WCAG 2.2 AA aplicável | REQ-NF-005 |
-| TEST-064 | 2 | visual | seis temas usam tokens, contraste válido e fallback opaco | REQ-NF-012 |
+| TEST-060 | 2 | componente | **Aprovado:** estados de UI e formulários são acessíveis | UX_UI |
+| TEST-061 | 6 | E2E | **Aprovado:** jornadas essenciais funcionam a partir de 320 px e desktop | REQ-NF-004 |
+| TEST-062 | 2 | i18n | **Aprovado:** pt-BR/en completos, seleção inicial e troca persistente | REQ-NF-006 |
+| TEST-063 | 7 | acessibilidade | **Aprovado no escopo do GATE-007:** automação e revisão registrada atendem WCAG 2.2 AA aplicável | REQ-NF-005 |
+| TEST-064 | 2 | visual | **Aprovado:** seis temas usam tokens, contraste válido e fallback opaco | REQ-NF-012 |
 | TEST-070 | 6 | E2E | GitHub Pages consome VPS por HTTPS/CORS corretos | CON-002 |
 | TEST-071 | 7 | segurança | sessão, token, rate limit, autorização e uploads resistem à suíte | REQ-NF-001/003 |
 | TEST-072 | 7 | operação | backup conjunto restaura banco e mídia com checksums | REQ-NF-010 |
