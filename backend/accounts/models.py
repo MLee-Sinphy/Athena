@@ -64,3 +64,18 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+
+class AccessToken(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="access_tokens")
+    digest = models.CharField(max_length=64, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_activity_at = models.DateTimeField()
+    absolute_expires_at = models.DateTimeField()
+    revoked_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        indexes = [models.Index(fields=["digest", "revoked_at"])]
+
+    def __str__(self):
+        return f"Token for {self.user_id}"
