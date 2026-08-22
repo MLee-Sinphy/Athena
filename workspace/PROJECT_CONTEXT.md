@@ -4,7 +4,7 @@
 
 ## 1. Identidade e objetivo
 
-- **Responsável:** Lee. **Estado:** planejamento.
+- **Responsável:** M Lee. **Estado:** planejamento.
 - Sistema web configurável para empréstimo gratuito de livros físicos em escolas, universidades, bibliotecas públicas e instituições semelhantes.
 - Projeto de estudo full stack, documentado, testado e implantável; não é serviço comercial nem precisa operar 24 horas.
 - Cada implantação atende uma instituição, com acervo, usuários, políticas e histórico isolados.

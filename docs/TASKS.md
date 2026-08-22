@@ -4,7 +4,7 @@
 
 # TASK-001 — Inicializar frontend, backend e qualidade
 ## Estado
-Planejada.
+Concluída.
 ## Tipo
 Chore.
 ## Prioridade
@@ -28,6 +28,16 @@ GATE-000, TEST-001 a TEST-003.
 Builds, lint, testes e banco de teste executam localmente e em CI.
 ## Riscos
 Versões ou ambiente incompatíveis.
+## Resultado
+React/TypeScript, Django/DRF, PostgreSQL, healthcheck, testes, lint, formatação, build, Compose e CI foram inicializados. A verificação estrutural falhou antes do bootstrap e passou depois da implementação.
+## Evidências
+- Commits: `255b3b9`, `ed1e646` e `ce688cb`.
+- CI aprovada: execução `32583985955` no GitHub Actions.
+- PostgreSQL 18 criou o banco de teste e executou o teste do healthcheck na CI.
+- Frontend: lint, um teste de componente e build aprovados.
+- Backend: Ruff, verificação de migrações e um teste de API aprovados.
+## Referências
+GATE-000; TEST-001, TEST-002 e TEST-003.
 
 # TASK-002 — Implementar contas e autenticação
 ## Estado
