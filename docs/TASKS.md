@@ -41,7 +41,7 @@ GATE-000; TEST-001, TEST-002 e TEST-003.
 
 # TASK-002 — Implementar contas e autenticação
 ## Estado
-Planejada; depende de TASK-001.
+Em andamento — GATE-001 aprovado; GATE-002 pendente.
 ## Tipo
 Feature.
 ## Prioridade
@@ -65,6 +65,10 @@ GATE-001 e GATE-002; TEST-010 a TEST-014.
 UC-001 e indisponibilidade da API verificados.
 ## Riscos
 Enumeração, token vazado ou autorização apenas visual.
+## Evidências parciais
+- Falha inicial: importação de `UserRole` inexistente antes da implementação.
+- Modelo customizado, perfis, unicidade, hash, primeiro acesso e política de senha cobertos por 7 testes.
+- CI PostgreSQL aprovada na execução `32584631836` para o commit `0446d38`.
 
 # TASK-003 — Implementar acervo e catálogo
 ## Estado
