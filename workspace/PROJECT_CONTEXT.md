@@ -29,17 +29,18 @@ Existem somente dois perfis:
 
 ## 3. Acervo
 
-- O catálogo agrupa cópias equivalentes por título.
+- O catálogo agrupa cópias equivalentes por título. Depois de escolher o título, o leitor pode escolher entre os exemplares disponíveis quando seus estados de conservação forem diferentes.
 - Cada exemplar físico possui código único e estado próprio: disponível, reservado, emprestado, danificado, em manutenção, perdido ou descartado.
-- O leitor solicita um título sem escolher nem ver o código do exemplar.
-- Toda concessão associa um exemplar específico, visível ao administrador.
+- O leitor pode comparar o estado dos exemplares, mas não precisa ver seus códigos internos.
+- Toda concessão associa o exemplar escolhido ou, quando não houver escolha, um exemplar compatível específico.
 - O administrador pode alterar ou restaurar qualquer estado; a ação é auditada.
 
 ### Dados bibliográficos
 
-- **Obrigatórios:** título, autor, ISBN, editora, edição, ano, categoria, descrição e capa principal.
-- **Opcionais:** número de páginas e imagens adicionais.
-- Busca: título, autor, ISBN, categoria, descrição e palavras-chave.
+- **Obrigatórios:** título, autor, editora, edição, ano, categoria, descrição e capa principal.
+- **Opcionais:** ISBN, número de páginas e imagens adicionais.
+- Busca: título, autor, ISBN, categoria, todo o texto da descrição e tags como `#medieval`.
+- Na devolução, o leitor pode sugerir novas tags que caracterizem o título. Cada sugestão deve preservar autoria e data para rastreabilidade.
 - Filtros: disponibilidade, avaliação e ano.
 
 ### Imagens
@@ -81,11 +82,12 @@ Somente dias de funcionamento contam nos prazos, exceto penalidades explicitamen
 
 ### Retirada não realizada e antecipação
 
-- Quem não retirar dentro da tolerância perde a prioridade daquela reserva.
-- O próximo leitor pode aceitar ou recusar retirada antecipada até a data original de sua reserva.
+- Quem não retirar dentro da tolerância perde a exclusividade sobre o período liberado, mas sua reserva não é cancelada imediatamente.
+- Enquanto nenhum período conflitante for concedido a outra pessoa e houver exemplar disponível, o leitor original ainda pode retirar com atraso.
+- O próximo leitor é avisado ao entrar no sistema e pode aceitar ou recusar retirada antecipada até a data original de sua reserva.
 - Se aceitar, pode retirar antes e manter a devolução original, mesmo excedendo excepcionalmente o prazo máximo.
 - Se recusar, preserva integralmente sua reserva.
-- O período livre pode ser usado por outra pessoa sem afetar reservas confirmadas.
+- O período livre pode ser reservado por outra pessoa. Nesse caso, o leitor original é avisado pelo sistema, perde o direito ao intervalo conflitante e deve escolher novas datas.
 
 ### Alteração, cancelamento e renovação
 
@@ -108,7 +110,7 @@ Somente dias de funcionamento contam nos prazos, exceto penalidades explicitamen
 
 ## 7. Devolução e avaliações
 
-- A cada devolução, o leitor pode avaliar separadamente conteúdo do título e estado do exemplar, de 0 a 5 estrelas.
+- A cada devolução, o leitor pode avaliar separadamente conteúdo do título e estado do exemplar, de 1 a 5 estrelas.
 - Avaliações são opcionais, independentes por devolução e não editáveis pelo leitor após o envio.
 - Médias do título e do exemplar derivam das respectivas avaliações individuais, que são a fonte de verdade.
 
@@ -118,6 +120,7 @@ Somente dias de funcionamento contam nos prazos, exceto penalidades explicitamen
 - Registro: autor, data/hora, ação, valor anterior e novo; justificativa opcional.
 - Auditoria não pode ser editada nem apagada por operações administrativas comuns.
 - Históricos de empréstimos e auditoria são preservados.
+- Reservas, retiradas, devoluções, cancelamentos, avaliações, alterações de estado e tags sugeridas devem manter data e relações históricas suficientes para análises futuras, como popularidade por período, preferência por categoria e estimativa da vida útil de exemplares. Não é necessário criar tabelas de estatísticas antecipadamente.
 - Exclusão ou anonimização de leitores preserva integridade referencial e auditoria.
 - Tokens expirados são removidos periodicamente; dados sintéticos de teste podem ser recriados.
 
@@ -126,13 +129,13 @@ Somente dias de funcionamento contam nos prazos, exceto penalidades explicitamen
 ### Incluído
 
 - Frontend React responsivo e internacionalizado.
-- Backend com autenticação, autorização, usuários, acervo, reservas, empréstimos, fila, calendário, políticas, penalidades, avaliações e auditoria.
+- Backend com autenticação, autorização, usuários, acervo, reservas, empréstimos, fila, calendário, políticas, penalidades, avaliações, avisos internos e auditoria.
 - Painéis de leitor e administrador; catálogo, busca, filtros e disponibilidade futura.
 - Persistência relacional e mensagem de backend indisponível sem indicar sucesso indevido.
 
 ### Futuro
 
-- Notificações internas e por e-mail sobre antecipações e perda de prioridade, registrando envio, leitura, aceite e recusa.
+- Envio por e-mail dos avisos de antecipação e perda de prioridade. Na primeira versão, esses avisos já aparecem ao entrar no sistema.
 - Recuperação autônoma de senha por e-mail.
 - Leitores ópticos, scanners ou totens para registrar retirada e devolução físicas sob as mesmas regras e auditoria da API.
 
@@ -166,6 +169,13 @@ O Tema 1 referencia [First Principles of Calculus](https://mlee-sinphy.github.io
 - **Banco:** PostgreSQL via Django ORM.
 - **Comunicação:** API HTTPS; CORS restrito à origem exata do frontend.
 - Priorizar recursos gratuitos; serviço pago exige aprovação.
+
+### Backup
+
+- PostgreSQL e diretório de imagens devem ser copiados como um conjunto consistente, com manifesto e verificações de integridade.
+- Os backups devem ser criptografados e mantidos fora do VPS, inicialmente em repositório controlado pelo responsável.
+- Criar backup antes de mudanças de infraestrutura e, quando o backend estiver em uso, uma cópia diária com retenção inicial de 7 diárias e 4 semanais.
+- Testar a restauração antes de cada entrega relevante e registrar o resultado; backup sem restauração verificada não conta como proteção válida.
 
 ### Autenticação
 
@@ -214,11 +224,10 @@ O Tema 1 referencia [First Principles of Calculus](https://mlee-sinphy.github.io
 - A comunicação entre GitHub Pages e VPS depende de HTTPS, CORS e configuração correta.
 - Backend desligado torna funções dinâmicas indisponíveis; isso é intencional e deve ser explicado na interface.
 
-### Decisões de produto pendentes
+### Decisões consolidadas nesta revisão
 
-1. Quando uma reserva concedida se torna empréstimo ativo: na concessão, na data prevista ou na confirmação física da retirada?
-2. Como o próximo leitor descobrirá disponibilidade antecipada na primeira versão, sem notificações internas ou por e-mail?
-
-### Decisão técnica pendente
-
-3. Qual será a estratégia conjunta de backup do PostgreSQL e das imagens no VPS?
+- Uma reserva só se torna empréstimo ativo na confirmação da retirada física do exemplar.
+- Avisos de antecipação e perda do período são exibidos ao leitor quando ele entra no sistema; e-mail permanece futuro.
+- ISBN é opcional e avaliações válidas usam de 1 a 5 estrelas.
+- O modelo persistirá eventos e relações históricas para permitir análises futuras sem pré-calcular estatísticas.
+- Backups consistentes do banco e das imagens serão criptografados, mantidos fora do VPS e terão restauração testada.

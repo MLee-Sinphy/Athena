@@ -17,12 +17,13 @@ Não haverá pagamentos, livros digitais nem exigência de funcionamento contín
 
 ## 3. Acervo e catálogo
 
-- O leitor vê um único título mesmo quando existem várias cópias.
+- O leitor primeiro vê um único título. Se houver exemplares em estados de conservação diferentes, pode comparar esses estados e escolher qual exemplar deseja.
 - O sistema e o administrador controlam cada exemplar por código e estado próprios.
 - Estados: disponível, reservado, emprestado, danificado, em manutenção, perdido ou descartado.
-- Busca por título, autor, ISBN, categoria, descrição e palavras-chave; filtros por disponibilidade, avaliação e ano.
-- Dados hoje definidos como obrigatórios: título, autor, ISBN, editora, edição, ano, categoria, descrição e capa.
-- Depois da devolução, o leitor pode dar notas independentes de 0 a 5 para o conteúdo e para o estado do exemplar.
+- Busca por título, autor, ISBN, categoria, todo o texto da descrição e tags como `#medieval`; filtros por disponibilidade, avaliação e ano.
+- Na devolução, o leitor pode sugerir novas tags para caracterizar o título.
+- Dados obrigatórios: título, autor, editora, edição, ano, categoria, descrição e capa. ISBN é opcional.
+- Depois da devolução, o leitor pode dar notas independentes de 1 a 5 para o conteúdo e para o estado do exemplar.
 
 ## 4. Reserva e empréstimo
 
@@ -30,8 +31,9 @@ Não haverá pagamentos, livros digitais nem exigência de funcionamento contín
 2. O leitor escolhe retirada e devolução em dias de funcionamento.
 3. O sistema aprova automaticamente se leitor, período, limite e disponibilidade estiverem regulares.
 4. Um exemplar específico é separado sem exigir confirmação do administrador.
-5. Sem disponibilidade, o leitor escolhe um período futuro e entra em fila por ordem de solicitação.
-6. A fila mostra posição e previsão, nunca dados dos outros leitores.
+5. A reserva só se torna empréstimo ativo quando a retirada física for confirmada.
+6. Sem disponibilidade, o leitor escolhe um período futuro e entra em fila por ordem de solicitação.
+7. A fila mostra posição e previsão, nunca dados dos outros leitores.
 
 Antes da retirada, o leitor pode alterar ambas as datas ou cancelar sem prejudicar reservas confirmadas. Depois da retirada, só pode prorrogar a devolução se não houver fila e se respeitar o prazo máximo.
 
@@ -53,13 +55,14 @@ Reservas já confirmadas são preservadas pelas penalidades automáticas. Leitor
 
 ## 6. Vaga liberada antes do previsto
 
-Se uma reserva expirar sem retirada ou um livro voltar antes:
+Se uma reserva ultrapassar a tolerância sem retirada ou um livro voltar antes:
 
-- o próximo da fila mantém sua reserva original;
-- pode optar por retirar antes e conservar a devolução original, mesmo que isso exceda excepcionalmente o prazo máximo;
-- se não quiser antecipar, o período livre pode ser oferecido a outra pessoa sem afetar reservas existentes.
+- o leitor atrasado perde a exclusividade, mas ainda pode retirar se o exemplar continuar livre e não surgir conflito;
+- o próximo da fila recebe um aviso ao entrar, mantém sua reserva original e pode antecipar a retirada conservando a devolução original;
+- se o próximo não antecipar, outra pessoa pode reservar o período livre;
+- se isso ocorrer, o leitor atrasado recebe um aviso, perde o intervalo conflitante e deve escolher novas datas.
 
-Notificações internas e por e-mail serão futuras, assim como recuperação de senha por e-mail e retirada/devolução com scanner ou leitor óptico.
+E-mails serão futuros. Os avisos internos descritos acima fazem parte da primeira versão. Recuperação de senha por e-mail e retirada/devolução com scanner também ficam para o futuro.
 
 ## 7. Interface
 
@@ -75,16 +78,27 @@ Notificações internas e por e-mail serão futuras, assim como recuperação de
 - PostgreSQL e Django ORM.
 - HTTPS e token de acesso mantido somente na memória do frontend; atualizar a página pode exigir novo login.
 - Imagens inicialmente no VPS, com referências no banco e possibilidade de migração futura.
+- Banco e imagens terão backup conjunto, criptografado e fora do VPS, com retenção de 7 cópias diárias e 4 semanais e testes de restauração antes de entregas relevantes.
 - Testes automatizados e dados pessoais fictícios; escala simulada de até 5.000 leitores, 20.000 títulos, 50.000 exemplares e 500 acessos simultâneos.
 
-## 9. Pontos que precisam da sua avaliação
+## 9. Dados para análises futuras
 
-1. **Início do empréstimo:** a reserva se torna empréstimo ativo quando é aprovada, quando chega a data marcada ou somente quando o exemplar é fisicamente retirado?
-2. **Antecipação na primeira versão:** sem notificações, como o próximo leitor saberá que pode retirar antes — aviso ao entrar no sistema, consulta manual em sua reserva ou essa antecipação deve ficar totalmente para uma versão futura?
-3. **ISBN obrigatório:** ele deve continuar obrigatório mesmo para obras antigas, edições especiais ou itens que não tenham ISBN?
-4. **Nota zero:** `0 estrelas` é uma avaliação válida ou deve representar apenas “não avaliado”, fazendo a menor nota válida ser `1 estrela`?
-5. **Backup:** você quer decidir agora como salvar banco e imagens do VPS ou prefere delegar essa decisão técnica para `ARCHITECTURE.md`?
+O sistema preservará datas e relações de reservas, retiradas, devoluções, cancelamentos, avaliações, estados físicos e tags. Isso permitirá calcular futuramente, sem tabelas estatísticas prematuras:
 
-## 10. Confirmação geral
+- quantidade de empréstimos por título e período;
+- categorias e estilos mais procurados;
+- evolução das avaliações;
+- frequência de danos e estimativa de vida útil dos exemplares.
 
-Além das cinco perguntas acima, confirme se o objetivo, os perfis, o fluxo, os padrões configuráveis e o escopo futuro representam corretamente o produto que você deseja construir.
+## 10. Decisões confirmadas nesta revisão
+
+- O leitor pode escolher um exemplar pelo estado de conservação.
+- Descrição e tags participam da busca; leitores podem sugerir tags na devolução.
+- A reserva vira empréstimo somente na retirada física.
+- Avisos de antecipação e perda do período aparecem ao entrar no sistema.
+- ISBN é opcional; notas válidas vão de 1 a 5.
+- A estratégia de backup será detalhada tecnicamente pelo projeto.
+
+## 11. Confirmação geral
+
+Confirme se o objetivo, os perfis, o fluxo, os padrões configuráveis e as decisões desta revisão representam corretamente o produto que você deseja construir.
