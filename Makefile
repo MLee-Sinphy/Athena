@@ -18,7 +18,7 @@ check-backend:
 	$(RUFF) format --check backend
 	$(RUFF) check backend
 	$(PYTHON) backend/manage.py makemigrations --check --dry-run
-	$(PYTHON) backend/manage.py test accounts health
+	$(PYTHON) backend/manage.py test accounts catalog circulation governance health
 
 check-frontend:
 	cd frontend && npm run lint

@@ -112,7 +112,7 @@ Catálogo agrupado por título, comparação de exemplares disponíveis, busca t
 
 # TASK-004 — Implementar calendário, políticas e disponibilidade
 ## Estado
-Pronta para iniciar; dependência TASK-003 satisfeita.
+Concluída — GATE-004 aprovado.
 ## Tipo
 Feature.
 ## Prioridade
@@ -136,10 +136,17 @@ GATE-004; TEST-030 a TEST-034.
 Disponibilidade e políticas passam testes de fronteira e concorrência.
 ## Riscos
 Off-by-one e política retroativa.
+## Resultado
+Calendário semanal configurável, exceções de abertura/fechamento, políticas versionadas, limites e suspensão, penalidades, FIFO determinístico e alocação transacional sem sobreposição foram implementados.
+## Evidências
+- Falha inicial: módulo `circulation.models` inexistente antes da implementação.
+- TEST-030 a TEST-034 cobertos por 13 testes de unidade, integração, autorização e concorrência.
+- Teste concorrente executado no PostgreSQL real; exatamente uma das duas alocações simultâneas foi confirmada.
+- Regressão de 45 testes de backend, lint e build do frontend aprovados na CI `32596027546` para `af1968d`.
 
 # TASK-005 — Implementar circulação, fila e avisos
 ## Estado
-Planejada; depende de TASK-004.
+Concluída — GATE-005 aprovado.
 ## Tipo
 Feature.
 ## Prioridade
@@ -163,10 +170,16 @@ GATE-005; TEST-040 a TEST-047.
 Nenhum cenário concorrente sobrepõe exemplar; avisos e respostas são rastreáveis.
 ## Riscos
 Corridas temporais e transições ambíguas.
+## Resultado
+Reserva automática, fila FIFO, retirada e devolução idempotentes, alteração, cancelamento, renovação, penalidades, perda de exclusividade, antecipação, avisos privados e intervenção administrativa foram implementados sem dependência de e-mail ou hardware.
+## Evidências
+- TEST-040 a TEST-047 cobertos por 10 testes de fluxo e privacidade, apoiados pelos 13 testes temporais anteriores.
+- Regressão de 55 testes de backend e 3 de frontend aprovada; suítes usam bancos isolados na CI para impedir interferência de estado.
+- Concorrência PostgreSQL, formatação, migrações, lint, tipos, build e estrutura aprovados na CI `32596839732` para `277c539`.
 
 # TASK-006 — Implementar avaliações, tags e auditoria
 ## Estado
-Planejada; depende de TASK-005.
+Concluída — GATE-006 aprovado.
 ## Tipo
 Feature.
 ## Prioridade
@@ -190,10 +203,16 @@ GATE-006; TEST-050 a TEST-053.
 Histórico permanece íntegro e permite consultas exemplificadas.
 ## Riscos
 Exclusão destrutiva ou média como fonte indevida.
+## Resultado
+Avaliações opcionais e únicas por devolução, sugestões de tags rastreáveis, médias derivadas, auditoria imutável e consultas históricas por título, categoria e período foram implementadas. As consultas analíticas não retornam identificadores de leitores.
+## Evidências
+- TEST-050 a TEST-053 cobertos por 5 testes de integração, segurança e dados.
+- Tentativas de editar ou excluir auditoria por instância e queryset são rejeitadas.
+- Regressão de 60 testes de backend e 3 de frontend, PostgreSQL, lint, migrações e build aprovados na CI `32597411718` para `632baf1`.
 
 # TASK-007 — Consolidar UX, acessibilidade e temas
 ## Estado
-Planejada; depende de TASK-006.
+Concluída — GATE-007 aprovado.
 ## Tipo
 Feature.
 ## Prioridade
@@ -217,10 +236,17 @@ GATE-007; TEST-060 a TEST-064.
 Funções essenciais operam nos dispositivos, idiomas e temas definidos.
 ## Riscos
 Contraste do tema translúcido e regressões mobile.
+## Resultado
+Experiência responsiva por perfil, fluxos de catálogo/circulação/administração, catálogos completos pt-BR/en, preferências persistentes, seis temas tokenizados e recursos WCAG aplicáveis foram implementados.
+## Evidências
+- 8 testes de componente/qualidade cobrem estados, idioma, temas, contraste e ausência de persistência do token.
+- 3 testes Playwright exercitam login e catálogo em 320 × 700 e 1440 × 900, ausência de overflow e Axe Core.
+- Revisão incremental registrada em `ACCESSIBILITY_REVIEW.md`; matriz final de navegadores e tecnologias assistivas pertence ao GATE-008.
+- CI completa aprovada na execução `32598062053` para o commit `4de11d7`.
 
 # TASK-008 — Implantar, proteger e validar a versão 1.0.0
 ## Estado
-Planejada; depende de TASK-007.
+Em validação final — automação aprovada no CI `32599541412`; publicação real, verificações no VPS, tecnologias assistivas e aceite humano permanecem pendentes.
 ## Tipo
 Chore/Test.
 ## Prioridade

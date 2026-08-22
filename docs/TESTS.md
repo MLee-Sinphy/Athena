@@ -91,13 +91,13 @@ Zero bloqueador; desvios não bloqueadores documentados e aceitos.
 | GATE-001 | modelo de contas | **Aprovado** — unidades de senha/perfis falharam e depois passaram | TASK-002 |
 | GATE-002 | autenticação ponta a ponta | **Aprovado** — autorização, sessão e indisponibilidade passam | TASK-002 |
 | GATE-003 | acervo e catálogo | **Aprovado** — CRUD, agrupamento, busca e privacidade passam | TASK-003 |
-| GATE-004 | calendário e disponibilidade | bordas e concorrência PostgreSQL passam | TASK-004 |
-| GATE-005 | circulação | reserva até devolução, fila e avisos passam | TASK-005 |
-| GATE-006 | governança histórica | penalidades, auditoria, avaliações e análises passam | TASK-006 |
-| GATE-007 | experiência completa | responsividade, i18n, temas e AA passam | TASK-007 |
-| GATE-008 | aceite 1.0 | deploy, segurança, backup, E2E e carga passam | TASK-008 |
+| GATE-004 | calendário e disponibilidade | **Aprovado** — bordas e concorrência PostgreSQL passam | TASK-004 |
+| GATE-005 | circulação | **Aprovado** — reserva até devolução, fila e avisos passam | TASK-005 |
+| GATE-006 | governança histórica | **Aprovado** — penalidades, auditoria, avaliações e análises passam | TASK-006 |
+| GATE-007 | experiência completa | **Aprovado** — responsividade, i18n, temas e AA aplicável passam | TASK-007 |
+| GATE-008 | aceite 1.0 | **Em validação** — automação verde; publicação real, ensaios no VPS, tecnologia assistiva e aceite humano pendentes | TASK-008 |
 
-GATE-000 a GATE-003 foram aprovados em 2026-08-22. Os demais portões estão **Planejados**. A regressão exigida em cada linha inclui todos os portões anteriores.
+GATE-000 a GATE-007 foram aprovados em 2026-08-22. A parte automatizável do GATE-008 passou no CI `32599541412`; o portão permanece **Em validação** até as evidências externas e o aceite humano. A regressão exigida em cada linha inclui todos os portões anteriores.
 
 ## Casos de teste
 | ID | Nível | Tipo | Objetivo e resultado esperado | Fonte |
@@ -114,44 +114,44 @@ GATE-000 a GATE-003 foram aprovados em 2026-08-22. Os demais portões estão **P
 | TEST-021 | 3 | integração | **Aprovado:** busca encontra descrição e tags; ISBN ausente é válido | REQ-F-005 |
 | TEST-022 | 5 | fluxo | **Aprovado:** leitor escolhe exemplar pela conservação sem ver código | REQ-F-005 |
 | TEST-023 | 3 | segurança | **Aprovado:** upload inválido é rejeitado e mídia autorizada funciona | ARCHITECTURE |
-| TEST-030 | 1 | unidade | calendário cobre fechamentos, mínimo/máximo e bordas | RULE-005 |
-| TEST-031 | 1 | unidade | penalidades cobrem atraso e janela de cancelamento | RULE-012 |
-| TEST-032 | 3 | concorrência | duas reservas simultâneas não usam o mesmo exemplar/período | RULE-007 |
-| TEST-033 | 3 | integração | FIFO e desempate são determinísticos e privados | RULE-008 |
-| TEST-034 | 3 | integração | mudança de política preserva reservas existentes | RULE-015 |
-| TEST-040 | 5 | fluxo | reserva válida é automática e recusa explica regra | REQ-F-006 |
-| TEST-041 | 5 | fluxo | retirada cria empréstimo somente na confirmação física | RULE-009 |
-| TEST-042 | 5 | fluxo | devolução encerra uma vez e libera disponibilidade | REQ-F-010 |
-| TEST-043 | 5 | fluxo | ausente retira enquanto livre e perde intervalo após conflito | RULE-010 |
-| TEST-044 | 5 | fluxo | próximo aceita/recusa antecipação sem perder data final | RULE-010 |
-| TEST-045 | 5 | fluxo | alteração/cancelamento respeitam conflito e contagem | RULE-011/012 |
-| TEST-046 | 5 | fluxo | renovação exige ausência de fila e máximo | REQ-F-013 |
-| TEST-047 | 3 | privacidade | avisos e fila não expõem outras pessoas | REQ-NF-009 |
-| TEST-050 | 3 | integração | notas 1–5 são opcionais, únicas por devolução e não editáveis | RULE-013 |
-| TEST-051 | 3 | integração | tags preservam autor/data e participam da busca | RULE-013 |
-| TEST-052 | 3 | segurança | auditoria é completa e imutável por operação comum | REQ-F-019 |
-| TEST-053 | 3 | dados | histórico responde aos exemplos analíticos após anonimização | DECISION-006 |
-| TEST-060 | 2 | componente | estados de UI e formulários são acessíveis | UX_UI |
-| TEST-061 | 6 | E2E | jornadas essenciais funcionam a partir de 320 px e desktop | REQ-NF-004 |
-| TEST-062 | 2 | i18n | pt-BR/en completos, seleção inicial e troca persistente | REQ-NF-006 |
-| TEST-063 | 7 | acessibilidade | automação e revisão manual atendem WCAG 2.2 AA aplicável | REQ-NF-005 |
-| TEST-064 | 2 | visual | seis temas usam tokens, contraste válido e fallback opaco | REQ-NF-012 |
-| TEST-070 | 6 | E2E | GitHub Pages consome VPS por HTTPS/CORS corretos | CON-002 |
-| TEST-071 | 7 | segurança | sessão, token, rate limit, autorização e uploads resistem à suíte | REQ-NF-001/003 |
-| TEST-072 | 7 | operação | backup conjunto restaura banco e mídia com checksums | REQ-NF-010 |
-| TEST-073 | 7 | carga | volumes e 500 simultâneos são simulados e documentados | REQ-NF-008 |
-| TEST-074 | 7 | compatibilidade | navegadores alvo e tecnologias assistivas passam checklist | REQ-NF-004/005 |
+| TEST-030 | 1 | unidade | **Aprovado:** calendário cobre fechamentos, mínimo/máximo e bordas | RULE-005 |
+| TEST-031 | 1 | unidade | **Aprovado:** penalidades cobrem atraso e janela de cancelamento | RULE-012 |
+| TEST-032 | 3 | concorrência | **Aprovado:** duas reservas simultâneas não usam o mesmo exemplar/período | RULE-007 |
+| TEST-033 | 3 | integração | **Aprovado:** FIFO e desempate são determinísticos e privados | RULE-008 |
+| TEST-034 | 3 | integração | **Aprovado:** mudança de política preserva reservas existentes | RULE-015 |
+| TEST-040 | 5 | fluxo | **Aprovado:** reserva válida é automática e recusa explica regra | REQ-F-006 |
+| TEST-041 | 5 | fluxo | **Aprovado:** retirada cria empréstimo somente na confirmação física | RULE-009 |
+| TEST-042 | 5 | fluxo | **Aprovado:** devolução encerra uma vez e libera disponibilidade | REQ-F-010 |
+| TEST-043 | 5 | fluxo | **Aprovado:** ausente retira enquanto livre e perde intervalo após conflito | RULE-010 |
+| TEST-044 | 5 | fluxo | **Aprovado:** próximo aceita/recusa antecipação sem perder data final | RULE-010 |
+| TEST-045 | 5 | fluxo | **Aprovado:** alteração/cancelamento respeitam conflito e contagem | RULE-011/012 |
+| TEST-046 | 5 | fluxo | **Aprovado:** renovação exige ausência de fila e máximo | REQ-F-013 |
+| TEST-047 | 3 | privacidade | **Aprovado:** avisos e fila não expõem outras pessoas | REQ-NF-009 |
+| TEST-050 | 3 | integração | **Aprovado:** notas 1–5 são opcionais, únicas por devolução e não editáveis | RULE-013 |
+| TEST-051 | 3 | integração | **Aprovado:** tags preservam autor/data e participam da busca | RULE-013 |
+| TEST-052 | 3 | segurança | **Aprovado:** auditoria é completa e imutável por operação comum | REQ-F-019 |
+| TEST-053 | 3 | dados | **Aprovado:** histórico responde aos exemplos analíticos após anonimização | DECISION-006 |
+| TEST-060 | 2 | componente | **Aprovado:** estados de UI e formulários são acessíveis | UX_UI |
+| TEST-061 | 6 | E2E | **Aprovado:** jornadas essenciais funcionam a partir de 320 px e desktop | REQ-NF-004 |
+| TEST-062 | 2 | i18n | **Aprovado:** pt-BR/en completos, seleção inicial e troca persistente | REQ-NF-006 |
+| TEST-063 | 7 | acessibilidade | **Aprovado no escopo do GATE-007:** automação e revisão registrada atendem WCAG 2.2 AA aplicável | REQ-NF-005 |
+| TEST-064 | 2 | visual | **Aprovado:** seis temas usam tokens, contraste válido e fallback opaco | REQ-NF-012 |
+| TEST-070 | 6 | E2E | **Pendente externo:** GitHub Pages deve consumir o VPS real por HTTPS/CORS corretos | CON-002 |
+| TEST-071 | 7 | segurança | **Aprovado na automação:** sessão, token, rate limit, autorização, uploads e configuração de produção passam | REQ-NF-001/003 |
+| TEST-072 | 7 | operação | **Aprovado na automação:** banco e mídia foram cifrados e restaurados com checksums; ensaio no VPS permanece pendente | REQ-NF-010 |
+| TEST-073 | 7 | carga | **Aprovado na automação:** 5.000 leitores, 20.000 títulos, 50.000 exemplares e 500 clientes simultâneos passaram; medição no VPS permanece pendente | REQ-NF-008 |
+| TEST-074 | 7 | compatibilidade | **Parcial:** Chromium, Firefox e WebKit passaram; duas versões estáveis e tecnologias assistivas exigem revisão humana | REQ-NF-004/005 |
 
 ## Matriz de rastreabilidade
 | Fonte | Critério ou comportamento | Testes | Portões | Estado |
 |---|---|---|---|---|
-| UC-001 | acesso e credenciais | 010–014 | 001–002 | Planejado |
-| UC-002/008 | catálogo e acervo | 020–023 | 003 | Planejado |
-| UC-003/009 | calendário e reserva | 030–040 | 004–005 | Planejado |
-| UC-004/005/006 | circulação e avisos | 041–047 | 005 | Planejado |
-| UC-007/010 | avaliações, histórico e auditoria | 050–053 | 006 | Planejado |
-| REQ-NF-004/005/006/012 | experiência | 060–064 | 007 | Planejado |
-| REQ-NF-001/003/008/010 | aceite operacional | 070–074 | 008 | Planejado |
+| UC-001 | acesso e credenciais | 010–014 | 001–002 | Aprovado |
+| UC-002/008 | catálogo e acervo | 020–023 | 003 | Aprovado |
+| UC-003/009 | calendário e reserva | 030–040 | 004–005 | Aprovado |
+| UC-004/005/006 | circulação e avisos | 041–047 | 005 | Aprovado |
+| UC-007/010 | avaliações, histórico e auditoria | 050–053 | 006 | Aprovado |
+| REQ-NF-004/005/006/012 | experiência | 060–064 | 007 | Aprovado |
+| REQ-NF-001/003/008/010 | aceite operacional | 070–074 | 008 | Em validação |
 
 ## Regressão acumulada
 | Após o portão | Testes e suítes obrigatórios | Resultado exigido |

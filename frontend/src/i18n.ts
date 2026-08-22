@@ -1,0 +1,39 @@
+export type Language = 'pt' | 'en'
+
+export const messages = {
+  pt: {
+    skip: 'Pular para o conteúdo', language: 'English', theme: 'Tema visual',
+    unavailable: 'Serviço temporariamente indisponível', connectionError: 'Não foi possível conectar ao sistema da biblioteca.',
+    retry: 'Tentar novamente', login: 'Entrar', identifier: 'E-mail ou matrícula', password: 'Senha',
+    invalid: 'Não foi possível concluir. Verifique os dados e tente novamente.', firstAccess: 'Defina sua nova senha',
+    current: 'Senha temporária', next: 'Nova senha', change: 'Alterar senha', catalog: 'Catálogo',
+    search: 'Pesquisar título, autor, descrição ou #tag', searchButton: 'Pesquisar', available: 'exemplares disponíveis',
+    reservations: 'Minhas reservas', loans: 'Empréstimos', notices: 'Avisos', profile: 'Perfil', logout: 'Sair', reserve: 'Reservar',
+    startDate: 'Data de retirada', endDate: 'Data de devolução', cancel: 'Cancelar', empty: 'Nada para mostrar por enquanto.',
+    accepted: 'Aceitar', declined: 'Recusar', administrator: 'Administração', createReader: 'Cadastrar leitor',
+    email: 'E-mail', registration: 'Matrícula', temporaryPassword: 'Senha temporária', save: 'Salvar',
+    policy: 'Nova política', minDays: 'Prazo mínimo', maxDays: 'Prazo máximo', loanLimit: 'Limite simultâneo',
+    success: 'Operação concluída.', menu: 'Navegação principal', status: 'Estado', queue: 'Posição na fila',
+    checkout: 'Confirmar retirada', returnBook: 'Confirmar devolução', renew: 'Renovar', feedback: 'Avaliar devolução',
+    titleScore: 'Nota do título', copyScore: 'Estado do exemplar', tags: 'Tags separadas por vírgula', inventory: 'Cadastrar título e exemplar',
+    visualIdentity: 'Identidade visual', applyTheme: 'Aplicar tema para todos',
+  },
+  en: {
+    skip: 'Skip to content', language: 'Português', theme: 'Visual theme', unavailable: 'Service temporarily unavailable',
+    connectionError: 'The library system could not be reached.', retry: 'Try again', login: 'Sign in',
+    identifier: 'Email or registration ID', password: 'Password', invalid: 'The operation could not be completed. Check the data and try again.',
+    firstAccess: 'Set your new password', current: 'Temporary password', next: 'New password', change: 'Change password',
+    catalog: 'Catalog', search: 'Search title, author, description, or #tag', searchButton: 'Search',
+    available: 'copies available', reservations: 'My reservations', loans: 'Loans', notices: 'Notices', profile: 'Profile', logout: 'Sign out',
+    reserve: 'Reserve', startDate: 'Pickup date', endDate: 'Return date', cancel: 'Cancel', empty: 'Nothing to show yet.',
+    accepted: 'Accept', declined: 'Decline', administrator: 'Administration', createReader: 'Create reader', email: 'Email',
+    registration: 'Registration ID', temporaryPassword: 'Temporary password', save: 'Save', policy: 'New policy',
+    minDays: 'Minimum term', maxDays: 'Maximum term', loanLimit: 'Simultaneous limit', success: 'Operation completed.',
+    menu: 'Main navigation', status: 'Status', queue: 'Queue position',
+    checkout: 'Confirm pickup', returnBook: 'Confirm return', renew: 'Renew', feedback: 'Review return', titleScore: 'Title rating',
+    copyScore: 'Copy condition', tags: 'Comma-separated tags', inventory: 'Create title and copy',
+    visualIdentity: 'Visual identity', applyTheme: 'Apply theme for everyone',
+  },
+} as const
+
+export type MessageCatalog = typeof messages.pt | typeof messages.en
