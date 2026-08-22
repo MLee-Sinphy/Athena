@@ -246,7 +246,7 @@ Experiência responsiva por perfil, fluxos de catálogo/circulação/administra�
 
 # TASK-008 — Implantar, proteger e validar a versão 1.0.0
 ## Estado
-Em validação final — automação aprovada no CI `32599541412`; publicação real, verificações no VPS, tecnologias assistivas e aceite humano permanecem pendentes.
+Em validação final — automação e publicação real aprovadas; ensaios de restauração/carga no VPS e tecnologias assistivas permanecem pendentes.
 ## Tipo
 Chore/Test.
 ## Prioridade
@@ -273,7 +273,7 @@ Ambiente VPS e resultados abaixo da meta.
 
 # TASK-009 — Disponibilizar demonstração autenticada e catálogo enriquecido
 ## Estado
-Em andamento.
+Concluída — GATE-009 aprovado.
 ## Tipo
 Feature/Chore.
 ## Prioridade
@@ -297,3 +297,11 @@ GATE-009; TEST-075 a TEST-078.
 Regressão verde, seed repetível, contêineres operáveis sem segredo no Git, frontend publicado e backend acessível por HTTPS quando a infraestrutura for autorizada.
 ## Riscos
 Permissão Docker, DNS/firewall, serviço bibliográfico externo e exposição indevida de credenciais demonstrativas.
+## Resultado
+Frontend publicado no GitHub Pages e API/PostgreSQL executados sob demanda no VPS com HTTPS público, CORS restrito, seed idempotente, catálogo enriquecido e login por perfil usando e-mail, matrícula ou telefone. O estado offline foi preservado para quando os containers estiverem parados.
+## Evidências
+- CI `32604153879` aprovada para o commit `b9ac869`.
+- Deployment do Pages `32604327940` aprovado para o merge `7b78039`.
+- Saúde HTTPS, CORS e seis combinações de perfil/identidade retornaram sucesso no VPS.
+- Jornada publicada validada em Chromium com login real e oito títulos visíveis.
+- Responsável aprovou a demonstração operacional em 2026-08-22.

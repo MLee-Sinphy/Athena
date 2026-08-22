@@ -95,10 +95,10 @@ Zero bloqueador; desvios não bloqueadores documentados e aceitos.
 | GATE-005 | circulação | **Aprovado** — reserva até devolução, fila e avisos passam | TASK-005 |
 | GATE-006 | governança histórica | **Aprovado** — penalidades, auditoria, avaliações e análises passam | TASK-006 |
 | GATE-007 | experiência completa | **Aprovado** — responsividade, i18n, temas e AA aplicável passam | TASK-007 |
-| GATE-008 | aceite 1.0 | **Em validação** — automação verde; publicação real, ensaios no VPS, tecnologia assistiva e aceite humano pendentes | TASK-008 |
-| GATE-009 | demonstração operacional | perfis, seed, Open Library, WhatsApp e ciclo Docker passam sem segredo versionado | TASK-009 |
+| GATE-008 | aceite 1.0 | **Em validação** — automação e publicação real verdes; ensaios de restauração/carga no VPS e tecnologia assistiva pendentes | TASK-008 |
+| GATE-009 | demonstração operacional | **Aprovado** — perfis, seed, Open Library, WhatsApp, HTTPS e ciclo Docker validados sem segredo versionado | TASK-009 |
 
-GATE-000 a GATE-007 foram aprovados em 2026-08-22. A parte automatizável do GATE-008 passou no CI `32599541412`; o portão permanece **Em validação** até as evidências externas e o aceite humano. A regressão exigida em cada linha inclui todos os portões anteriores.
+GATE-000 a GATE-007 e GATE-009 foram aprovados em 2026-08-22. A parte automatizável e a publicação real do GATE-008 passaram; o portão permanece **Em validação** até os ensaios restantes no VPS e a revisão com tecnologia assistiva. A regressão exigida em cada linha inclui todos os portões anteriores.
 
 ## Casos de teste
 | ID | Nível | Tipo | Objetivo e resultado esperado | Fonte |
@@ -137,15 +137,15 @@ GATE-000 a GATE-007 foram aprovados em 2026-08-22. A parte automatizável do GAT
 | TEST-062 | 2 | i18n | **Aprovado:** pt-BR/en completos, seleção inicial e troca persistente | REQ-NF-006 |
 | TEST-063 | 7 | acessibilidade | **Aprovado no escopo do GATE-007:** automação e revisão registrada atendem WCAG 2.2 AA aplicável | REQ-NF-005 |
 | TEST-064 | 2 | visual | **Aprovado:** seis temas usam tokens, contraste válido e fallback opaco | REQ-NF-012 |
-| TEST-070 | 6 | E2E | **Pendente externo:** GitHub Pages deve consumir o VPS real por HTTPS/CORS corretos | CON-002 |
+| TEST-070 | 6 | E2E | **Aprovado:** GitHub Pages consumiu o VPS real por HTTPS/CORS e completou login e catálogo | CON-002 |
 | TEST-071 | 7 | segurança | **Aprovado na automação:** sessão, token, rate limit, autorização, uploads e configuração de produção passam | REQ-NF-001/003 |
 | TEST-072 | 7 | operação | **Aprovado na automação:** banco e mídia foram cifrados e restaurados com checksums; ensaio no VPS permanece pendente | REQ-NF-010 |
 | TEST-073 | 7 | carga | **Aprovado na automação:** 5.000 leitores, 20.000 títulos, 50.000 exemplares e 500 clientes simultâneos passaram; medição no VPS permanece pendente | REQ-NF-008 |
 | TEST-074 | 7 | compatibilidade | **Parcial:** Chromium, Firefox e WebKit passaram; duas versões estáveis e tecnologias assistivas exigem revisão humana | REQ-NF-004/005 |
-| TEST-075 | 3 | segurança | perfil selecionado deve corresponder à conta sem alterar resposta neutra | REQ-F-001 |
-| TEST-076 | 3 | dados | seed repetido preserva duas contas, oito títulos e 25 exemplares sem duplicar ou versionar senha | TASK-009 |
-| TEST-077 | 3 | integração | metadados Open Library têm fallback e capas são requisitadas diretamente pelo frontend por ISBN | DECISION-007 |
-| TEST-078 | 3 | operação | WhatsApp opcional/único autentica; subir, parar, remover e destruir Docker respeitam persistência e confirmação | TASK-009 |
+| TEST-075 | 3 | segurança | **Aprovado:** perfil selecionado corresponde à conta sem alterar resposta neutra | REQ-F-001 |
+| TEST-076 | 3 | dados | **Aprovado:** seed repetido preserva duas contas, oito títulos e 25 exemplares sem duplicar ou versionar senha | TASK-009 |
+| TEST-077 | 3 | integração | **Aprovado:** metadados Open Library têm fallback e capas são requisitadas diretamente pelo frontend por ISBN | DECISION-007 |
+| TEST-078 | 3 | operação | **Aprovado:** WhatsApp opcional/único autentica e o ciclo Docker preserva dados, exigindo confirmação para destruição | TASK-009 |
 
 ## Matriz de rastreabilidade
 | Fonte | Critério ou comportamento | Testes | Portões | Estado |
@@ -157,7 +157,7 @@ GATE-000 a GATE-007 foram aprovados em 2026-08-22. A parte automatizável do GAT
 | UC-007/010 | avaliações, histórico e auditoria | 050–053 | 006 | Aprovado |
 | REQ-NF-004/005/006/012 | experiência | 060–064 | 007 | Aprovado |
 | REQ-NF-001/003/008/010 | aceite operacional | 070–074 | 008 | Em validação |
-| REQ-F-001/003/004 e DECISION-007 | demonstração operacional | 075–078 | 009 | Em desenvolvimento |
+| REQ-F-001/003/004 e DECISION-007 | demonstração operacional | 075–078 | 009 | Aprovado |
 
 ## Regressão acumulada
 | Após o portão | Testes e suítes obrigatórios | Resultado exigido |

@@ -141,7 +141,7 @@ Todos os critérios finais de `TESTS.md`, documentação e validação humana ap
 ## Riscos
 Amplitude dos testes de acessibilidade, segurança e carga.
 ## Estado
-Em validação — candidata implementada na cadeia de branches; ainda não entregue nem versionada.
+Em validação — candidata implementada e demonstração operacional aprovada; ensaios finais do GATE-008 ainda impedem a entrega e a tag.
 ## Datas
 - Previsão: não definida.
 - Entrega real: não aplicável.
