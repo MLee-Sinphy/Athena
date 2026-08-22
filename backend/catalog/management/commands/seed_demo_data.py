@@ -104,14 +104,25 @@ class Command(BaseCommand):
 
         user_model = get_user_model()
         accounts = (
-            ("mlee.admin@proton.me", "ADM-001", UserRole.ADMINISTRATOR),
-            ("mlee.student@proton.me", "ALU-000001", UserRole.READER),
+            (
+                "mlee.admin@proton.me",
+                "ADM-001",
+                "+5500000000001",
+                UserRole.ADMINISTRATOR,
+            ),
+            (
+                "mlee.student@proton.me",
+                "ALU-000001",
+                "+5500000000002",
+                UserRole.READER,
+            ),
         )
-        for email, registration_id, role in accounts:
+        for email, registration_id, whatsapp_number, role in accounts:
             user, _ = user_model.objects.update_or_create(
                 email=email,
                 defaults={
                     "registration_id": registration_id,
+                    "whatsapp_number": whatsapp_number,
                     "role": role,
                     "must_change_password": False,
                     "is_active": True,
