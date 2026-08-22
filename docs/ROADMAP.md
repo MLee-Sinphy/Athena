@@ -33,7 +33,7 @@ Autenticação, autorização base, segurança e deploy de prova verificados.
 ## Riscos
 Integração cross-origin e sessão não persistente.
 ## Estado
-Planejada.
+Implementada na candidata 1.0.0 — portões correspondentes aprovados; não foi publicada como entrega independente.
 ## Datas
 - Previsão: não definida.
 - Entrega real: não aplicável.
@@ -60,7 +60,7 @@ UC-002 e parte administrativa de UC-008 verificadas.
 ## Riscos
 Licenças de capas e desempenho de busca.
 ## Estado
-Planejada.
+Implementada na candidata 1.0.0 — portão correspondente aprovado; não foi publicada como entrega independente.
 ## Datas
 - Previsão: não definida.
 - Entrega real: não aplicável.
@@ -87,7 +87,7 @@ UC-003 a UC-006 verificados sem sobreposição concorrente.
 ## Riscos
 Complexidade temporal e concorrência.
 ## Estado
-Planejada.
+Implementada na candidata 1.0.0 — portões correspondentes aprovados; não foi publicada como entrega independente.
 ## Datas
 - Previsão: não definida.
 - Entrega real: não aplicável.
@@ -114,7 +114,7 @@ UC-007 a UC-010 verificados.
 ## Riscos
 Retenção e interpretação de políticas alteradas.
 ## Estado
-Planejada.
+Implementada na candidata 1.0.0 — portão correspondente aprovado; não foi publicada como entrega independente.
 ## Datas
 - Previsão: não definida.
 - Entrega real: não aplicável.
@@ -141,7 +141,7 @@ Todos os critérios finais de `TESTS.md`, documentação e validação humana ap
 ## Riscos
 Amplitude dos testes de acessibilidade, segurança e carga.
 ## Estado
-Planejada.
+Em validação — candidata implementada na cadeia de branches; ainda não entregue nem versionada.
 ## Datas
 - Previsão: não definida.
 - Entrega real: não aplicável.

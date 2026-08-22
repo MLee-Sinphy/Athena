@@ -246,7 +246,7 @@ Experiência responsiva por perfil, fluxos de catálogo/circulação/administra�
 
 # TASK-008 — Implantar, proteger e validar a versão 1.0.0
 ## Estado
-Em andamento — automação e testes do GATE-008 iniciados.
+Em validação final — automação aprovada no CI `32599541412`; publicação real, verificações no VPS, tecnologias assistivas e aceite humano permanecem pendentes.
 ## Tipo
 Chore/Test.
 ## Prioridade

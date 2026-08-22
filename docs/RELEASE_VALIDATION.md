@@ -2,11 +2,15 @@
 
 ## Evidências automatizadas
 
+Execução de referência: CI `32599541412`, commit `9da7a9e`, concluída com sucesso em 2026-08-22.
+
 - TEST-071: regressão de autenticação, autorização, rate limit, uploads, CORS, cabeçalhos seguros e configuração de produção.
 - TEST-072: scripts de backup/restauração cifram banco e mídia, verificam SHA-256 e exigem confirmação destrutiva.
 - TEST-073: catálogo paginado limita respostas a 100 itens e `scripts/load_test.py` permite simular 500 clientes concorrentes.
 - TEST-074: Playwright executa as jornadas responsivas e Axe em Chromium, Firefox e WebKit.
 - A identidade visual é uma configuração global auditada: somente administradores escolhem entre as seis paletas tokenizadas.
+
+No ensaio de referência, o CI criou 5.000 leitores, 20.000 títulos e 50.000 exemplares sintéticos e concluiu 500 requisições simultâneas sem falha; o passo completo, incluindo carga dos dados, terminou em aproximadamente 13 segundos no runner hospedado. Esse resultado comprova o cenário automatizado, não a capacidade do VPS futuro.
 
 ## Procedimento de carga
 

@@ -95,9 +95,9 @@ Zero bloqueador; desvios não bloqueadores documentados e aceitos.
 | GATE-005 | circulação | **Aprovado** — reserva até devolução, fila e avisos passam | TASK-005 |
 | GATE-006 | governança histórica | **Aprovado** — penalidades, auditoria, avaliações e análises passam | TASK-006 |
 | GATE-007 | experiência completa | **Aprovado** — responsividade, i18n, temas e AA aplicável passam | TASK-007 |
-| GATE-008 | aceite 1.0 | deploy, segurança, backup, E2E e carga passam | TASK-008 |
+| GATE-008 | aceite 1.0 | **Em validação** — automação verde; publicação real, ensaios no VPS, tecnologia assistiva e aceite humano pendentes | TASK-008 |
 
-GATE-000 a GATE-007 foram aprovados em 2026-08-22. O GATE-008 permanece **Planejado**. A regressão exigida em cada linha inclui todos os portões anteriores.
+GATE-000 a GATE-007 foram aprovados em 2026-08-22. A parte automatizável do GATE-008 passou no CI `32599541412`; o portão permanece **Em validação** até as evidências externas e o aceite humano. A regressão exigida em cada linha inclui todos os portões anteriores.
 
 ## Casos de teste
 | ID | Nível | Tipo | Objetivo e resultado esperado | Fonte |
@@ -136,11 +136,11 @@ GATE-000 a GATE-007 foram aprovados em 2026-08-22. O GATE-008 permanece **Planej
 | TEST-062 | 2 | i18n | **Aprovado:** pt-BR/en completos, seleção inicial e troca persistente | REQ-NF-006 |
 | TEST-063 | 7 | acessibilidade | **Aprovado no escopo do GATE-007:** automação e revisão registrada atendem WCAG 2.2 AA aplicável | REQ-NF-005 |
 | TEST-064 | 2 | visual | **Aprovado:** seis temas usam tokens, contraste válido e fallback opaco | REQ-NF-012 |
-| TEST-070 | 6 | E2E | GitHub Pages consome VPS por HTTPS/CORS corretos | CON-002 |
-| TEST-071 | 7 | segurança | sessão, token, rate limit, autorização e uploads resistem à suíte | REQ-NF-001/003 |
-| TEST-072 | 7 | operação | backup conjunto restaura banco e mídia com checksums | REQ-NF-010 |
-| TEST-073 | 7 | carga | volumes e 500 simultâneos são simulados e documentados | REQ-NF-008 |
-| TEST-074 | 7 | compatibilidade | navegadores alvo e tecnologias assistivas passam checklist | REQ-NF-004/005 |
+| TEST-070 | 6 | E2E | **Pendente externo:** GitHub Pages deve consumir o VPS real por HTTPS/CORS corretos | CON-002 |
+| TEST-071 | 7 | segurança | **Aprovado na automação:** sessão, token, rate limit, autorização, uploads e configuração de produção passam | REQ-NF-001/003 |
+| TEST-072 | 7 | operação | **Aprovado na automação:** banco e mídia foram cifrados e restaurados com checksums; ensaio no VPS permanece pendente | REQ-NF-010 |
+| TEST-073 | 7 | carga | **Aprovado na automação:** 5.000 leitores, 20.000 títulos, 50.000 exemplares e 500 clientes simultâneos passaram; medição no VPS permanece pendente | REQ-NF-008 |
+| TEST-074 | 7 | compatibilidade | **Parcial:** Chromium, Firefox e WebKit passaram; duas versões estáveis e tecnologias assistivas exigem revisão humana | REQ-NF-004/005 |
 
 ## Matriz de rastreabilidade
 | Fonte | Critério ou comportamento | Testes | Portões | Estado |
@@ -151,7 +151,7 @@ GATE-000 a GATE-007 foram aprovados em 2026-08-22. O GATE-008 permanece **Planej
 | UC-004/005/006 | circulação e avisos | 041–047 | 005 | Planejado |
 | UC-007/010 | avaliações, histórico e auditoria | 050–053 | 006 | Planejado |
 | REQ-NF-004/005/006/012 | experiência | 060–064 | 007 | Planejado |
-| REQ-NF-001/003/008/010 | aceite operacional | 070–074 | 008 | Planejado |
+| REQ-NF-001/003/008/010 | aceite operacional | 070–074 | 008 | Em validação |
 
 ## Regressão acumulada
 | Após o portão | Testes e suítes obrigatórios | Resultado exigido |
