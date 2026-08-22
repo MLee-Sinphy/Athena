@@ -36,8 +36,23 @@ jobs:
       - run: python -m pip install -r backend/requirements-dev.txt
       - run: npm ci
         working-directory: frontend
-      - name: Check backend
-        run: make check-backend PYTHON=python RUFF=ruff
+      - name: Check backend formatting and migrations
+        run: |
+          ruff format --check backend
+          ruff check backend
+          python backend/manage.py makemigrations --check --dry-run
+        env:
+          DJANGO_SECRET_KEY: ci-only-not-a-production-secret
+      - name: Test accounts, catalog, and health
+        run: python backend/manage.py test accounts catalog health
+        env:
+          DJANGO_SECRET_KEY: ci-only-not-a-production-secret
+      - name: Test calendar and policy domain
+        run: python backend/manage.py test circulation.test_policy_domain
+        env:
+          DJANGO_SECRET_KEY: ci-only-not-a-production-secret
+      - name: Test circulation flows
+        run: python backend/manage.py test circulation.test_circulation_flow
         env:
           DJANGO_SECRET_KEY: ci-only-not-a-production-secret
       - name: Check frontend
