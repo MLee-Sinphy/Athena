@@ -112,7 +112,7 @@ Catálogo agrupado por título, comparação de exemplares disponíveis, busca t
 
 # TASK-004 — Implementar calendário, políticas e disponibilidade
 ## Estado
-Pronta para iniciar; dependência TASK-003 satisfeita.
+Em andamento — testes do GATE-004 iniciados.
 ## Tipo
 Feature.
 ## Prioridade
