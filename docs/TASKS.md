@@ -78,7 +78,7 @@ Contas de leitor e administrador, login por identificador único, token opaco re
 
 # TASK-003 — Implementar acervo e catálogo
 ## Estado
-Pronta para iniciar; dependência TASK-002 satisfeita.
+Concluída — GATE-003 aprovado.
 ## Tipo
 Feature.
 ## Prioridade
@@ -102,10 +102,17 @@ GATE-003; TEST-020 a TEST-023.
 UC-002 e administração do acervo verificados nos dois perfis.
 ## Riscos
 Licença de mídia, N+1 e busca inconsistente.
+## Resultado
+Catálogo agrupado por título, comparação de exemplares disponíveis, busca textual e por `#tag`, CRUD administrativo de títulos/exemplares, imagens adicionais e mídia autenticada foram implementados. ISBN e páginas permanecem opcionais; códigos internos ficam restritos às APIs administrativas.
+## Evidências
+- Falha inicial: importação de `catalog.models` inexistente antes da implementação.
+- TEST-020 a TEST-023 cobertos por 11 testes específicos; regressão total de 32 testes de backend e 3 de frontend.
+- Ruff, migrações, lint TypeScript e build aprovados.
+- CI PostgreSQL aprovada na execução `32595446620` para o commit `ec803f7`.
 
 # TASK-004 — Implementar calendário, políticas e disponibilidade
 ## Estado
-Planejada; depende de TASK-003.
+Pronta para iniciar; dependência TASK-003 satisfeita.
 ## Tipo
 Feature.
 ## Prioridade

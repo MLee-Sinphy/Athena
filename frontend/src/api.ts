@@ -63,3 +63,21 @@ export async function logout() {
     accessToken = null
   }
 }
+
+export type CatalogTitle = {
+  id: number
+  name: string
+  author: string
+  category: string
+  description: string
+  cover: string
+  tags: string[]
+  available_copies: number
+}
+
+export async function getCatalog(query = ''): Promise<CatalogTitle[]> {
+  const search = query ? `?q=${encodeURIComponent(query)}` : ''
+  const response = await request(`/catalog/titles/${search}`)
+  const result = await response.json() as { results: CatalogTitle[] }
+  return result.results
+}
