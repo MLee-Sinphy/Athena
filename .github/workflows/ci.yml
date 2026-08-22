@@ -51,8 +51,12 @@ jobs:
         run: python backend/manage.py test circulation.test_policy_domain
         env:
           DJANGO_SECRET_KEY: ci-only-not-a-production-secret
-      - name: Test circulation flows
-        run: python backend/manage.py test circulation.test_circulation_flow
+      - name: Test reservation flows
+        run: python backend/manage.py test circulation.test_circulation_flow.ReservationFlowTests
+        env:
+          DJANGO_SECRET_KEY: ci-only-not-a-production-secret
+      - name: Test missed pickup and notice flows
+        run: python backend/manage.py test circulation.test_circulation_flow.MissedPickupAndNoticeTests
         env:
           DJANGO_SECRET_KEY: ci-only-not-a-production-secret
       - name: Check frontend
