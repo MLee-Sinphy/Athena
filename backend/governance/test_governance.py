@@ -10,7 +10,7 @@ from catalog.models import BookCopy, CopyState
 from circulation.models import PolicyVersion
 from circulation.services import checkout_reservation, create_reservation, return_loan
 from circulation.test_policy_domain import make_title, make_user
-from governance.models import AuditEntry, Rating, TagSuggestion
+from governance.models import AuditEntry, Rating, TagSuggestion, VisualConfiguration
 from governance.services import submit_return_feedback
 
 
@@ -119,3 +119,41 @@ class AuditAndAnalyticsTests(TestCase):
         self.assertEqual(response.data["by_period"][0]["returned_on"], date(2026, 10, 9))
         self.assertNotIn(self.reader.email, str(response.data))
         self.assertNotIn(self.reader.registration_id, str(response.data))
+
+
+class VisualConfigurationTests(TestCase):
+    def setUp(self):
+        self.admin = make_user("THEME-ADMIN")
+        self.admin.role = "administrator"
+        self.admin.save(update_fields=["role"])
+        self.reader = make_user("THEME-READER")
+
+    def test_administrator_selects_global_theme_and_change_is_audited(self):
+        client = APIClient()
+        client.credentials(HTTP_AUTHORIZATION=f"Bearer {issue_token(self.admin)}")
+
+        response = client.patch(
+            "/api/v1/admin/configuration/visual/", {"theme": "aqua"}, format="json"
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(VisualConfiguration.load().theme, "aqua")
+        self.assertEqual(AuditEntry.objects.get().action, "visual_configuration_changed")
+        self.assertEqual(APIClient().get("/api/v1/health/").data["theme"], "aqua")
+
+    def test_reader_cannot_change_global_theme_and_unknown_theme_is_rejected(self):
+        client = APIClient()
+        client.credentials(HTTP_AUTHORIZATION=f"Bearer {issue_token(self.reader)}")
+        self.assertEqual(
+            client.patch(
+                "/api/v1/admin/configuration/visual/", {"theme": "wine"}, format="json"
+            ).status_code,
+            403,
+        )
+        client.credentials(HTTP_AUTHORIZATION=f"Bearer {issue_token(self.admin)}")
+        self.assertEqual(
+            client.patch(
+                "/api/v1/admin/configuration/visual/", {"theme": "unknown"}, format="json"
+            ).status_code,
+            400,
+        )

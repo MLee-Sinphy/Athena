@@ -16,6 +16,7 @@ export const messages = {
     success: 'Operação concluída.', menu: 'Navegação principal', status: 'Estado', queue: 'Posição na fila',
     checkout: 'Confirmar retirada', returnBook: 'Confirmar devolução', renew: 'Renovar', feedback: 'Avaliar devolução',
     titleScore: 'Nota do título', copyScore: 'Estado do exemplar', tags: 'Tags separadas por vírgula', inventory: 'Cadastrar título e exemplar',
+    visualIdentity: 'Identidade visual', applyTheme: 'Aplicar tema para todos',
   },
   en: {
     skip: 'Skip to content', language: 'Português', theme: 'Visual theme', unavailable: 'Service temporarily unavailable',
@@ -31,6 +32,7 @@ export const messages = {
     menu: 'Main navigation', status: 'Status', queue: 'Queue position',
     checkout: 'Confirm pickup', returnBook: 'Confirm return', renew: 'Renew', feedback: 'Review return', titleScore: 'Title rating',
     copyScore: 'Copy condition', tags: 'Comma-separated tags', inventory: 'Create title and copy',
+    visualIdentity: 'Visual identity', applyTheme: 'Apply theme for everyone',
   },
 } as const
 

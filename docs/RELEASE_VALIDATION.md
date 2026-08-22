@@ -6,6 +6,7 @@
 - TEST-072: scripts de backup/restauração cifram banco e mídia, verificam SHA-256 e exigem confirmação destrutiva.
 - TEST-073: catálogo paginado limita respostas a 100 itens e `scripts/load_test.py` permite simular 500 clientes concorrentes.
 - TEST-074: Playwright executa as jornadas responsivas e Axe em Chromium, Firefox e WebKit.
+- A identidade visual é uma configuração global auditada: somente administradores escolhem entre as seis paletas tokenizadas.
 
 ## Procedimento de carga
 

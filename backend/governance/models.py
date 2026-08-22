@@ -8,6 +8,32 @@ from catalog.models import BookTitle
 from circulation.models import Loan
 
 
+class VisualTheme(models.TextChoices):
+    CALCULUS = "calculus", "Calculus"
+    OCEAN = "ocean", "Ocean"
+    WINE = "wine", "Wine"
+    SLATE = "slate", "Slate"
+    INDIGO = "indigo", "Indigo"
+    AQUA = "aqua", "Aqua Glass"
+
+
+class VisualConfiguration(models.Model):
+    theme = models.CharField(max_length=20, choices=VisualTheme, default=VisualTheme.CALCULUS)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.get_theme_display()
+
+    def save(self, *args, **kwargs):
+        self.pk = 1
+        return super().save(*args, **kwargs)
+
+    @classmethod
+    def load(cls):
+        configuration, _ = cls.objects.get_or_create(pk=1)
+        return configuration
+
+
 class RatingQuerySet(models.QuerySet):
     def title_average(self, title):
         return self.filter(loan__reservation__title=title).aggregate(value=Avg("title_score"))[

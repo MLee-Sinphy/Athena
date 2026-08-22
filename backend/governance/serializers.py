@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import AuditEntry, Rating
+from .models import AuditEntry, Rating, VisualConfiguration
 
 
 class FeedbackSerializer(serializers.Serializer):
@@ -35,3 +35,10 @@ class AuditEntrySerializer(serializers.ModelSerializer):
             "created_at",
         )
         read_only_fields = fields
+
+
+class VisualConfigurationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = VisualConfiguration
+        fields = ("theme", "updated_at")
+        read_only_fields = ("updated_at",)

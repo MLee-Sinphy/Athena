@@ -25,7 +25,7 @@ function App() {
   const [language, updateLanguage] = useState<Language>(() =>
     preference('athena-language', navigator.language.startsWith('pt') ? 'pt' : 'en'),
   )
-  const [theme, updateTheme] = useState<Theme>(() => preference('athena-theme', 'calculus'))
+  const [theme, updateTheme] = useState<Theme>('calculus')
   const [error, setError] = useState('')
   const [temporaryPassword, setTemporaryPassword] = useState('')
   const [profile, setProfile] = useState<Profile | null>(null)
@@ -42,20 +42,28 @@ function App() {
   }
   const setTheme = (value: Theme) => {
     updateTheme(value)
-    localStorage.setItem('athena-theme', value)
     document.documentElement.dataset.theme = value
   }
 
   const probe = useCallback(async () => {
-    try { await checkHealth(); setScreen('login') } catch { setScreen('unavailable') }
+    try {
+      const health = await checkHealth()
+      if (['calculus', 'ocean', 'wine', 'slate', 'indigo', 'aqua'].includes(health.theme)) {
+        updateTheme(health.theme as Theme)
+        document.documentElement.dataset.theme = health.theme
+      }
+      setScreen('login')
+    } catch { setScreen('unavailable') }
   }, [])
 
   useEffect(() => {
     document.documentElement.lang = language === 'pt' ? 'pt-BR' : 'en'
     document.documentElement.dataset.theme = theme
-    // oxlint-disable-next-line react/set-state-in-effect
-    void probe()
-  }, [language, probe, theme])
+  }, [language, theme])
+
+  // The initial availability probe intentionally transitions the UI state asynchronously.
+  // oxlint-disable-next-line react/set-state-in-effect
+  useEffect(() => { void probe() }, [probe])
 
   async function loadDashboard() {
     const currentProfile = await getProfile()
@@ -94,7 +102,7 @@ function App() {
   const signOut = async () => {
     await logout(); setProfile(null); setScreen('login')
   }
-  const preferences = <Preferences language={language} setLanguage={setLanguage} theme={theme} setTheme={setTheme} text={text} />
+  const preferences = <Preferences language={language} setLanguage={setLanguage} text={text} />
 
   return <>
     <a className="skip-link" href="#main-content">{text.skip}</a>
@@ -113,7 +121,7 @@ function App() {
         {error && <p role="alert">{error}</p>}<button type="submit">{text.change}</button>
       </form></section>}
       {screen === 'dashboard' && profile?.role === 'reader' && <ReaderDashboard text={text} profile={profile} initialTitles={titles} initialReservations={reservations} initialNotices={notices} initialLoans={loans} onLogout={() => void signOut()} />}
-      {screen === 'dashboard' && profile?.role === 'administrator' && <AdminDashboard text={text} onLogout={() => void signOut()} />}
+      {screen === 'dashboard' && profile?.role === 'administrator' && <AdminDashboard text={text} theme={theme} setTheme={setTheme} onLogout={() => void signOut()} />}
     </main>
   </>
 }

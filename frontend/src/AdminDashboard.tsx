@@ -1,10 +1,14 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 
-import { createCopy, createPolicy, createReader, createTitle } from './api'
+import { createCopy, createPolicy, createReader, createTitle, setVisualTheme } from './api'
 import type { MessageCatalog } from './i18n'
+import { themes } from './themes'
+import type { Theme } from './themes'
 
-export function AdminDashboard({ text, onLogout }: { text: MessageCatalog; onLogout: () => void }) {
+type Props = { text: MessageCatalog; theme: Theme; setTheme: (theme: Theme) => void; onLogout: () => void }
+
+export function AdminDashboard({ text, theme, setTheme, onLogout }: Props) {
   const [message, setMessage] = useState('')
 
   async function readerSubmit(event: FormEvent<HTMLFormElement>) {
@@ -39,10 +43,23 @@ export function AdminDashboard({ text, onLogout }: { text: MessageCatalog; onLog
     form.reset(); setMessage(text.success)
   }
 
+  async function themeSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const value = String(new FormData(event.currentTarget).get('theme')) as Theme
+    const result = await setVisualTheme(value)
+    setTheme(result.theme as Theme)
+    setMessage(text.success)
+  }
+
   return <div className="dashboard-layout">
     <nav className="main-nav" aria-label={text.menu}><span>{text.administrator}</span><button type="button" onClick={onLogout}>{text.logout}</button></nav>
     <div className="dashboard-content"><h1>{text.administrator}</h1>{message && <p role="status" className="success">{message}</p>}
-      <div className="admin-grid"><form className="panel" onSubmit={readerSubmit}><h2>{text.createReader}</h2>
+      <div className="admin-grid"><form className="panel" onSubmit={themeSubmit}><h2>{text.visualIdentity}</h2>
+        <label>{text.theme}<select name="theme" defaultValue={theme}>
+          {themes.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+        </select></label>
+        <button type="submit">{text.applyTheme}</button>
+      </form><form className="panel" onSubmit={readerSubmit}><h2>{text.createReader}</h2>
         <label>{text.email}<input name="email" type="email" required /></label>
         <label>{text.registration}<input name="registration" required /></label>
         <label>{text.temporaryPassword}<input name="password" type="password" minLength={15} required /></label>

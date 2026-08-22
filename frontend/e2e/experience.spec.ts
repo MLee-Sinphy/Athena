@@ -5,7 +5,7 @@ async function mockApi(page: import('@playwright/test').Page) {
   await page.route('http://localhost:8000/api/v1/**', async (route) => {
     const path = new URL(route.request().url()).pathname
     const bodies: Record<string, unknown> = {
-      '/api/v1/health/': { status: 'ok' },
+      '/api/v1/health/': { status: 'ok', service: 'athena-api', theme: 'calculus' },
       '/api/v1/auth/login/': { access_token: 'opaque-test-token', must_change_password: false },
       '/api/v1/auth/me/': { id: 1, email: 'reader@example.com', registration_id: 'READER-001', role: 'reader' },
       '/api/v1/catalog/titles/': { results: [{ id: 1, name: 'O Nome da Rosa', author: 'Umberto Eco', category: 'Mistério', description: 'Abadia medieval', cover: '', tags: ['medieval'], available_copies: 2 }] },

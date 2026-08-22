@@ -39,7 +39,7 @@ Ordem lógica, skip link, foco visível, retorno correto após modal e nenhuma a
 
 ## Identidade visual
 ### Paleta de cores
-Seis temas usam os mesmos tokens: `primary`, `secondary`, `accent`, `background`, `surface`, `text`, `muted`, `border`, `success`, `warning`, `error`, `info`, foco e estados interativos. Paletas-base estão em `PROJECT_CONTEXT.md`; Tema 1 é preferencial inicial e Tema 6 usa transparência com fallback opaco.
+Seis temas usam os mesmos tokens: `primary`, `secondary`, `accent`, `background`, `surface`, `text`, `muted`, `border`, `success`, `warning`, `error`, `info`, foco e estados interativos. Paletas-base estão em `PROJECT_CONTEXT.md`; Tema 1 é preferencial inicial e Tema 6 usa transparência com fallback opaco. O administrador escolhe no painel a identidade visual global da instituição; leitores não alteram a paleta individualmente.
 ### Tipografia
 Fonte de interface legível e livre; escala responsiva moderada; corpo mínimo equivalente a 16 px; números e códigos administrativos alinháveis.
 ### Espaçamentos

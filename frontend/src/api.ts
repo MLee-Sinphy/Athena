@@ -38,7 +38,13 @@ async function jsonRequest<T>(path: string, init: RequestInit = {}): Promise<T> 
 }
 
 export async function checkHealth() {
-  await request('/health/')
+  return jsonRequest<{ status: string; service: string; theme: string }>('/health/')
+}
+
+export async function setVisualTheme(theme: string) {
+  return jsonRequest<{ theme: string }>('/admin/configuration/visual/', {
+    method: 'PATCH', body: JSON.stringify({ theme }),
+  })
 }
 
 export async function login(identifier: string, password: string) {

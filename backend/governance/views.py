@@ -6,9 +6,14 @@ from rest_framework.views import APIView
 from accounts.permissions import AdministratorOnly, PasswordChanged
 from circulation.models import Loan
 
-from .models import AuditEntry
-from .serializers import AuditEntrySerializer, FeedbackSerializer, RatingSerializer
-from .services import submit_return_feedback
+from .models import AuditEntry, VisualConfiguration
+from .serializers import (
+    AuditEntrySerializer,
+    FeedbackSerializer,
+    RatingSerializer,
+    VisualConfigurationSerializer,
+)
+from .services import record_audit, submit_return_feedback
 
 
 class FeedbackView(APIView):
@@ -49,3 +54,22 @@ class CirculationAnalyticsView(APIView):
             returned.values("returned_on").annotate(loan_count=Count("id")).order_by("returned_on")
         )
         return Response({"by_title": by_title, "by_category": by_category, "by_period": by_period})
+
+
+class VisualConfigurationView(APIView):
+    permission_classes = [AdministratorOnly]
+
+    def patch(self, request):
+        configuration = VisualConfiguration.load()
+        before = VisualConfigurationSerializer(configuration).data
+        serializer = VisualConfigurationSerializer(configuration, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        configuration = serializer.save()
+        record_audit(
+            request.user,
+            "visual_configuration_changed",
+            configuration,
+            dict(before),
+            dict(serializer.data),
+        )
+        return Response(serializer.data)

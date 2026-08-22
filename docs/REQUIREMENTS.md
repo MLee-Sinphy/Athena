@@ -629,7 +629,7 @@ Manutenibilidade e UX.
 ### Estado
 Aprovado.
 ### Regra
-Cores e efeitos usam tokens semânticos, seis temas selecionáveis centralmente e fallback opaco no Aqua Glass.
+Cores e efeitos usam tokens semânticos. O administrador seleciona uma das seis paletas como identidade visual global, sem alteração de código; o Aqua Glass mantém fallback opaco.
 ### Critério de verificação
 Inspeção de estilos e testes de contraste em todos os temas.
 ### Prioridade
