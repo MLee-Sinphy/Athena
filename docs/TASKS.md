@@ -146,7 +146,7 @@ Calendário semanal configurável, exceções de abertura/fechamento, políticas
 
 # TASK-005 — Implementar circulação, fila e avisos
 ## Estado
-Pronta para iniciar; dependência TASK-004 satisfeita.
+Em andamento — testes do GATE-005 iniciados.
 ## Tipo
 Feature.
 ## Prioridade

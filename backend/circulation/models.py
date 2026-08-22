@@ -60,6 +60,7 @@ class ReservationState(models.TextChoices):
     CONFIRMED = "confirmed", "Confirmed"
     CANCELLED = "cancelled", "Cancelled"
     COMPLETED = "completed", "Completed"
+    NEEDS_RESCHEDULE = "needs_reschedule", "Needs reschedule"
 
 
 class Reservation(models.Model):
@@ -73,6 +74,7 @@ class Reservation(models.Model):
     state = models.CharField(max_length=20, choices=ReservationState)
     policy = models.ForeignKey(PolicyVersion, on_delete=models.PROTECT)
     created_at = models.DateTimeField(auto_now_add=True)
+    exclusivity_lost_at = models.DateField(null=True, blank=True)
 
     class Meta:
         ordering = ["created_at", "id"]
@@ -102,6 +104,9 @@ class ReservationRequest(models.Model):
     title = models.ForeignKey(BookTitle, on_delete=models.PROTECT, related_name="requests")
     created_at = models.DateTimeField(auto_now_add=True)
     active = models.BooleanField(default=True)
+    reservation = models.OneToOneField(
+        Reservation, on_delete=models.CASCADE, related_name="queue_request", null=True, blank=True
+    )
 
     objects = ReservationRequestQuerySet.as_manager()
 
@@ -110,6 +115,16 @@ class ReservationRequest(models.Model):
 
     def __str__(self):
         return f"Request {self.pk}"
+
+    @property
+    def position(self):
+        return (
+            ReservationRequest.objects.for_title(self.title)
+            .filter(
+                Q(created_at__lt=self.created_at) | Q(created_at=self.created_at, id__lte=self.id)
+            )
+            .count()
+        )
 
 
 class CancellationEvent(models.Model):
@@ -130,6 +145,7 @@ class Penalty(models.Model):
     starts_on = models.DateField()
     ends_on = models.DateField()
     loan_limit_reduction = models.PositiveSmallIntegerField(default=0)
+    blocks_new = models.BooleanField(default=True)
 
     class Meta:
         ordering = ["starts_on", "id"]
@@ -141,3 +157,38 @@ class Penalty(models.Model):
 
     def __str__(self):
         return f"Penalty {self.pk}: {self.reason}"
+
+
+class Loan(models.Model):
+    reservation = models.OneToOneField(Reservation, on_delete=models.PROTECT, related_name="loan")
+    checked_out_at = models.DateTimeField()
+    due_date = models.DateField()
+    returned_on = models.DateField(null=True, blank=True)
+
+    class Meta:
+        ordering = ["-checked_out_at", "-id"]
+
+    def __str__(self):
+        return f"Loan {self.pk}"
+
+
+class NoticeResponse(models.TextChoices):
+    ACCEPTED = "accepted", "Accepted"
+    DECLINED = "declined", "Declined"
+
+
+class InternalNotice(models.Model):
+    recipient = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="notices"
+    )
+    kind = models.CharField(max_length=80)
+    payload = models.JSONField(default=dict)
+    created_at = models.DateTimeField(auto_now_add=True)
+    read_at = models.DateTimeField(null=True, blank=True)
+    response = models.CharField(max_length=20, choices=NoticeResponse, blank=True)
+
+    class Meta:
+        ordering = ["-created_at", "-id"]
+
+    def __str__(self):
+        return f"Notice {self.pk}: {self.kind}"

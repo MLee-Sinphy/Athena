@@ -1,14 +1,28 @@
+from django.utils import timezone
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from accounts.permissions import AdministratorOnly
+from accounts.permissions import AdministratorOnly, PasswordChanged
 
-from .models import PolicyVersion, RegularOpening
+from .models import InternalNotice, Loan, NoticeResponse, PolicyVersion, RegularOpening, Reservation
 from .serializers import (
     CalendarExceptionSerializer,
+    LoanSerializer,
+    NoticeSerializer,
     PolicyVersionSerializer,
     RegularOpeningSerializer,
+    ReservationSerializer,
+)
+from .services import (
+    AllocationConflict,
+    accept_early_opportunity,
+    cancel_reservation,
+    change_reservation,
+    checkout_reservation,
+    create_reservation,
+    renew_loan,
+    return_loan,
 )
 
 
@@ -45,3 +59,115 @@ class CalendarExceptionView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class ReservationView(APIView):
+    permission_classes = [PasswordChanged]
+
+    def get(self, request):
+        reservations = Reservation.objects.filter(reader=request.user).select_related(
+            "queue_request"
+        )
+        return Response({"results": ReservationSerializer(reservations, many=True).data})
+
+    def post(self, request):
+        serializer = ReservationSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+        try:
+            reservation = create_reservation(
+                request.user.id, data["title"].id, data["start_date"], data["end_date"]
+            )
+        except AllocationConflict:
+            return Response({"detail": "Reservation is not eligible."}, status=409)
+        return Response(ReservationSerializer(reservation).data, status=status.HTTP_201_CREATED)
+
+
+class ReservationDetailView(APIView):
+    permission_classes = [PasswordChanged]
+
+    def patch(self, request, reservation_id):
+        serializer = ReservationSerializer(data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        reservation = Reservation.objects.get(pk=reservation_id, reader=request.user)
+        try:
+            changed = change_reservation(
+                reservation.id,
+                request.user.id,
+                serializer.validated_data.get("start_date", reservation.start_date),
+                serializer.validated_data.get("end_date", reservation.end_date),
+            )
+        except AllocationConflict:
+            return Response({"detail": "Requested dates conflict."}, status=409)
+        return Response(ReservationSerializer(changed).data)
+
+    def delete(self, request, reservation_id):
+        cancel_reservation(reservation_id, request.user.id)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class CheckoutView(APIView):
+    permission_classes = [PasswordChanged]
+
+    def post(self, request, reservation_id):
+        try:
+            loan = checkout_reservation(reservation_id, request.user.id, timezone.now())
+        except AllocationConflict:
+            return Response({"detail": "Checkout is not allowed."}, status=409)
+        return Response(LoanSerializer(loan).data, status=status.HTTP_201_CREATED)
+
+
+class ReturnView(APIView):
+    permission_classes = [PasswordChanged]
+
+    def post(self, request, loan_id):
+        loan = Loan.objects.get(pk=loan_id, reservation__reader=request.user)
+        returned = return_loan(loan.id, timezone.localdate())
+        return Response(LoanSerializer(returned).data)
+
+
+class RenewView(APIView):
+    permission_classes = [PasswordChanged]
+
+    def post(self, request, loan_id):
+        try:
+            loan = renew_loan(loan_id, request.user.id, request.data.get("due_date"))
+        except (AllocationConflict, TypeError):
+            return Response({"detail": "Renewal is not allowed."}, status=409)
+        return Response(LoanSerializer(loan).data)
+
+
+class NoticeView(APIView):
+    permission_classes = [PasswordChanged]
+
+    def get(self, request, notice_id=None):
+        notices = InternalNotice.objects.filter(recipient=request.user)
+        return Response({"results": NoticeSerializer(notices, many=True).data})
+
+    def post(self, request, notice_id=None):
+        response = request.data.get("response")
+        if response not in NoticeResponse.values:
+            return Response({"response": ["Invalid response."]}, status=400)
+        notice = accept_early_opportunity(notice_id, request.user.id, response)
+        return Response(NoticeSerializer(notice).data)
+
+
+class AdminReservationInterventionView(APIView):
+    permission_classes = [AdministratorOnly]
+
+    def patch(self, request, reservation_id):
+        reservation = Reservation.objects.get(pk=reservation_id)
+        try:
+            changed = change_reservation(
+                reservation.id,
+                reservation.reader_id,
+                request.data.get("start_date", reservation.start_date),
+                request.data.get("end_date", reservation.end_date),
+            )
+        except (AllocationConflict, TypeError):
+            return Response({"detail": "Intervention conflicts with another period."}, status=409)
+        return Response(ReservationSerializer(changed).data)
+
+    def delete(self, request, reservation_id):
+        cancel_reservation(reservation_id, request.user.id, administrative=True)
+        return Response(status=status.HTTP_204_NO_CONTENT)
