@@ -185,7 +185,7 @@ A capacidade estende o controle individual de exemplares e reutiliza o domínio 
 
 ## Referências
 - Review: Não aplicável; origem anterior à primeira versão.
-- Roadmap: Não incluída.
+- Roadmap: horizonte futuro sem versão aprovada.
 - Requisito: Pendente.
 - Decisão: Pendente.
 - Tarefa: Pendente.
@@ -267,7 +267,7 @@ A capacidade complementa a autenticação, mas depende da infraestrutura de e-ma
 
 ## Referências
 - Review: Não aplicável; origem anterior à primeira versão.
-- Roadmap: Não incluída.
+- Roadmap: horizonte futuro sem versão aprovada.
 - Requisito: Pendente.
 - Decisão: Pendente.
 - Tarefa: Pendente.
