@@ -1,6 +1,6 @@
 # TESTS.md
 
-> Estratégia e portões propostos. Nenhum portão autoriza implementação antes da validação humana da documentação.
+> Estratégia e portões aprovados em 2026-08-22. Cada incremento exige a falha inicial correta e a regressão acumulada definida aqui.
 
 ## Objetivo
 Guiar incrementos por falha inicial comprovada, regressão acumulada e evidência proporcional ao risco.
@@ -14,7 +14,7 @@ Guiar incrementos por falha inicial comprovada, regressão acumulada e evidênci
 
 ## Convenções
 - Casos: `TEST-[ID]`; portões: `GATE-[ID]`; suítes: `SUITE-[ID]`.
-- Estados iniciais: Planejado e bloqueado por validação documental.
+- Estado inicial dos casos: Planejado; a execução depende da tarefa e do portão correspondentes.
 
 ## Estratégia por ordem crescente de implementação
 ### Nível 0 — Infraestrutura e verificações estáticas
@@ -97,7 +97,7 @@ Zero bloqueador; desvios não bloqueadores documentados e aceitos.
 | GATE-007 | experiência completa | responsividade, i18n, temas e AA passam | TASK-007 |
 | GATE-008 | aceite 1.0 | deploy, segurança, backup, E2E e carga passam | TASK-008 |
 
-Todos os portões estão **Planejados e bloqueados por validação humana**. A regressão exigida em cada linha inclui todos os portões anteriores.
+Todos os portões estão **Planejados**. A regressão exigida em cada linha inclui todos os portões anteriores.
 
 ## Casos de teste
 | ID | Nível | Tipo | Objetivo e resultado esperado | Fonte |

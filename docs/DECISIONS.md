@@ -4,7 +4,7 @@
 
 # DECISION-001 — SPA React no GitHub Pages
 ## Estado
-Proposta para validação final.
+Aprovada.
 ## Data
 2026-08-22.
 ## Responsável
@@ -37,7 +37,7 @@ Nenhuma.
 
 # DECISION-002 — Django/DRF com PostgreSQL
 ## Estado
-Proposta para validação final.
+Aprovada.
 ## Data
 2026-08-22.
 ## Responsável
@@ -70,7 +70,7 @@ Nenhuma.
 
 # DECISION-003 — Token opaco somente em memória
 ## Estado
-Proposta para validação final.
+Aprovada.
 ## Data
 2026-08-22.
 ## Responsável
@@ -103,7 +103,7 @@ Nenhuma.
 
 # DECISION-004 — Separar título e exemplar
 ## Estado
-Proposta para validação final.
+Aprovada.
 ## Data
 2026-08-22.
 ## Responsável
@@ -136,7 +136,7 @@ Nenhuma.
 
 # DECISION-005 — Reserva vira empréstimo na retirada
 ## Estado
-Proposta para validação final.
+Aprovada.
 ## Data
 2026-08-22.
 ## Responsável
@@ -169,7 +169,7 @@ Nenhuma.
 
 # DECISION-006 — Preservar fatos e derivar estatísticas
 ## Estado
-Proposta para validação final.
+Aprovada.
 ## Data
 2026-08-22.
 ## Responsável

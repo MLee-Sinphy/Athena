@@ -1,10 +1,10 @@
 # TASKS.md
 
-> Plano executável proposto. Todas as tarefas estão bloqueadas até a validação humana integral da documentação oficial.
+> Plano executável aprovado em 2026-08-22. Cada tarefa só pode iniciar quando suas dependências e seu portão de entrada forem satisfeitos.
 
 # TASK-001 — Inicializar frontend, backend e qualidade
 ## Estado
-Bloqueada por validação documental.
+Planejada.
 ## Tipo
 Chore.
 ## Prioridade
@@ -31,7 +31,7 @@ Versões ou ambiente incompatíveis.
 
 # TASK-002 — Implementar contas e autenticação
 ## Estado
-Bloqueada por TASK-001 e validação.
+Planejada; depende de TASK-001.
 ## Tipo
 Feature.
 ## Prioridade
@@ -58,7 +58,7 @@ Enumeração, token vazado ou autorização apenas visual.
 
 # TASK-003 — Implementar acervo e catálogo
 ## Estado
-Bloqueada por TASK-002 e validação.
+Planejada; depende de TASK-002.
 ## Tipo
 Feature.
 ## Prioridade
@@ -85,7 +85,7 @@ Licença de mídia, N+1 e busca inconsistente.
 
 # TASK-004 — Implementar calendário, políticas e disponibilidade
 ## Estado
-Bloqueada por TASK-003 e validação.
+Planejada; depende de TASK-003.
 ## Tipo
 Feature.
 ## Prioridade
@@ -112,7 +112,7 @@ Off-by-one e política retroativa.
 
 # TASK-005 — Implementar circulação, fila e avisos
 ## Estado
-Bloqueada por TASK-004 e validação.
+Planejada; depende de TASK-004.
 ## Tipo
 Feature.
 ## Prioridade
@@ -139,7 +139,7 @@ Corridas temporais e transições ambíguas.
 
 # TASK-006 — Implementar avaliações, tags e auditoria
 ## Estado
-Bloqueada por TASK-005 e validação.
+Planejada; depende de TASK-005.
 ## Tipo
 Feature.
 ## Prioridade
@@ -166,7 +166,7 @@ Exclusão destrutiva ou média como fonte indevida.
 
 # TASK-007 — Consolidar UX, acessibilidade e temas
 ## Estado
-Bloqueada por TASK-006 e validação.
+Planejada; depende de TASK-006.
 ## Tipo
 Feature.
 ## Prioridade
@@ -193,7 +193,7 @@ Contraste do tema translúcido e regressões mobile.
 
 # TASK-008 — Implantar, proteger e validar a versão 1.0.0
 ## Estado
-Bloqueada por TASK-007 e validação.
+Planejada; depende de TASK-007.
 ## Tipo
 Chore/Test.
 ## Prioridade

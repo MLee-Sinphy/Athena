@@ -1,6 +1,6 @@
 # ARCHITECTURE.md
 
-> Arquitetura oficial proposta. Só autoriza implementação depois da validação humana e da aprovação dos portões em `TESTS.md`.
+> Arquitetura oficial validada pelo responsável em 2026-08-22. Cada incremento ainda depende do portão correspondente em `TESTS.md`.
 
 ## Visão geral
 

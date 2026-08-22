@@ -5,7 +5,11 @@
 ## Identidade
 - Nome do projeto: Athena.
 - Descrição curta: sistema web configurável para empréstimo gratuito de livros físicos.
-- Estado atual: Planejamento — documentação em validação.
+- Estado atual: Planejamento concluído — documentação validada; implementação ainda não iniciada.
+
+## Validação
+- Aprovada por Lee em 2026-08-22.
+- A implementação deve seguir `TASKS.md` e os portões de `TESTS.md`.
 
 ## Visão
 Oferecer a diferentes tipos de biblioteca uma experiência previsível de consulta, reserva e empréstimo, mantendo controle preciso de cada exemplar físico.

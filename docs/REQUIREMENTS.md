@@ -7,13 +7,13 @@
 - Estados: Proposto, Aprovado, Implementado, Verificado ou Rejeitado.
 - Prioridades não funcionais: Obrigatória, Alta, Média ou Baixa.
 - Casos de uso: `UC-[ID]`; funcionais: `REQ-F-[ID]`; não funcionais: `REQ-NF-[ID]`; regras: `RULE-[ID]`.
-- Todos os itens abaixo estão **Propostos** até a validação humana integral desta documentação.
+- Todos os itens abaixo foram **Aprovados** pelo responsável em 2026-08-22. Mudanças de comportamento exigem nova validação e atualização das referências.
 
 # Casos de uso
 
 ## UC-001 — Autenticar e administrar o próprio acesso
 ### Estado
-Proposto.
+Aprovado.
 ### Ator principal
 Leitor ou administrador.
 ### Atores secundários
@@ -41,7 +41,7 @@ REQ-NF-001, REQ-NF-002, REQ-NF-003.
 
 ## UC-002 — Consultar o catálogo
 ### Estado
-Proposto.
+Aprovado.
 ### Ator principal
 Leitor.
 ### Objetivo
@@ -67,7 +67,7 @@ REQ-NF-004, REQ-NF-005, REQ-NF-006.
 
 ## UC-003 — Solicitar reserva
 ### Estado
-Proposto.
+Aprovado.
 ### Ator principal
 Leitor.
 ### Objetivo
@@ -93,7 +93,7 @@ REQ-NF-007, REQ-NF-008.
 
 ## UC-004 — Retirar e devolver exemplar
 ### Estado
-Proposto.
+Aprovado.
 ### Ator principal
 Administrador, registrando a operação física do leitor.
 ### Objetivo
@@ -119,7 +119,7 @@ REQ-NF-007, REQ-NF-009.
 
 ## UC-005 — Administrar reserva ou empréstimo próprio
 ### Estado
-Proposto.
+Aprovado.
 ### Ator principal
 Leitor.
 ### Objetivo
@@ -145,7 +145,7 @@ REQ-NF-007.
 
 ## UC-006 — Receber e responder aviso interno
 ### Estado
-Proposto.
+Aprovado.
 ### Ator principal
 Leitor.
 ### Objetivo
@@ -171,7 +171,7 @@ REQ-NF-005, REQ-NF-009.
 
 ## UC-007 — Avaliar e sugerir tags
 ### Estado
-Proposto.
+Aprovado.
 ### Ator principal
 Leitor.
 ### Objetivo
@@ -197,7 +197,7 @@ REQ-NF-009.
 
 ## UC-008 — Administrar usuários e acervo
 ### Estado
-Proposto.
+Aprovado.
 ### Ator principal
 Administrador.
 ### Objetivo
@@ -223,7 +223,7 @@ REQ-NF-001, REQ-NF-009.
 
 ## UC-009 — Configurar calendário e políticas
 ### Estado
-Proposto.
+Aprovado.
 ### Ator principal
 Administrador.
 ### Objetivo
@@ -249,7 +249,7 @@ REQ-NF-009.
 
 ## UC-010 — Consultar e intervir administrativamente
 ### Estado
-Proposto.
+Aprovado.
 ### Ator principal
 Administrador.
 ### Objetivo
@@ -277,7 +277,7 @@ REQ-NF-001, REQ-NF-009.
 
 ## REQ-F-001 — Autenticar por e-mail ou matrícula
 ### Estado
-Proposto.
+Aprovado.
 ### Descrição
 Validar um único identificador e senha e emitir sessão segura.
 ### Objetivo
@@ -299,7 +299,7 @@ REQ-NF-001 a REQ-NF-003.
 
 ## REQ-F-002 — Gerenciar primeiro acesso e recuperação assistida
 ### Estado
-Proposto.
+Aprovado.
 ### Descrição
 Exigir troca da senha temporária e permitir que administrador emita outra.
 ### Critérios de aceitação
@@ -311,7 +311,7 @@ RULE-001, RULE-002.
 
 ## REQ-F-003 — Alterar credenciais próprias e encerrar sessão
 ### Estado
-Proposto.
+Aprovado.
 ### Descrição
 Permitir alteração de e-mail e senha e logout.
 ### Critérios de aceitação
@@ -321,7 +321,7 @@ UC-001.
 
 ## REQ-F-004 — Exibir catálogo agrupado
 ### Estado
-Proposto.
+Aprovado.
 ### Descrição
 Exibir cada título uma vez, com disponibilidade agregada e detalhes bibliográficos.
 ### Critérios de aceitação
@@ -331,7 +331,7 @@ UC-002.
 
 ## REQ-F-005 — Pesquisar, filtrar e comparar exemplares
 ### Estado
-Proposto.
+Aprovado.
 ### Descrição
 Pesquisar campos bibliográficos, descrição completa e tags; filtrar e comparar conservação de exemplares disponíveis.
 ### Critérios de aceitação
@@ -341,7 +341,7 @@ UC-002.
 
 ## REQ-F-006 — Validar e conceder reserva
 ### Estado
-Proposto.
+Aprovado.
 ### Descrição
 Avaliar regras e conceder automaticamente reserva válida, associando exemplar escolhido ou compatível.
 ### Critérios de aceitação
@@ -351,7 +351,7 @@ UC-003.
 
 ## REQ-F-007 — Calcular calendário e disponibilidade futura
 ### Estado
-Proposto.
+Aprovado.
 ### Descrição
 Considerar dias regulares, feriados, fechamentos e períodos dos exemplares.
 ### Critérios de aceitação
@@ -361,7 +361,7 @@ UC-003.
 
 ## REQ-F-008 — Organizar fila FIFO privada
 ### Estado
-Proposto.
+Aprovado.
 ### Descrição
 Ordenar solicitações elegíveis pelo instante de criação e mostrar somente posição e estimativas próprias.
 ### Critérios de aceitação
@@ -371,7 +371,7 @@ UC-003.
 
 ## REQ-F-009 — Confirmar retirada física
 ### Estado
-Proposto.
+Aprovado.
 ### Descrição
 Converter a reserva em empréstimo ativo somente na confirmação do exemplar físico.
 ### Critérios de aceitação
@@ -381,7 +381,7 @@ UC-004.
 
 ## REQ-F-010 — Confirmar devolução e liberar exemplar
 ### Estado
-Proposto.
+Aprovado.
 ### Descrição
 Encerrar empréstimo, registrar data e recalcular oportunidades.
 ### Critérios de aceitação
@@ -391,7 +391,7 @@ UC-004.
 
 ## REQ-F-011 — Tratar retirada não realizada
 ### Estado
-Proposto.
+Aprovado.
 ### Descrição
 Remover exclusividade após a tolerância sem cancelar imediatamente e permitir ocupação do intervalo livre.
 ### Critérios de aceitação
@@ -401,7 +401,7 @@ UC-004, UC-006.
 
 ## REQ-F-012 — Alterar ou cancelar reserva própria
 ### Estado
-Proposto.
+Aprovado.
 ### Descrição
 Permitir mudanças anteriores à retirada sem afetar períodos confirmados.
 ### Critérios de aceitação
@@ -411,7 +411,7 @@ UC-005.
 
 ## REQ-F-013 — Renovar empréstimo
 ### Estado
-Proposto.
+Aprovado.
 ### Descrição
 Alterar somente a devolução quando não houver fila e o máximo for respeitado.
 ### Critérios de aceitação
@@ -421,7 +421,7 @@ UC-005.
 
 ## REQ-F-014 — Exibir avisos internos
 ### Estado
-Proposto.
+Aprovado.
 ### Descrição
 Exibir ao entrar avisos de antecipação e perda do intervalo, registrando leitura e resposta aplicável.
 ### Critérios de aceitação
@@ -431,7 +431,7 @@ UC-006.
 
 ## REQ-F-015 — Registrar avaliações e tags sugeridas
 ### Estado
-Proposto.
+Aprovado.
 ### Descrição
 Após devolução, aceitar notas opcionais de 1 a 5 e tags, preservando autoria e data.
 ### Critérios de aceitação
@@ -441,7 +441,7 @@ UC-007.
 
 ## REQ-F-016 — Gerenciar leitores, títulos e exemplares
 ### Estado
-Proposto.
+Aprovado.
 ### Descrição
 Oferecer CRUD administrativo com validação, estados e códigos únicos.
 ### Critérios de aceitação
@@ -451,7 +451,7 @@ UC-008.
 
 ## REQ-F-017 — Configurar calendário e políticas
 ### Estado
-Proposto.
+Aprovado.
 ### Descrição
 Gerenciar dias, fechamentos, prazos, limites, tolerância, penalidades, renovação e suspensão.
 ### Critérios de aceitação
@@ -461,7 +461,7 @@ UC-009.
 
 ## REQ-F-018 — Intervir em operações
 ### Estado
-Proposto.
+Aprovado.
 ### Descrição
 Permitir que administrador visualize, altere ou cancele qualquer reserva ou empréstimo de modo consistente.
 ### Critérios de aceitação
@@ -471,7 +471,7 @@ UC-010.
 
 ## REQ-F-019 — Consultar auditoria e histórico
 ### Estado
-Proposto.
+Aprovado.
 ### Descrição
 Consultar eventos administrativos e históricos necessários a rastreabilidade e análises futuras.
 ### Critérios de aceitação
@@ -481,7 +481,7 @@ UC-010.
 
 ## REQ-F-020 — Informar indisponibilidade do backend
 ### Estado
-Proposto.
+Aprovado.
 ### Descrição
 Informar falha de acesso à API sem apresentar a operação como concluída.
 ### Critérios de aceitação
@@ -495,7 +495,7 @@ Todos os casos que dependem da API.
 ### Categoria
 Segurança.
 ### Estado
-Proposto.
+Aprovado.
 ### Regra
 Backend autoriza toda operação por perfil, propriedade e estado; frontend não é fronteira de segurança.
 ### Critério de verificação
@@ -507,7 +507,7 @@ Obrigatória.
 ### Categoria
 Segurança.
 ### Estado
-Proposto.
+Aprovado.
 ### Regra
 Mínimo 15 caracteres, aceitar ao menos 64, espaços e Unicode normalizado; bloquear senhas comuns/comprometidas, sem composição artificial.
 ### Critério de verificação
@@ -519,7 +519,7 @@ Obrigatória.
 ### Categoria
 Segurança.
 ### Estado
-Proposto.
+Aprovado.
 ### Regra
 Token opaco revogável somente em memória; 30 minutos de inatividade e 8 horas absolutas; CORS restrito e HTTPS.
 ### Critério de verificação
@@ -531,7 +531,7 @@ Obrigatória.
 ### Categoria
 Usabilidade.
 ### Estado
-Proposto.
+Aprovado.
 ### Regra
 Todas as funções essenciais operam em smartphone e computador nas duas versões estáveis mais recentes dos navegadores definidos.
 ### Critério de verificação
@@ -543,7 +543,7 @@ Obrigatória.
 ### Categoria
 Acessibilidade.
 ### Estado
-Proposto.
+Aprovado.
 ### Regra
 Atender critérios aplicáveis da WCAG 2.2 AA.
 ### Critério de verificação
@@ -555,7 +555,7 @@ Obrigatória.
 ### Categoria
 Usabilidade.
 ### Estado
-Proposto.
+Aprovado.
 ### Regra
 Interface em pt-BR e en, inicializada pelo navegador e alterável manualmente sem geolocalização por IP.
 ### Critério de verificação
@@ -567,7 +567,7 @@ Alta.
 ### Categoria
 Confiabilidade.
 ### Estado
-Proposto.
+Aprovado.
 ### Regra
 Operações críticas são transacionais, idempotentes quando repetíveis e impedem sobreposição de exemplar.
 ### Critério de verificação
@@ -579,7 +579,7 @@ Obrigatória.
 ### Categoria
 Desempenho.
 ### Estado
-Proposto.
+Aprovado.
 ### Regra
 Projetar e simular 5.000 leitores, 20.000 títulos, 50.000 exemplares e pico de 500 usuários simultâneos.
 ### Critério de verificação
@@ -591,7 +591,7 @@ Alta.
 ### Categoria
 Dados.
 ### Estado
-Proposto.
+Aprovado.
 ### Regra
 Preservar históricos e autoria necessários, anonimizar quando aplicável e impedir exposição de outros leitores.
 ### Critério de verificação
@@ -603,7 +603,7 @@ Obrigatória.
 ### Categoria
 Operação.
 ### Estado
-Proposto.
+Aprovado.
 ### Regra
 Backup conjunto de banco e imagens, criptografado fora do VPS, com 7 diárias, 4 semanais e restauração testada antes de entregas relevantes.
 ### Critério de verificação
@@ -615,7 +615,7 @@ Alta.
 ### Categoria
 Operação.
 ### Estado
-Proposto.
+Aprovado.
 ### Regra
 Logs estruturados e correlacionáveis para erros, autenticação e operações relevantes, sem segredos nem dados pessoais desnecessários.
 ### Critério de verificação
@@ -627,7 +627,7 @@ Alta.
 ### Categoria
 Manutenibilidade e UX.
 ### Estado
-Proposto.
+Aprovado.
 ### Regra
 Cores e efeitos usam tokens semânticos, seis temas selecionáveis centralmente e fallback opaco no Aqua Glass.
 ### Critério de verificação
@@ -639,7 +639,7 @@ Média.
 
 ## RULE-001 — Cadastro institucional
 ### Estado
-Proposto.
+Aprovado.
 ### Regra
 Somente administrador cria leitores; matrícula e e-mail são únicos na instituição.
 ### Exceções
@@ -651,7 +651,7 @@ REQ-F-001, REQ-F-002, REQ-F-016.
 
 ## RULE-002 — Primeiro acesso e senha
 ### Estado
-Proposto.
+Aprovado.
 ### Regra
 Senha inicial ou redefinida é temporária e deve ser trocada antes do uso comum.
 ### Exceções
@@ -663,7 +663,7 @@ REQ-F-001 a REQ-F-003.
 
 ## RULE-003 — Título e exemplar
 ### Estado
-Proposto.
+Aprovado.
 ### Regra
 Catálogo agrupa por título; exemplar tem código único, estado e conservação próprios; leitor pode escolhê-lo pela conservação.
 ### Exceções
@@ -675,7 +675,7 @@ REQ-F-004, REQ-F-005, REQ-F-016.
 
 ## RULE-004 — Reserva obrigatória
 ### Estado
-Proposto.
+Aprovado.
 ### Regra
 Todo empréstimo começa por reserva e só se torna ativo na retirada física.
 ### Exceções
@@ -687,7 +687,7 @@ REQ-F-006, REQ-F-009.
 
 ## RULE-005 — Calendário
 ### Estado
-Proposto.
+Aprovado.
 ### Regra
 Prazos contam somente dias de funcionamento configurados; padrão segunda a sexta, mínimo 3 e máximo 15.
 ### Exceções
@@ -699,7 +699,7 @@ REQ-F-007, REQ-F-017.
 
 ## RULE-006 — Limite simultâneo
 ### Estado
-Proposto.
+Aprovado.
 ### Regra
 Padrão de 3 empréstimos simultâneos, configurável e redutível por penalidade.
 ### Exceções
@@ -711,7 +711,7 @@ REQ-F-006, REQ-F-017.
 
 ## RULE-007 — Não sobreposição
 ### Estado
-Proposto.
+Aprovado.
 ### Regra
 Um exemplar não pode possuir períodos confirmados sobrepostos.
 ### Exceções
@@ -723,7 +723,7 @@ REQ-F-006, REQ-F-007.
 
 ## RULE-008 — Prioridade FIFO
 ### Estado
-Proposto.
+Aprovado.
 ### Regra
 Solicitação elegível mais antiga tem prioridade; a ordem não muda silenciosamente.
 ### Exceções
@@ -735,7 +735,7 @@ REQ-F-008.
 
 ## RULE-009 — Estado do empréstimo
 ### Estado
-Proposto.
+Aprovado.
 ### Regra
 Reserva confirmada não é empréstimo ativo até a retirada; devolução encerra o empréstimo.
 ### Exceções
@@ -747,7 +747,7 @@ REQ-F-009, REQ-F-010.
 
 ## RULE-010 — Tolerância e oportunidade antecipada
 ### Estado
-Proposto.
+Aprovado.
 ### Regra
 Após 1 dia de funcionamento por padrão, o ausente perde exclusividade, mas retira enquanto livre; próximo pode antecipar mantendo a devolução original; conflito posterior desloca o ausente e gera aviso.
 ### Exceções
@@ -759,7 +759,7 @@ REQ-F-011, REQ-F-014.
 
 ## RULE-011 — Alterações pelo leitor
 ### Estado
-Proposto.
+Aprovado.
 ### Regra
 Antes da retirada, ambas as datas podem mudar sem conflito; depois, somente devolução, sem fila e dentro do máximo.
 ### Exceções
@@ -771,7 +771,7 @@ REQ-F-012, REQ-F-013.
 
 ## RULE-012 — Penalidades
 ### Estado
-Proposto.
+Aprovado.
 ### Regra
 Atraso bloqueia novas reservas e empréstimos por 7 dias corridos; mais de 3 cancelamentos numa janela de 30 dias bloqueia novas solicitações até seu fim.
 ### Exceções
@@ -783,7 +783,7 @@ REQ-F-006, REQ-F-012, REQ-F-017.
 
 ## RULE-013 — Avaliações e tags
 ### Estado
-Proposto.
+Aprovado.
 ### Regra
 Após cada devolução, leitor responsável pode enviar avaliação opcional não editável de 1 a 5 para título e exemplar e sugerir tags rastreáveis.
 ### Exceções
@@ -795,7 +795,7 @@ REQ-F-015.
 
 ## RULE-014 — Estados e intervenção administrativa
 ### Estado
-Proposto.
+Aprovado.
 ### Regra
 Administrador pode intervir em operações e transitar exemplares entre todos os estados definidos, preservando consistência e auditoria.
 ### Exceções
@@ -807,7 +807,7 @@ REQ-F-016, REQ-F-018, REQ-F-019.
 
 ## RULE-015 — Configuração com vigência
 ### Estado
-Proposto.
+Aprovado.
 ### Regra
 Mudança de política é auditada e não altera silenciosamente reservas confirmadas; suspensão global bloqueia apenas novas reservas.
 ### Exceções

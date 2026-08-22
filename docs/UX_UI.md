@@ -1,6 +1,6 @@
 # UX_UI.md
 
-> Especificação proposta da experiência. Detalhes visuais serão prototipados e validados antes da implementação definitiva.
+> Direção de experiência validada pelo responsável em 2026-08-22. Protótipos e detalhes visuais ainda serão verificados nos portões correspondentes.
 
 ## Visão da experiência
 Uma biblioteca digitalmente organizada, calma e confiável: descoberta simples para o leitor e densidade controlada no painel administrativo.
