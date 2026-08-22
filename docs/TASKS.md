@@ -146,7 +146,7 @@ Calendário semanal configurável, exceções de abertura/fechamento, políticas
 
 # TASK-005 — Implementar circulação, fila e avisos
 ## Estado
-Em andamento — testes do GATE-005 iniciados.
+Concluída — GATE-005 aprovado.
 ## Tipo
 Feature.
 ## Prioridade
@@ -170,10 +170,16 @@ GATE-005; TEST-040 a TEST-047.
 Nenhum cenário concorrente sobrepõe exemplar; avisos e respostas são rastreáveis.
 ## Riscos
 Corridas temporais e transições ambíguas.
+## Resultado
+Reserva automática, fila FIFO, retirada e devolução idempotentes, alteração, cancelamento, renovação, penalidades, perda de exclusividade, antecipação, avisos privados e intervenção administrativa foram implementados sem dependência de e-mail ou hardware.
+## Evidências
+- TEST-040 a TEST-047 cobertos por 10 testes de fluxo e privacidade, apoiados pelos 13 testes temporais anteriores.
+- Regressão de 55 testes de backend e 3 de frontend aprovada; suítes usam bancos isolados na CI para impedir interferência de estado.
+- Concorrência PostgreSQL, formatação, migrações, lint, tipos, build e estrutura aprovados na CI `32596839732` para `277c539`.
 
 # TASK-006 — Implementar avaliações, tags e auditoria
 ## Estado
-Planejada; depende de TASK-005.
+Pronta para iniciar; dependência TASK-005 satisfeita.
 ## Tipo
 Feature.
 ## Prioridade

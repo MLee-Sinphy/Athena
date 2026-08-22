@@ -92,12 +92,12 @@ Zero bloqueador; desvios não bloqueadores documentados e aceitos.
 | GATE-002 | autenticação ponta a ponta | **Aprovado** — autorização, sessão e indisponibilidade passam | TASK-002 |
 | GATE-003 | acervo e catálogo | **Aprovado** — CRUD, agrupamento, busca e privacidade passam | TASK-003 |
 | GATE-004 | calendário e disponibilidade | **Aprovado** — bordas e concorrência PostgreSQL passam | TASK-004 |
-| GATE-005 | circulação | reserva até devolução, fila e avisos passam | TASK-005 |
+| GATE-005 | circulação | **Aprovado** — reserva até devolução, fila e avisos passam | TASK-005 |
 | GATE-006 | governança histórica | penalidades, auditoria, avaliações e análises passam | TASK-006 |
 | GATE-007 | experiência completa | responsividade, i18n, temas e AA passam | TASK-007 |
 | GATE-008 | aceite 1.0 | deploy, segurança, backup, E2E e carga passam | TASK-008 |
 
-GATE-000 a GATE-004 foram aprovados em 2026-08-22. Os demais portões estão **Planejados**. A regressão exigida em cada linha inclui todos os portões anteriores.
+GATE-000 a GATE-005 foram aprovados em 2026-08-22. Os demais portões estão **Planejados**. A regressão exigida em cada linha inclui todos os portões anteriores.
 
 ## Casos de teste
 | ID | Nível | Tipo | Objetivo e resultado esperado | Fonte |
@@ -119,14 +119,14 @@ GATE-000 a GATE-004 foram aprovados em 2026-08-22. Os demais portões estão **P
 | TEST-032 | 3 | concorrência | **Aprovado:** duas reservas simultâneas não usam o mesmo exemplar/período | RULE-007 |
 | TEST-033 | 3 | integração | **Aprovado:** FIFO e desempate são determinísticos e privados | RULE-008 |
 | TEST-034 | 3 | integração | **Aprovado:** mudança de política preserva reservas existentes | RULE-015 |
-| TEST-040 | 5 | fluxo | reserva válida é automática e recusa explica regra | REQ-F-006 |
-| TEST-041 | 5 | fluxo | retirada cria empréstimo somente na confirmação física | RULE-009 |
-| TEST-042 | 5 | fluxo | devolução encerra uma vez e libera disponibilidade | REQ-F-010 |
-| TEST-043 | 5 | fluxo | ausente retira enquanto livre e perde intervalo após conflito | RULE-010 |
-| TEST-044 | 5 | fluxo | próximo aceita/recusa antecipação sem perder data final | RULE-010 |
-| TEST-045 | 5 | fluxo | alteração/cancelamento respeitam conflito e contagem | RULE-011/012 |
-| TEST-046 | 5 | fluxo | renovação exige ausência de fila e máximo | REQ-F-013 |
-| TEST-047 | 3 | privacidade | avisos e fila não expõem outras pessoas | REQ-NF-009 |
+| TEST-040 | 5 | fluxo | **Aprovado:** reserva válida é automática e recusa explica regra | REQ-F-006 |
+| TEST-041 | 5 | fluxo | **Aprovado:** retirada cria empréstimo somente na confirmação física | RULE-009 |
+| TEST-042 | 5 | fluxo | **Aprovado:** devolução encerra uma vez e libera disponibilidade | REQ-F-010 |
+| TEST-043 | 5 | fluxo | **Aprovado:** ausente retira enquanto livre e perde intervalo após conflito | RULE-010 |
+| TEST-044 | 5 | fluxo | **Aprovado:** próximo aceita/recusa antecipação sem perder data final | RULE-010 |
+| TEST-045 | 5 | fluxo | **Aprovado:** alteração/cancelamento respeitam conflito e contagem | RULE-011/012 |
+| TEST-046 | 5 | fluxo | **Aprovado:** renovação exige ausência de fila e máximo | REQ-F-013 |
+| TEST-047 | 3 | privacidade | **Aprovado:** avisos e fila não expõem outras pessoas | REQ-NF-009 |
 | TEST-050 | 3 | integração | notas 1–5 são opcionais, únicas por devolução e não editáveis | RULE-013 |
 | TEST-051 | 3 | integração | tags preservam autor/data e participam da busca | RULE-013 |
 | TEST-052 | 3 | segurança | auditoria é completa e imutável por operação comum | REQ-F-019 |
