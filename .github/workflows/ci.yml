@@ -65,6 +65,10 @@ jobs:
         run: python backend/manage.py test circulation.test_circulation_flow.MissedPickupAndNoticeTests
         env:
           DJANGO_SECRET_KEY: ci-only-not-a-production-secret
+      - name: Test governance and historical analytics
+        run: python backend/manage.py test governance
+        env:
+          DJANGO_SECRET_KEY: ci-only-not-a-production-secret
       - name: Check frontend
         run: make check-frontend
       - name: Verify repository structure

@@ -35,6 +35,7 @@ class CatalogListView(APIView):
                 | Q(category__icontains=query)
                 | Q(description__icontains=query)
                 | Q(tags__name__iexact=tag_query)
+                | Q(tag_suggestions__name__iexact=tag_query)
             ).distinct()
         return Response(
             {
@@ -108,9 +109,21 @@ class AdminCopyDetailView(APIView):
         return Response(AdminCopySerializer(self.get_object(copy_id)).data)
 
     def patch(self, request, copy_id):
-        serializer = AdminCopySerializer(self.get_object(copy_id), data=request.data, partial=True)
+        copy = self.get_object(copy_id)
+        before = AdminCopySerializer(copy).data
+        serializer = AdminCopySerializer(copy, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
+        copy = serializer.save()
+        from governance.services import record_audit
+
+        record_audit(
+            request.user,
+            "book_copy_changed",
+            copy,
+            dict(before),
+            dict(serializer.data),
+            request.data.get("reason", ""),
+        )
         return Response(serializer.data)
 
     def delete(self, request, copy_id):

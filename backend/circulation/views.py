@@ -34,9 +34,21 @@ class PolicyView(APIView):
         return Response(PolicyVersionSerializer(policy).data if policy else None)
 
     def post(self, request):
+        previous = PolicyVersion.objects.first()
+        before = PolicyVersionSerializer(previous).data if previous else {}
         serializer = PolicyVersionSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
+        policy = serializer.save()
+        from governance.services import record_audit
+
+        record_audit(
+            request.user,
+            "policy_version_created",
+            policy,
+            dict(before),
+            dict(serializer.data),
+            request.data.get("reason", ""),
+        )
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -45,9 +57,20 @@ class RegularOpeningView(APIView):
 
     def put(self, request, weekday):
         opening, _ = RegularOpening.objects.get_or_create(weekday=weekday)
+        before = {"weekday": opening.weekday, "is_open": opening.is_open}
         serializer = RegularOpeningSerializer(opening, data={**request.data, "weekday": weekday})
         serializer.is_valid(raise_exception=True)
-        serializer.save()
+        opening = serializer.save()
+        from governance.services import record_audit
+
+        record_audit(
+            request.user,
+            "regular_opening_changed",
+            opening,
+            before,
+            dict(serializer.data),
+            request.data.get("reason", ""),
+        )
         return Response(serializer.data)
 
 
@@ -57,7 +80,17 @@ class CalendarExceptionView(APIView):
     def post(self, request):
         serializer = CalendarExceptionSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
+        exception = serializer.save()
+        from governance.services import record_audit
+
+        record_audit(
+            request.user,
+            "calendar_exception_created",
+            exception,
+            {},
+            dict(serializer.data),
+            request.data.get("reason", ""),
+        )
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -157,6 +190,11 @@ class AdminReservationInterventionView(APIView):
 
     def patch(self, request, reservation_id):
         reservation = Reservation.objects.get(pk=reservation_id)
+        before = {
+            "state": reservation.state,
+            "start_date": reservation.start_date.isoformat(),
+            "end_date": reservation.end_date.isoformat(),
+        }
         try:
             changed = change_reservation(
                 reservation.id,
@@ -166,8 +204,34 @@ class AdminReservationInterventionView(APIView):
             )
         except (AllocationConflict, TypeError):
             return Response({"detail": "Intervention conflicts with another period."}, status=409)
+        from governance.services import record_audit
+
+        record_audit(
+            request.user,
+            "reservation_changed",
+            changed,
+            before,
+            {
+                "state": changed.state,
+                "start_date": changed.start_date.isoformat(),
+                "end_date": changed.end_date.isoformat(),
+            },
+            request.data.get("reason", ""),
+        )
         return Response(ReservationSerializer(changed).data)
 
     def delete(self, request, reservation_id):
-        cancel_reservation(reservation_id, request.user.id, administrative=True)
+        reservation = Reservation.objects.get(pk=reservation_id)
+        before = {"state": reservation.state}
+        cancelled = cancel_reservation(reservation_id, request.user.id, administrative=True)
+        from governance.services import record_audit
+
+        record_audit(
+            request.user,
+            "reservation_cancelled",
+            cancelled,
+            before,
+            {"state": cancelled.state},
+            request.data.get("reason", ""),
+        )
         return Response(status=status.HTTP_204_NO_CONTENT)

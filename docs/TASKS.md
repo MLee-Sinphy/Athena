@@ -179,7 +179,7 @@ Reserva automática, fila FIFO, retirada e devolução idempotentes, alteração
 
 # TASK-006 — Implementar avaliações, tags e auditoria
 ## Estado
-Pronta para iniciar; dependência TASK-005 satisfeita.
+Em andamento — testes do GATE-006 iniciados.
 ## Tipo
 Feature.
 ## Prioridade

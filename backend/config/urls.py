@@ -23,5 +23,6 @@ urlpatterns = [
     path("api/v1/", include("accounts.urls")),
     path("api/v1/", include("catalog.urls")),
     path("api/v1/", include("circulation.urls")),
+    path("api/v1/", include("governance.urls")),
     path("api/v1/", include("health.urls")),
 ]
