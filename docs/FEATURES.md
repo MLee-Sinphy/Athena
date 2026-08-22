@@ -110,6 +110,92 @@ A capacidade complementa a fila de espera e a política de antecipação por dev
 
 ---
 
+# FEATURE-003 — Retirada e devolução assistidas por leitor físico
+
+## Estado
+- [x] Adiada
+
+## Origem
+- Usuário: contexto fornecido pelo responsável em 2026-08-22.
+
+## Problema ou oportunidade
+A primeira versão registra digitalmente operações cuja entrega e devolução continuam sendo confirmadas pela interação convencional com a biblioteca. Uma integração física futura pode tornar essas operações mais rápidas e autônomas.
+
+## Público beneficiado
+Leitores e equipes administrativas de bibliotecas que adotarem equipamentos compatíveis.
+
+## Proposta
+Permitir que o leitor se identifique e escaneie o exemplar físico para registrar sua retirada ou devolução, respeitando as mesmas regras, permissões, períodos e registros de auditoria da API.
+
+## Benefício esperado
+Reduzir trabalho operacional, diminuir erros de identificação do exemplar e oferecer autoatendimento controlado.
+
+## Alinhamento com o projeto
+A capacidade estende o controle individual de exemplares e reutiliza o domínio de reservas e empréstimos, sem alterar as regras centrais.
+
+## Fluxo esperado
+1. O leitor autentica ou identifica-se no dispositivo autorizado.
+2. O dispositivo lê o identificador único do exemplar.
+3. A integração solicita à API a retirada ou a devolução.
+4. A API autentica o dispositivo e o leitor, valida as regras e executa ou rejeita a operação.
+5. O resultado é apresentado ao leitor e registrado na auditoria.
+
+## Escopo inicial
+- Contrato de integração para identificação do leitor e do exemplar.
+- Retirada e devolução por dispositivo autorizado.
+- Aplicação integral das regras existentes.
+- Auditoria do leitor, dispositivo, exemplar, operação e resultado.
+
+## Fora de escopo
+- Implementação na primeira versão.
+- Escolha antecipada entre código de barras, QR Code, RFID ou outra tecnologia.
+- Compra, instalação ou manutenção de hardware.
+- Alteração das regras de empréstimo para acomodar limitações de um fornecedor específico.
+
+## Critérios iniciais de sucesso
+- O dispositivo não consegue ignorar autenticação, autorização ou regras de negócio.
+- O exemplar correto é associado à operação.
+- Operações duplicadas ou concorrentes não geram estados inconsistentes.
+- Falhas de comunicação não produzem falsa confirmação de retirada ou devolução.
+- Toda tentativa relevante possui registro auditável.
+
+## Dependências
+- API estável para reservas, empréstimos e devoluções.
+- Identificador físico legível e único em cada exemplar.
+- Mecanismo de autenticação para dispositivos.
+- Hardware e protocolo ainda não escolhidos.
+
+## Riscos
+- Duplicação de operação causada por repetição de leitura.
+- Uso indevido de dispositivo ou identificador.
+- Incompatibilidade entre fornecedores.
+- Operação física concluída enquanto a API está indisponível.
+
+## Impactos possíveis
+- Produto: acrescenta autoatendimento.
+- UX/UI: exige interface adequada ao dispositivo e feedback imediato.
+- Arquitetura: exige API idempotente e autenticação de dispositivos.
+- Dados: exige identificar dispositivo e origem da operação.
+- Segurança: amplia a superfície física e lógica de autenticação.
+- Desempenho: exige resposta rápida durante leitura presencial.
+- Documentação: requisitos, arquitetura, UX/UI, testes e decisões serão atualizados quando a feature for priorizada.
+
+## Documentos que precisam ser atualizados
+- Pendente até aprovação e priorização futura.
+
+## Referências
+- Review: Não aplicável; origem anterior à primeira versão.
+- Roadmap: Não incluída.
+- Requisito: Pendente.
+- Decisão: Pendente.
+- Tarefa: Pendente.
+
+## Resultado
+- Versão entregue: Não entregue.
+- Data: Não aplicável.
+
+---
+
 # FEATURE-002 — Recuperação autônoma de senha por e-mail
 
 ## Estado

@@ -49,16 +49,21 @@ O problema ocorre em escolas, universidades, bibliotecas públicas e instituiç�
 Uma instalação atende uma única instituição e deve ser projetada para até 5.000 leitores, 20.000 títulos, 50.000 exemplares e picos simulados de 500 usuários simultâneos.
 
 ### Causas conhecidas ou suspeitas
-- [Causa ou hipótese.]
+- Processos de biblioteca podem depender de atendimento presencial, registros manuais, planilhas ou sistemas com políticas pouco configuráveis.
+- Títulos com vários exemplares exigem controle individual sem tornar a experiência do leitor desnecessariamente complexa.
+- Reservas futuras, filas e calendários produzem conflitos difíceis de controlar sem regras consistentes e automação.
 
 ### Como o problema é resolvido atualmente
-[Solução atual.]
+Como o Athena é um projeto teórico, não existe uma instituição-alvo já analisada. O projeto parte do cenário plausível de bibliotecas que combinam atendimento presencial, registros manuais, planilhas ou sistemas existentes.
 
 ### Limitações das soluções atuais
-- [Limitação.]
+- Baixa visibilidade da disponibilidade futura para o leitor.
+- Dificuldade de adaptar prazos, penalidades e calendário à política de cada biblioteca.
+- Risco de inconsistência ao controlar títulos, exemplares, filas e empréstimos em registros separados.
 
 ### Aspectos atuais que devem ser preservados
-- [Aspecto.]
+- A entrega e a devolução continuam sendo atos físicos vinculados à biblioteca.
+- A equipe administrativa mantém autoridade para acompanhar e intervir nas operações.
 
 ## Objetivos
 
@@ -98,7 +103,7 @@ Leitores cadastrados pela instituição, incluindo alunos, universitários, clie
 Leitores e administradores utilizam uma aplicação web vinculada ao acervo físico da instituição, tanto em computadores quanto em dispositivos móveis.
 
 ### Conhecimento esperado
-[Conhecimento prévio.]
+O leitor deve conseguir usar o sistema sem conhecimento técnico ou treinamento especializado. Administradores podem receber orientação inicial sobre cadastro do acervo e configuração das políticas.
 
 ### Limitações e necessidades de acessibilidade
 - A interface deve permanecer compreensível, operável e visualmente consistente em computadores e dispositivos móveis.
@@ -118,7 +123,7 @@ Facilitar o acesso dos leitores ao acervo e permitir que diferentes instituiçõ
 - Painel administrativo para adaptar as políticas de empréstimo à dinâmica de cada biblioteca.
 
 ### Hipótese de valor
-[Hipótese.]
+Se leitores puderem visualizar disponibilidade, organizar datas e acompanhar reservas, enquanto administradores configuram políticas e rastreiam exemplares individualmente, a operação da biblioteca se tornará mais previsível, transparente e controlável.
 
 ## Escopo
 
@@ -154,6 +159,7 @@ Facilitar o acesso dos leitores ao acervo e permitir que diferentes instituiçõ
 - Notificação por e-mail quando uma devolução antecipada permitir que o próximo leitor retire o exemplar antes da data reservada.
 - Central de notificações internas para eventos de antecipação e perda de prioridade.
 - Recuperação autônoma de senha por e-mail.
+- Integração com leitores ópticos, scanners, totens ou outros componentes físicos para retirada e devolução autônomas.
 
 ### Fora do projeto
 - Cobrança por empréstimo ou processamento de pagamentos.
@@ -162,6 +168,7 @@ Facilitar o acesso dos leitores ao acervo e permitir que diferentes instituiçõ
 ### Funcionalidades futuras conhecidas
 - Notificações internas e por e-mail vinculadas à fila de espera, à perda de prioridade e às devoluções antes do prazo.
 - Recuperação autônoma de senha por e-mail.
+- Integração com hardware capaz de identificar leitor e exemplar para registrar retirada e devolução físicas.
 
 ### Limites entre o sistema e o ambiente externo
 - O sistema controla registros e solicitações, mas a entrega e a devolução do exemplar físico ocorrem na instituição responsável pelo acervo.
@@ -293,6 +300,7 @@ Facilitar o acesso dos leitores ao acervo e permitir que diferentes instituiçõ
 - Moderna, minimalista e visualmente bela.
 - Clara, responsiva e eficiente, sem elementos decorativos que prejudiquem o uso.
 - Consistente entre computadores e dispositivos móveis.
+- Baseada em tokens semânticos de design, permitindo comparar paletas completas sem reescrever componentes.
 
 ### Experiência que deve ser evitada
 - Interface visualmente carregada, com excesso de animações, adornos ou informações sem hierarquia.
@@ -351,9 +359,17 @@ Facilitar o acesso dos leitores ao acervo e permitir que diferentes instituiçõ
 - A persistência deve utilizar banco de dados relacional.
 - Cada implantação deve manter acervo, usuários, configurações e histórico de uma única instituição isolada.
 - A seleção automática de idioma deve usar a preferência informada pelo navegador, sem depender de geolocalização por IP; o usuário pode alterar o idioma manualmente.
+- Nenhum componente deve usar cores de interface literais quando existir um token semântico correspondente.
+- O tema visual ativo deve ser selecionável em um único ponto de configuração, permitindo testar seis paletas candidatas.
+- Temas translúcidos devem possuir fallback opaco, não podem comprometer contraste ou legibilidade e devem respeitar preferências de redução de transparência ou movimento quando disponíveis.
+- O frontend usará `HashRouter` para que rotas da SPA funcionem no endereço padrão do GitHub Pages sem depender de fallback do servidor.
 
 ### Tecnologias proibidas
-- [Tecnologia e motivo.]
+- Persistência de tokens no armazenamento do navegador, por risco de exposição a scripts.
+- Geolocalização por IP apenas para selecionar idioma, por ser desnecessária, imprecisa e potencialmente invasiva.
+- Armazenamento de senhas, tokens reutilizáveis ou segredos em texto puro.
+- Dependência obrigatória de serviço pago na primeira versão.
+- Acoplamento direto das regras de negócio ao filesystem do VPS ou a um fornecedor específico de armazenamento.
 
 ### Segurança
 - O backend deve possuir autenticação e autorização apropriadas aos tipos de usuário.
@@ -418,17 +434,18 @@ Frontend React internacionalizado publicado no GitHub Pages, comunicando-se por 
 7. O frontend apresenta o resultado ou uma mensagem de indisponibilidade quando não conseguir acessar o backend.
 
 ### Persistência
-Usuários, títulos, exemplares físicos e seus estados, calendários de funcionamento, feriados, fechamentos excepcionais, políticas configuráveis, penalidades, empréstimos, reservas, posições da fila de espera, avaliações individuais, notificações e registros de auditoria devem persistir em banco de dados relacional. Um título pode possuir vários exemplares, e cada exemplar deve possuir identificação única. As avaliações individuais são a fonte de verdade; suas médias podem ser calculadas sob demanda ou mantidas como dados derivados, sem substituir o histórico. Política de retenção: Pendente.
+Usuários, títulos, exemplares físicos e seus estados, calendários de funcionamento, feriados, fechamentos excepcionais, políticas configuráveis, penalidades, empréstimos, reservas, posições da fila de espera, avaliações individuais, notificações e registros de auditoria devem persistir em banco de dados relacional. Um título pode possuir vários exemplares, e cada exemplar deve possuir identificação única. As avaliações individuais são a fonte de verdade; suas médias podem ser calculadas sob demanda ou mantidas como dados derivados, sem substituir o histórico. Históricos de empréstimos e auditoria são preservados; tokens expirados são removidos periodicamente; dados sintéticos de teste podem ser recriados. Exclusão ou anonimização de leitores é administrativa e deve preservar a integridade referencial e da auditoria.
 
 ### Integrações externas
-- Armazenamento de imagens: serviço ou mecanismo ainda pendente; preferencialmente os arquivos ficam fora do banco relacional e o banco armazena metadados e URLs.
+- Na primeira versão, imagens ficam em diretório persistente no VPS e o PostgreSQL armazena caminhos, metadados e relações.
+- A camada de armazenamento deve usar uma abstração que permita migrar futuramente para serviço de objetos sem alterar as regras de negócio.
 
 ### Tecnologias desejadas
 - React para o frontend, como tecnologia de estudo definida pelo responsável.
 - Python com Django e Django REST Framework para o backend, aproveitando a familiaridade do responsável e os recursos maduros de autenticação, administração, ORM, migrações e APIs.
 - PostgreSQL como sistema gerenciador de banco de dados relacional.
 - Django ORM para modelagem, consultas e migrações.
-- Armazenamento de objetos compatível com a infraestrutura escolhida para imagens; PostgreSQL armazena URLs, metadados e relações, não os arquivos binários por padrão.
+- Armazenamento de arquivos no VPS na primeira versão, atrás da abstração de storage do Django; PostgreSQL armazena caminhos, metadados e relações, não os arquivos binários por padrão.
 
 ### Ambientes e deploy
 - Frontend publicável no GitHub Pages.
@@ -539,7 +556,7 @@ Projeto mantido pelo responsável durante o período de estudo, sem compromisso 
 - Na primeira versão, recuperação de acesso é assistida pelo administrador; recuperação autônoma por e-mail fica para o futuro.
 - A política de senha prioriza comprimento mínimo de 15 caracteres, bloqueio de senhas comuns/comprometidas, suporte a gerador seguro e ausência de regras obrigatórias de composição.
 - A sessão expira após 30 minutos de inatividade ou 8 horas de duração absoluta.
-- Imagens ficam preferencialmente em armazenamento de objetos, com referências e metadados no PostgreSQL.
+- Imagens ficam em diretório persistente do VPS na primeira versão, por uma abstração de armazenamento; caminhos e metadados ficam no PostgreSQL.
 - O frontend usará o endereço padrão do GitHub Pages na primeira versão.
 - A autenticação entre os domínios usará token bearer opaco e revogável, mantido somente na memória do React e enviado no cabeçalho `Authorization`.
 - Tokens não serão persistidos no armazenamento do navegador; recarregar ou reabrir a aplicação pode exigir novo login.
@@ -552,6 +569,10 @@ Projeto mantido pelo responsável durante o período de estudo, sem compromisso 
 - O projeto priorizará serviços gratuitos e testes com dados sintéticos e carga simulada.
 - A escala-alvo simulada é de 5.000 leitores, 20.000 títulos, 50.000 exemplares e 500 usuários simultâneos.
 - Serão suportadas as duas versões estáveis mais recentes de Chrome, Firefox, Edge e Safari.
+- O frontend usará `HashRouter` para compatibilidade confiável com o GitHub Pages.
+- As imagens serão armazenadas no VPS na primeira versão, por uma abstração que permitirá migração futura.
+- Históricos de empréstimos e auditoria serão preservados; tokens expirados serão removidos e exclusões de leitores deverão preservar o histórico por anonimização quando aplicável.
+- Seis paletas completas serão implementadas por tokens semânticos e selecionadas em um único ponto de configuração durante a avaliação visual.
 
 ## Referências
 
@@ -561,9 +582,31 @@ Projeto mantido pelo responsável durante o período de estudo, sem compromisso 
 - O que não copiar:
 
 ### Referências visuais
-- Referência:
-- Elemento relevante:
-- Intenção:
+- Referência: First Principles of Calculus — `https://mlee-sinphy.github.io/First-Principles-of-Calculus/`.
+- Elemento relevante: primária `#111827`, secundária `#8B6F47`, destaque `#D9CCB4`, fundo `#FAF9F6`, superfície `#FFFDF8`, texto `#252525`, texto secundário `#5F5B53`, texto sobre primária `#F8F4EC`, borda `#DDD7CC`, sucesso `#2F6B4F`, alerta `#9A6700`, erro `#B42318` e informação `#175CD3`.
+- Intenção: servir como Tema 1 e referência preferencial de sobriedade, clareza e identidade acadêmica.
+
+- Referência: Tema 2 — Oceano e cobre.
+- Elemento relevante: primária `#0F3D3E`, secundária `#285E61`, destaque `#B66A3C`, fundo `#F4F7F6`, superfície `#FFFFFF`, texto `#172121`, texto secundário `#52605E`, texto sobre primária `#FFFFFF`, borda `#CBD8D5`, sucesso `#257A52`, alerta `#9A6700`, erro `#B42318` e informação `#176B87`.
+- Intenção: alternativa moderna, serena e institucional.
+
+- Referência: Tema 3 — Vinho e ouro antigo.
+- Elemento relevante: primária `#3B1021`, secundária `#6B213C`, destaque `#A67C32`, fundo `#FBF7EF`, superfície `#FFFFFF`, texto `#261B1F`, texto secundário `#69575E`, texto sobre primária `#FFF8F3`, borda `#E2D5C3`, sucesso `#2F6B4F`, alerta `#9A6700`, erro `#B42318` e informação `#365F91`.
+- Intenção: alternativa clássica e acolhedora sem excesso ornamental.
+
+- Referência: Tema 4 — Ardósia e sálvia.
+- Elemento relevante: primária `#243447`, secundária `#496273`, destaque `#667B68`, fundo `#F5F7F2`, superfície `#FFFFFF`, texto `#1F2933`, texto secundário `#5F6B76`, texto sobre primária `#F8FAFC`, borda `#D5DDD2`, sucesso `#3F6B4F`, alerta `#8A6508`, erro `#A9342A` e informação `#315F7D`.
+- Intenção: alternativa discreta, contemporânea e neutra.
+
+- Referência: Tema 5 — Índigo e âmbar.
+- Elemento relevante: primária `#1E1B4B`, secundária `#3730A3`, destaque `#B45309`, fundo `#F8FAFC`, superfície `#FFFFFF`, texto `#1E293B`, texto secundário `#64748B`, texto sobre primária `#F8FAFC`, borda `#D8DEE9`, sucesso `#287A52`, alerta `#A15C00`, erro `#B42318` e informação `#2563EB`.
+- Intenção: alternativa digital, nítida e expressiva.
+
+- Referência: Tema 6 — Aqua Glass.
+- Elemento relevante: primária `#0B3B60`, secundária `#1677A6`, destaque `#67D4E8`, fundo `#EAF7FB`, superfície translúcida `rgba(255, 255, 255, 0.72)`, superfície elevada `rgba(255, 255, 255, 0.86)`, texto `#0B1F33`, texto secundário `#46657A`, texto sobre primária `#FFFFFF`, borda translúcida `rgba(120, 180, 205, 0.38)`, sucesso `#167A5A`, alerta `#9A6700`, erro `#B42318` e informação `#087EA4`.
+- Intenção: alternativa moderna e aquática, com camadas translúcidas, reflexos discretos, profundidade suave e `backdrop-filter` moderado; deve possuir superfícies opacas de fallback e nunca sacrificar contraste ou legibilidade.
+
+Todas as paletas devem mapear os mesmos tokens semânticos. Contraste e estados de interação serão validados antes da aprovação em `UX_UI.md`; cor nunca será o único meio de comunicar estado. Efeitos translúcidos e desfoque pertencem a tokens próprios e podem ser desativados sem alterar a estrutura dos componentes.
 
 ### Referências técnicas
 - Referência:
@@ -582,7 +625,7 @@ Projeto mantido pelo responsável durante o período de estudo, sem compromisso 
 - Nenhuma identificada neste bloco no momento.
 
 ### Dúvidas técnicas
-- Qual provedor de armazenamento de objetos será compatível com a hospedagem e o orçamento escolhidos?
+- Como será realizada a estratégia de backup do diretório de imagens e do PostgreSQL no VPS?
 
 ## Observações adicionais
-[Contexto adicional.]
+Uma evolução futura poderá integrar leitores ópticos ou outros dispositivos físicos. O leitor poderá identificar a si próprio e escanear o exemplar para registrar retirada ou devolução, sempre sujeito às mesmas regras, autorização, auditoria e prevenção de conflitos da API.
