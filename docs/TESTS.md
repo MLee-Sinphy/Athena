@@ -93,11 +93,11 @@ Zero bloqueador; desvios não bloqueadores documentados e aceitos.
 | GATE-003 | acervo e catálogo | **Aprovado** — CRUD, agrupamento, busca e privacidade passam | TASK-003 |
 | GATE-004 | calendário e disponibilidade | **Aprovado** — bordas e concorrência PostgreSQL passam | TASK-004 |
 | GATE-005 | circulação | **Aprovado** — reserva até devolução, fila e avisos passam | TASK-005 |
-| GATE-006 | governança histórica | penalidades, auditoria, avaliações e análises passam | TASK-006 |
+| GATE-006 | governança histórica | **Aprovado** — penalidades, auditoria, avaliações e análises passam | TASK-006 |
 | GATE-007 | experiência completa | responsividade, i18n, temas e AA passam | TASK-007 |
 | GATE-008 | aceite 1.0 | deploy, segurança, backup, E2E e carga passam | TASK-008 |
 
-GATE-000 a GATE-005 foram aprovados em 2026-08-22. Os demais portões estão **Planejados**. A regressão exigida em cada linha inclui todos os portões anteriores.
+GATE-000 a GATE-006 foram aprovados em 2026-08-22. Os demais portões estão **Planejados**. A regressão exigida em cada linha inclui todos os portões anteriores.
 
 ## Casos de teste
 | ID | Nível | Tipo | Objetivo e resultado esperado | Fonte |
@@ -127,10 +127,10 @@ GATE-000 a GATE-005 foram aprovados em 2026-08-22. Os demais portões estão **P
 | TEST-045 | 5 | fluxo | **Aprovado:** alteração/cancelamento respeitam conflito e contagem | RULE-011/012 |
 | TEST-046 | 5 | fluxo | **Aprovado:** renovação exige ausência de fila e máximo | REQ-F-013 |
 | TEST-047 | 3 | privacidade | **Aprovado:** avisos e fila não expõem outras pessoas | REQ-NF-009 |
-| TEST-050 | 3 | integração | notas 1–5 são opcionais, únicas por devolução e não editáveis | RULE-013 |
-| TEST-051 | 3 | integração | tags preservam autor/data e participam da busca | RULE-013 |
-| TEST-052 | 3 | segurança | auditoria é completa e imutável por operação comum | REQ-F-019 |
-| TEST-053 | 3 | dados | histórico responde aos exemplos analíticos após anonimização | DECISION-006 |
+| TEST-050 | 3 | integração | **Aprovado:** notas 1–5 são opcionais, únicas por devolução e não editáveis | RULE-013 |
+| TEST-051 | 3 | integração | **Aprovado:** tags preservam autor/data e participam da busca | RULE-013 |
+| TEST-052 | 3 | segurança | **Aprovado:** auditoria é completa e imutável por operação comum | REQ-F-019 |
+| TEST-053 | 3 | dados | **Aprovado:** histórico responde aos exemplos analíticos após anonimização | DECISION-006 |
 | TEST-060 | 2 | componente | estados de UI e formulários são acessíveis | UX_UI |
 | TEST-061 | 6 | E2E | jornadas essenciais funcionam a partir de 320 px e desktop | REQ-NF-004 |
 | TEST-062 | 2 | i18n | pt-BR/en completos, seleção inicial e troca persistente | REQ-NF-006 |

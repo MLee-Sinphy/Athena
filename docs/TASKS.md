@@ -179,7 +179,7 @@ Reserva automática, fila FIFO, retirada e devolução idempotentes, alteração
 
 # TASK-006 — Implementar avaliações, tags e auditoria
 ## Estado
-Em andamento — testes do GATE-006 iniciados.
+Concluída — GATE-006 aprovado.
 ## Tipo
 Feature.
 ## Prioridade
@@ -203,10 +203,16 @@ GATE-006; TEST-050 a TEST-053.
 Histórico permanece íntegro e permite consultas exemplificadas.
 ## Riscos
 Exclusão destrutiva ou média como fonte indevida.
+## Resultado
+Avaliações opcionais e únicas por devolução, sugestões de tags rastreáveis, médias derivadas, auditoria imutável e consultas históricas por título, categoria e período foram implementadas. As consultas analíticas não retornam identificadores de leitores.
+## Evidências
+- TEST-050 a TEST-053 cobertos por 5 testes de integração, segurança e dados.
+- Tentativas de editar ou excluir auditoria por instância e queryset são rejeitadas.
+- Regressão de 60 testes de backend e 3 de frontend, PostgreSQL, lint, migrações e build aprovados na CI `32597411718` para `632baf1`.
 
 # TASK-007 — Consolidar UX, acessibilidade e temas
 ## Estado
-Planejada; depende de TASK-006.
+Pronta para iniciar; dependência TASK-006 satisfeita.
 ## Tipo
 Feature.
 ## Prioridade
