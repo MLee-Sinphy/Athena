@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
 
-import { ApiError, changePassword, checkHealth, login, logout } from './api'
+import { ApiError, changePassword, checkHealth, getCatalog, login, logout } from './api'
+import type { CatalogTitle } from './api'
 import './App.css'
 
 type Screen = 'checking' | 'login' | 'password' | 'ready' | 'unavailable'
@@ -23,6 +24,9 @@ const copy = {
     ready: 'Biblioteca em preparação',
     readyText: 'Você entrou com segurança. O catálogo será o próximo incremento.',
     logout: 'Sair',
+    search: 'Pesquisar título, autor, descrição ou #tag',
+    searchButton: 'Pesquisar',
+    available: 'exemplares disponíveis',
   },
   en: {
     unavailable: 'Service temporarily unavailable',
@@ -39,6 +43,9 @@ const copy = {
     ready: 'Library in preparation',
     readyText: 'You signed in securely. The catalog is the next increment.',
     logout: 'Sign out',
+    search: 'Search title, author, description, or #tag',
+    searchButton: 'Search',
+    available: 'copies available',
   },
 }
 
@@ -49,6 +56,7 @@ function App() {
   )
   const [error, setError] = useState('')
   const [temporaryPassword, setTemporaryPassword] = useState('')
+  const [titles, setTitles] = useState<CatalogTitle[]>([])
   const text = copy[language]
 
   const probe = useCallback(async () => {
@@ -76,11 +84,22 @@ function App() {
         setTemporaryPassword(password)
         setScreen('password')
       } else {
+        setTitles(await getCatalog())
         setScreen('ready')
       }
     } catch (reason) {
       if (reason instanceof ApiError && reason.status === 0) setScreen('unavailable')
       else setError(text.invalid)
+    }
+  }
+
+  async function submitSearch(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const data = new FormData(event.currentTarget)
+    try {
+      setTitles(await getCatalog(String(data.get('query'))))
+    } catch {
+      setScreen('unavailable')
     }
   }
 
@@ -137,6 +156,19 @@ function App() {
     return (
       <main className="app-shell">
         {languageButton}<p className="eyebrow">Athena</p><h1>{text.ready}</h1><p>{text.readyText}</p>
+        <form role="search" onSubmit={submitSearch}>
+          <label>{text.search}<input name="query" type="search" /></label>
+          <button type="submit">{text.searchButton}</button>
+        </form>
+        <section aria-label="Catálogo">
+          {titles.map((title) => (
+            <article key={title.id}>
+              <img src={title.cover} alt="" /><h2>{title.name}</h2><p>{title.author}</p>
+              <p>{title.available_copies} {text.available}</p>
+              <p>{title.tags.map((tag) => `#${tag}`).join(' ')}</p>
+            </article>
+          ))}
+        </section>
         <button type="button" onClick={() => void logout().finally(() => setScreen('login'))}>{text.logout}</button>
       </main>
     )

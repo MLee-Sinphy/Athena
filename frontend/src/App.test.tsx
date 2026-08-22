@@ -33,6 +33,7 @@ describe('App', () => {
         ok: true,
         json: async () => ({ access_token: 'opaque-secret', must_change_password: false }),
       })
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ results: [] }) })
     vi.stubGlobal('fetch', fetchMock)
     const storageSpy = vi.spyOn(Storage.prototype, 'setItem')
     render(<App />)

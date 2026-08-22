@@ -78,7 +78,7 @@ Contas de leitor e administrador, login por identificador único, token opaco re
 
 # TASK-003 — Implementar acervo e catálogo
 ## Estado
-Pronta para iniciar; dependência TASK-002 satisfeita.
+Em andamento — testes do GATE-003 iniciados.
 ## Tipo
 Feature.
 ## Prioridade
