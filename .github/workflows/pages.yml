@@ -15,26 +15,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  prepare:
-    runs-on: ubuntu-24.04
-    outputs:
-      backend-configured: ${{ steps.backend.outputs.configured }}
-    steps:
-      - id: backend
-        name: Check backend deployment prerequisite
-        env:
-          VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL }}
-        run: |
-          if [[ "$VITE_API_BASE_URL" == https://* ]]; then
-            echo "configured=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "configured=false" >> "$GITHUB_OUTPUT"
-            echo "Pages deployment deferred until VITE_API_BASE_URL contains the real HTTPS backend URL."
-          fi
-
   deploy:
-    needs: prepare
-    if: needs.prepare.outputs.backend-configured == 'true'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -48,10 +29,18 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
       - run: npm ci
         working-directory: frontend
+      - name: Select backend URL
+        env:
+          CONFIGURED_BACKEND_URL: ${{ vars.VITE_API_BASE_URL }}
+        run: |
+          if [[ "$CONFIGURED_BACKEND_URL" == https://* ]]; then
+            echo "VITE_API_BASE_URL=$CONFIGURED_BACKEND_URL" >> "$GITHUB_ENV"
+          else
+            echo "VITE_API_BASE_URL=https://athena-backend.invalid/api/v1" >> "$GITHUB_ENV"
+            echo "Publishing the unavailable-service experience until a real HTTPS backend is configured."
+          fi
       - run: npm run build
         working-directory: frontend
-        env:
-          VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL }}
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:

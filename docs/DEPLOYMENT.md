@@ -17,7 +17,7 @@
 5. Verificar `https://DOMINIO/api/v1/health/` e confirmar o cabeçalho `X-Request-ID`.
 6. Configurar no GitHub a variável `VITE_API_BASE_URL` e executar o workflow de Pages.
 
-Enquanto `VITE_API_BASE_URL` estiver ausente ou não usar HTTPS, o workflow termina sem publicar e informa que o deploy foi adiado; isso evita apontar a interface para um backend fictício.
+Enquanto `VITE_API_BASE_URL` estiver ausente ou não usar HTTPS, o workflow publica o frontend apontando para o domínio reservado `.invalid`. A interface fica acessível para demonstração e apresenta o estado de serviço indisponível; nenhuma operação produz falso sucesso. Ao cadastrar a URL real, o próximo workflow passa a usá-la automaticamente.
 
 O arquivo real `.env.production` nunca deve ser versionado. O deploy público depende de domínio, VPS e variável do GitHub fornecidos pelo responsável.
 
