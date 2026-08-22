@@ -89,7 +89,7 @@ Zero bloqueador; desvios não bloqueadores documentados e aceitos.
 |---|---|---|---|
 | GATE-000 | documentação e bootstrap | **Aprovado** — validação humana, build/lint/testes base | TASK-001 |
 | GATE-001 | modelo de contas | **Aprovado** — unidades de senha/perfis falharam e depois passaram | TASK-002 |
-| GATE-002 | autenticação ponta a ponta | autorização, sessão e indisponibilidade passam | TASK-002 |
+| GATE-002 | autenticação ponta a ponta | **Aprovado** — autorização, sessão e indisponibilidade passam | TASK-002 |
 | GATE-003 | acervo e catálogo | CRUD, agrupamento, busca e privacidade passam | TASK-003 |
 | GATE-004 | calendário e disponibilidade | bordas e concorrência PostgreSQL passam | TASK-004 |
 | GATE-005 | circulação | reserva até devolução, fila e avisos passam | TASK-005 |
@@ -97,7 +97,7 @@ Zero bloqueador; desvios não bloqueadores documentados e aceitos.
 | GATE-007 | experiência completa | responsividade, i18n, temas e AA passam | TASK-007 |
 | GATE-008 | aceite 1.0 | deploy, segurança, backup, E2E e carga passam | TASK-008 |
 
-GATE-000 e GATE-001 foram aprovados em 2026-08-22. Os demais portões estão **Planejados**. A regressão exigida em cada linha inclui todos os portões anteriores.
+GATE-000, GATE-001 e GATE-002 foram aprovados em 2026-08-22. Os demais portões estão **Planejados**. A regressão exigida em cada linha inclui todos os portões anteriores.
 
 ## Casos de teste
 | ID | Nível | Tipo | Objetivo e resultado esperado | Fonte |
@@ -106,10 +106,10 @@ GATE-000 e GATE-001 foram aprovados em 2026-08-22. Os demais portões estão **P
 | TEST-002 | 0 | segurança | **Aprovado:** scanner não encontra segredo ou credencial real | CON-005 |
 | TEST-003 | 3 | banco | **Aprovado:** migrações e teste da API executam em PostgreSQL vazio | ARCHITECTURE |
 | TEST-010 | 1 | unidade | **Aprovado:** política de senha, perfis e identidades aceitam/rejeitam limites definidos | REQ-NF-002 |
-| TEST-011 | 3 | integração | e-mail e matrícula autenticam sem enumeração | REQ-F-001 |
-| TEST-012 | 5 | fluxo | senha temporária obriga troca e recuperação assistida revoga sessão | REQ-F-002 |
-| TEST-013 | 3 | segurança | matriz de perfil/propriedade bloqueia acesso indevido | REQ-NF-001 |
-| TEST-014 | 6 | E2E | API desligada produz mensagem e nenhum falso sucesso | REQ-F-020 |
+| TEST-011 | 3 | integração | **Aprovado:** e-mail e matrícula autenticam sem enumeração | REQ-F-001 |
+| TEST-012 | 5 | fluxo | **Aprovado:** senha temporária obriga troca e recuperação assistida revoga sessão | REQ-F-002 |
+| TEST-013 | 3 | segurança | **Aprovado:** matriz de perfil/propriedade bloqueia acesso indevido | REQ-NF-001 |
+| TEST-014 | 6 | E2E | **Aprovado:** API desligada produz mensagem e nenhum falso sucesso | REQ-F-020 |
 | TEST-020 | 3 | integração | catálogo agrupa título e preserva exemplares | RULE-003 |
 | TEST-021 | 3 | integração | busca encontra descrição e tags; ISBN ausente é válido | REQ-F-005 |
 | TEST-022 | 5 | fluxo | leitor escolhe exemplar pela conservação sem ver código | REQ-F-005 |
