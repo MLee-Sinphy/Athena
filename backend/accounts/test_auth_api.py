@@ -273,15 +273,15 @@ class FirstAccessAndRecoveryTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_429_TOO_MANY_REQUESTS)
 
 
-@override_settings(CORS_ALLOWED_ORIGINS=["https://mlee-sinphy.github.io"])
+@override_settings(CORS_ALLOWED_ORIGINS=["https://mlee-code.github.io"])
 class CorsPolicyTests(SimpleTestCase):
     def test_allowed_frontend_origin_receives_cors_header(self):
         response = self.client.options(
-            "/api/v1/auth/login/", headers={"origin": "https://mlee-sinphy.github.io"}
+            "/api/v1/auth/login/", headers={"origin": "https://mlee-code.github.io"}
         )
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertEqual(response["Access-Control-Allow-Origin"], "https://mlee-sinphy.github.io")
+        self.assertEqual(response["Access-Control-Allow-Origin"], "https://mlee-code.github.io")
 
     def test_unknown_origin_receives_no_cors_permission(self):
         response = self.client.options(

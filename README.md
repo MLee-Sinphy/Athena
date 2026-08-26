@@ -6,7 +6,7 @@ Esta é a primeira demonstração funcional. A candidata à versão `1.0.0` est�
 
 ## Acesso à demonstração
 
-- Frontend no GitHub Pages: <https://mlee-sinphy.github.io/Athena/>
+- Frontend no GitHub Pages: <https://mlee-code.github.io/Athena/>
 - API quando o VPS estiver ativo: <https://athena.179-197-79-149.sslip.io/api/v1/health/>
 
 O software pode ser acessado pelo link do GitHub Pages, mas suas funções não estarão sempre disponíveis. O frontend permanece publicado continuamente, enquanto o backend e o PostgreSQL são ligados no VPS apenas durante estudos e demonstrações para não consumirem recursos desnecessariamente. Quando o backend estiver desligado, a página continuará abrindo e apresentará a mensagem esperada de serviço temporariamente indisponível.
@@ -90,7 +90,7 @@ Athena/
 ## Início rápido com Docker
 
 ```bash
-git clone git@github.com:MLee-Sinphy/Athena.git
+git clone git@github.com:mlee-code/Athena.git
 cd Athena
 cp .env.example .env
 make app-up

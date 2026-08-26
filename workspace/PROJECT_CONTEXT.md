@@ -160,7 +160,7 @@ Todos os componentes usam tokens semânticos; o tema é escolhido em um único p
 | 5. Índigo e âmbar | `#1E1B4B` | `#3730A3` | `#B45309` | `#F8FAFC` | digital e expressivo |
 | 6. Aqua Glass | `#0B3B60` | `#1677A6` | `#67D4E8` | `#EAF7FB` | aquático e translúcido |
 
-O Tema 1 referencia [First Principles of Calculus](https://mlee-sinphy.github.io/First-Principles-of-Calculus/). Tokens completos serão derivados para `UX_UI.md`. O Tema 6 exige fallback opaco e não pode prejudicar contraste, legibilidade nem preferências de redução de transparência e movimento.
+O Tema 1 referencia [First Principles of Calculus](https://mlee-code.github.io/First-Principles-of-Calculus/). Tokens completos serão derivados para `UX_UI.md`. O Tema 6 exige fallback opaco e não pode prejudicar contraste, legibilidade nem preferências de redução de transparência e movimento.
 
 ## 11. Arquitetura e segurança
 
